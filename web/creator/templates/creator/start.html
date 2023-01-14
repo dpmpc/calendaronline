@@ -1,0 +1,52 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block title %}
+  Neuen Kalender erzeugen
+{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Hochkant</div>
+                <img src="{% static 'images/blank_portrait.png' %}" class="p-3" alt="Hochkant">
+                <div class="card-body">
+                   
+                
+                    <p class="card-text"></p>
+                      <a class="btn btn-primary" href="options?format=P" role="button">Hochkant</a>
+                      <a class="btn btn-secondary" href="preview?format=P" role="button">Vorschau</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Querformat</div>
+                <img src="{% static 'images/blank_landscape.png' %}" class="p-3" alt="Querformat">
+                <div class="card-body">
+                    <p class="card-text"></p>
+                    <a class="btn btn-primary" href="options?format=L" role="button">Querformat</a>
+                    <a class="btn btn-secondary" href="preview?format=L" role="button">Vorschau</a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Design 1</div>
+                <img src="{% static 'images/blank_design1.png' %}" class="p-3" alt="Querformat">
+                <div class="card-body">
+                    <p class="card-text"></p>
+                    <a class="btn btn-primary" href="options?format=1" role="button">Design 1</a>
+                    <a class="btn btn-secondary" href="preview?format=1" role="button">Vorschau</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

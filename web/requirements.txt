@@ -1,0 +1,5 @@
+uwsgi
+django>=4.1
+fpdf2>=2.6.0
+Pillow>=9.3
+python-dateutil
