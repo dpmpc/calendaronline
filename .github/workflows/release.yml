@@ -1,0 +1,25 @@
+name: Release Action
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Standart Checkout
+        uses: actions/checkout@v3
+
+      - name: Set Version Number
+        run: |
+          echo "VERSION_NUMBER=$(echo "${{ github.ref }}" | sed 's#refs/tags/v##')" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Build and Push Docker Image
+        run: |
+          cd web
+          docker build -t calendaronline .
+          docker login -u ${{ secrets.ACCESS_TOKEN_USER_GITHUB }}-p ${{ secrets.GITHUB_TOKEN }} ghcr.io push ghcr.io/dpmpc/calendaronline:${{ env.VERSION_NUMBER }}  
