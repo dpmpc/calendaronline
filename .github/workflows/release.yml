@@ -16,14 +16,18 @@ jobs:
       - name: Set Version Number
         run: |
           echo "VERSION_NUMBER=$(echo "${{ github.ref }}" | sed 's#refs/tags/v##')" >> $GITHUB_ENV
+          echo "DOCKER_IMAGE=calendaronline" >> $GITHUB_ENV
+          echo "DOCKER_TAG=ghcr.io/dpmpc/calendaronline" >> $GITHUB_ENV
         shell: bash
 
       - name: Build Docker Image
         run: |
           cd web
-          docker build -t calendaronline .
+          docker build -t ${{ env.DOCKER_IMAGE }} .
+          docker tag ${{ env.DOCKER_IMAGE }} ${{ env.DOCKER_TAG}}:latest
+          docker tag ${{ env.DOCKER_IMAGE }} ${{ env.DOCKER_TAG}}:${{ env.VERSION_NUMBER }}
       
       - name: Push Docker Image
         run: |
           docker login -u $GITHUB_REPOSITORY_OWNER -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
-          docker push ghcr.io/dpmpc/calendaronline:${{ env.VERSION_NUMBER }}  
+          docker push -a ${{ env.DOCKER_TAG }}  
