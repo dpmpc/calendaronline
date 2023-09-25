@@ -25,5 +25,5 @@ jobs:
       
       - name: Push Docker Image
         run: |
-          docker login -u ${{ secrets.ACCESS_TOKEN_USER_GITHUB }} -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
+          docker login -u $GITHUB_REPOSITORY_OWNER -p ${{ secrets.GITHUB_TOKEN }} ghcr.io
           docker push ghcr.io/dpmpc/calendaronline:${{ env.VERSION_NUMBER }}  
