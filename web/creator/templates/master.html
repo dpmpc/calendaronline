@@ -1,6 +1,6 @@
 {% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,16 +9,34 @@
     {% block head %}
     {% endblock %}
   </head>
-  <body class="g-sidenav-show bg-gray-100">
-    <div class="bg-light text-center border-radius-lg py-4 mb-4">
-      <h1>Fotokalender PDF Generator</h1>
-      <p>Einfaches Erzeugen von tollen Fotokalendern zum selber ausdrucken</p>
-    </div>
-    <div class="container">
+  <body >
+    <nav class="navbar navbar-expand-sm bg-dark-subtle sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <img class="bi me-2"  src="{% static 'images/iconmonstr-calendar-8.svg' %}" alt="Calendar Online" width="30" height="24">
+        </a>
+    
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link{% if page == 'start' %} active{% endif %}" aria-current="page" href="start">Start</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if page == 'impressum' %} active{% endif %}" href="impressum">Impressum</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{% if page == 'faq' %} active{% endif %}" href="faq">FAQ</a>
+            </li>
+        </div>
+      </div>
+    </nav>
+    <div class="container my-5">
       {% block content %}
       {% endblock %}
 
-    
       <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
         <p class="col-md-4 mb-0 text-muted">© 2023 Daniel Schlich</p>
     
@@ -27,9 +45,6 @@
         </a>
     
         <ul class="nav col-md-4 justify-content-end">
-          <li class="nav-item"><a href="start" class="nav-link px-2 text-muted">Start</a></li>
-          <li class="nav-item"><a href="impressum" class="nav-link px-2 text-muted">Impressum</a></li>
-          <li class="nav-item"><a href="faq" class="nav-link px-2 text-muted">FAQs</a></li>
           <li class="nav-item"><a href="https://github.com/dpmpc/calendaronline" class="nav-link px-2 text-muted">Source</a></li>
         </ul>
       </footer>

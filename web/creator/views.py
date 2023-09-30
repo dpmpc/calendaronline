@@ -7,12 +7,12 @@ from creator.fotocalendar.creator import create_for_format, create_from_request,
 
 def index(request):
     template = loader.get_template('creator/start.html')
-    return HttpResponse(template.render({}, request))
+    return HttpResponse(template.render({"page": "start"}, request))
 
 
 def options(request):
     template = loader.get_template('creator/options.html')
-    return HttpResponse(template.render({}, request))
+    return HttpResponse(template.render({"page": "options"}, request))
 
 
 def month(request):
@@ -27,7 +27,7 @@ def month(request):
     aspectRatio = calendar.get_image_aspect_ratio()
 
     template = loader.get_template('creator/months.html')
-    return HttpResponse(template.render({"months": months, "aspectRatio": aspectRatio}, request))
+    return HttpResponse(template.render({"page": "months", "months": months, "aspectRatio": aspectRatio}, request))
 
 
 def create(request):
@@ -46,9 +46,9 @@ def preview(request):
 
 def faq(request):
     template = loader.get_template('creator/faq.html')
-    return HttpResponse(template.render({}, request))
+    return HttpResponse(template.render({"page": "faq"}, request))
 
 
 def impressum(request):
     template = loader.get_template('creator/impressum.html')
-    return HttpResponse(template.render({}, request))
+    return HttpResponse(template.render({"page": "impressum"}, request))
