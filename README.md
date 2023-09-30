@@ -23,6 +23,8 @@ services:
   calendaronline:
     image: ghcr.io/dpmpc/calendaronline:latest
     restart: always
+    environment:
+      - CSRF_TRUSTED_ORIGINS=https://localhost:8000
     volumes:
       - web_static:/home/calendaronline/web/creator/static
 
