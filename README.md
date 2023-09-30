@@ -32,9 +32,11 @@ volumes:
 
 ## Used libraries
 - [Python 3](https://www.python.org/)
-- [django 4.1](https://docs.djangoproject.com/en/4.1/)
+- [django 4.2](https://docs.djangoproject.com/en/4.2/)
 - [Boostrap 5.3](https://getbootstrap.com/docs/5.3)
-- [PyFPDF/fpdf2 2.6](https://pyfpdf.github.io/fpdf2/index.html)
-- [Pillow (PIL Fork)](https://pillow.readthedocs.io/en/stable/installation.html)
+- [PyFPDF/fpdf2 2.7](https://pyfpdf.github.io/fpdf2/index.html)
+- [Pillow (PIL Fork) 10.0](https://pillow.readthedocs.io/en/stable/installation.html)
 - [Cropper.js 1.5.13](https://fengyuanchen.github.io/cropperjs/)
+- [gunicorn 2.21](https://gunicorn.org/)
+- [NGINX 1.25](https://www.nginx.com/)
 
