@@ -1,24 +1,23 @@
 version: "3.9"
 
 services:
-  calendaronlinie-nginx:
-    build: ./nginx/
+  calendaronline-nginx:
+    #image: ghcr.io/dpmpc/calendaronline-nginx:latest
+    image: calendaronline-nginx
     restart: always
     volumes:
-      - uwsgi_data:/tmp/uwsgi/
-      - web_static:/var/www/calendaronline/assets/:ro
+      - web_static:/static:ro
     ports:
       - "8000:80"
     depends_on: 
-      - calendaronlinie
+      - calendaronline
 
-  calendaronlinie:
-    build: ./web/
+  calendaronline:
+    #image: ghcr.io/dpmpc/calendaronline:latest
+    image: calendaronline
     restart: always
     volumes:
-      - uwsgi_data:/tmp/uwsgi/
-      - web_static:/static/
+      - web_static:/home/calendaronline/web/creator/static
 
 volumes:
-  uwsgi_data:
   web_static:
