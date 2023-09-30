@@ -3,7 +3,7 @@
 ###########
 
 # pull official base image
-FROM python:3.11-slim-bookworm as builder
+FROM python:3.11-alpine as builder
 
 # set work directory
 WORKDIR /usr/src/app
@@ -13,8 +13,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc
+RUN apk add gcc
 
 # lint
 RUN pip install --upgrade pip
@@ -30,37 +29,28 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requir
 # FINAL #
 #########
 
-FROM python:3.11-slim-bookworm
+FROM python:3.11-alpine
 
-# create directory for the app user
-RUN mkdir -p /home/calendaronline
-
-# create the app user
-RUN addgroup --system clendaronline && adduser --system --group calendaronline
-
-# create the appropriate directories
 ENV HOME=/home/calendaronline
 ENV APP_HOME=$HOME/web
-RUN mkdir $APP_HOME
+
+# create directory for the app user
+RUN mkdir -p $APP_HOME && \
+    addgroup --system calendaronline && \
+    adduser --system -G calendaronline calendaronline
+
 WORKDIR $APP_HOME
 
 # install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends
 COPY --from=builder /usr/src/app/wheels /wheels
-COPY --from=builder /usr/src/app/requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install --no-cache /wheels/*
-
-# copy entrypoint.prod.sh
-#COPY ./entrypoint.prod.sh .
-#RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
-#RUN chmod +x  $APP_HOME/entrypoint.prod.sh
+RUN pip install --upgrade pip && pip install --no-cache /wheels/*
 
 # copy project
 COPY . $APP_HOME
 
 # chown all the files to the app user
-RUN chown -R calendaronline:calendaronline $APP_HOME
+RUN chown -R calendaronline:calendaronline $APP_HOME && \
+    chmod +x startup.prod.sh
 
 # change to the app user
 USER calendaronline
