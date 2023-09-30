@@ -1,6 +1,7 @@
 from fpdf import FPDF, ViewerPreferences
 from calendar import monthrange
 
+
 class FotoCalendar:
     _dayNamesAbbrev = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
     _dayNames = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
@@ -22,10 +23,8 @@ class FotoCalendar:
         pdf.set_auto_page_break(False)
         pdf.set_font('Helvetica')
         pdf.set_producer("k51.de - Simple create foto calendars as PDF")
-        pdf.set_margin(self.margin)    
-        pdf.set_top_margin(self.tmargin)    
-       
-
+        pdf.set_margin(self.margin)
+        pdf.set_top_margin(self.tmargin)
 
     def addTitle(self, title='', image=None):
         pdf = self.fpdf
@@ -33,8 +32,6 @@ class FotoCalendar:
             pdf.set_subject(title)
             pdf.add_page()
             pdf.set_font(style='B', size=100)
-            # pdf.cell(txt=date.strftime("%Y"))
-        
             pdf.cell(txt=title)
             if image:
                 pdf.image(image, h=pdf.eph, w=pdf.epw, x=0, y=0)
@@ -43,7 +40,7 @@ class FotoCalendar:
         pdf = self.fpdf
         pdf.add_page()
         if image:
-            pdf.image(image, h=self.image_height, w=self.image_with,  x=self.margin, y=self.tmargin)
+            pdf.image(image, h=self.image_height, w=self.image_with, x=self.margin, y=self.tmargin)
 
         self._addText(date, self._generateMonthMatrix(date))
 
@@ -64,10 +61,10 @@ class FotoCalendar:
 
     def set_center_month(self, center_month):
         self.month_align = 'C' if center_month else 'L'
-    
+
     def set_table_border(self, table_border):
         self.table_border = 1 if table_border else 0
-        
+
     def _generateMonthMatrix(self, date):
         matrix = {}
         max_days = monthrange(date.year, date.month)[1]
@@ -78,14 +75,14 @@ class FotoCalendar:
         return matrix
 
     def _createDay(self, date):
-        dayOfWeek =  date.isoweekday()
+        dayOfWeek = date.isoweekday()
         return {
-                "day": str(date.day),
-                "dayOfWeek": dayOfWeek,
-                "week":  date.isocalendar().week,
-                "color": "#000000",
-                "weigth": "B" if dayOfWeek >= 6 else "",
-            }
+            "day": str(date.day),
+            "dayOfWeek": dayOfWeek,
+            "week": date.isocalendar().week,
+            "color": "#000000",
+            "weigth": "B" if dayOfWeek >= 6 else "",
+        }
 
     def get_month_name(self, date):
         return self._monthNames[date.month - 1]
@@ -105,8 +102,8 @@ class FotoCalendar:
     def _hex_color_to_tuple(self, color):
         if color.startswith('#'):
             color = color.lstrip('#')
-        return tuple(int(color[i:i+2], 16) for i in (0, 2, 4))
-    
+        return tuple(int(color[i:i + 2], 16) for i in (0, 2, 4))
+
     def _set_fill_color(self, color):
         pdf = self.fpdf
         pdf.set_fill_color(color[0], color[1], color[2])
@@ -124,6 +121,3 @@ class FotoCalendar:
 
     def output(self):
         return bytes(self.fpdf.output())
-
-
-        

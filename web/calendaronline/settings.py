@@ -22,13 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-7=y2bq_v2^res74)7mkyp8$8qibysl(a#*-)lq=rw-1au698zm'
+# SECRET_KEY = 'django-insecure-7=y2bq_v2^res74)7mkyp8$8qibysl(a#*-)lq=rw-1au698zm'
 SECRET_KEY = os.environ.get("SECRET_KEY", default='django-insecure-7=y2bq_v2^res74)7mkyp8$8qibysl(a#*-)lq=rw-1au698zm')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-#DEBUG = int(os.environ.get("DEBUG", default=0)) >
+# DEBUG = int(os.environ.get("DEBUG", default=0)) >
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 
@@ -36,8 +36,6 @@ ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]"]
 # Application definition
 
 INSTALLED_APPS = [
-#    'creator.apps.CreatorConfig',
-#    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -76,18 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'calendaronline.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -111,11 +97,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = 'de-DE'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 

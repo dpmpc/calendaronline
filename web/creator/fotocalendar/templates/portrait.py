@@ -1,5 +1,6 @@
 from creator.fotocalendar.fotocalendar import FotoCalendar
 
+
 class PortraitFotoCalendar(FotoCalendar):
     def __init__(self):
         super().__init__("P", 16, 176, 195)
@@ -15,7 +16,7 @@ class PortraitFotoCalendar(FotoCalendar):
         pdf.set_font(style='B', size=20)
         line_height = 8.5
         col_width = 25
-      
+
         pdf.set_y(220)
         pdf.cell(txt=self.get_month_name_with_year(date), w=pdf.epw, align=self.month_align, new_x="LMARGIN", new_y="NEXT")
         pdf.set_font(size=8)
@@ -37,7 +38,6 @@ class PortraitFotoCalendar(FotoCalendar):
             pdf.cell(col_width, line_height, txt=str(weekId), border=0, align="L", new_y="TOP")
             pdf.ln()
 
- 
     def set_table_border(self, table_border):
         self.table_border = 'BT' if table_border else 0
 
@@ -45,13 +45,12 @@ class PortraitFotoCalendar(FotoCalendar):
         weeks = {}
         for day in monthMatrix:
             weekId = monthMatrix[day]["week"]
-            if not weekId in weeks:
+            if weekId not in weeks:
                 weeks[weekId] = self.__emptyWeek()
             dayId = monthMatrix[day]["dayOfWeek"]
-            weeks[weekId][dayId] = monthMatrix[day]   
+            weeks[weekId][dayId] = monthMatrix[day]
 
         return weeks
 
     def __emptyWeek(self):
-        return { 1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None }
-
+        return {1: None, 2: None, 3: None, 4: None, 5: None, 6: None, 7: None}
