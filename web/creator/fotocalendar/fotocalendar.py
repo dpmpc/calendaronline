@@ -1,5 +1,7 @@
 from fpdf import FPDF, ViewerPreferences
 from calendar import monthrange
+from icalevents.icalparser import parse_events
+from icalevents.icaldownload import ICalDownload
 
 
 class FotoCalendar:
@@ -15,7 +17,7 @@ class FotoCalendar:
         self.image_with = image_with
         self.image_height = image_height
         self.month_align = 'L'
-        self.table_border = 1
+        self.ics_content = None
 
         pdf = FPDF(orientation=orientation, format="A4")
         self.fpdf = pdf
@@ -65,6 +67,13 @@ class FotoCalendar:
     def set_table_border(self, table_border):
         self.table_border = 1 if table_border else 0
 
+    def set_ics_url(self, ics_url):
+        if ics_url != "":
+            ical_download = ICalDownload()
+            self.ics_content = ical_download.data_from_url(ics_url)
+        else:
+            self.ics_content = None
+
     def _generateMonthMatrix(self, date):
         matrix = {}
         max_days = monthrange(date.year, date.month)[1]
@@ -82,6 +91,7 @@ class FotoCalendar:
             "week": date.isocalendar().week,
             "color": "#000000",
             "weigth": "B" if dayOfWeek >= 6 else "",
+            "events": self._get_events(date)
         }
 
     def get_month_name(self, date):
@@ -89,6 +99,15 @@ class FotoCalendar:
 
     def get_month_name_with_year(self, date):
         return self.get_month_name(date) + " " + self._year(date)
+
+    def _get_events(self, date):
+        events = []
+        if self.ics_content is not None:
+            end = date
+            # return events(string_content=self.ics_content, start=date, end=end)
+            events += parse_events(content=self.ics_content, start=date, end=end)
+        print("Events for", date, events)
+        return events
 
     def _year(self, date):
         return str(date.year)

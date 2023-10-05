@@ -16,6 +16,7 @@
   <input type="hidden" name="format" value="{{ request.POST.format }}" />
   <input type="hidden" name="center_month" value="{{ request.POST.center_month }}" />
   <input type="hidden" name="table_border" value="{{ request.POST.table_border }}" />
+  <input type="hidden" name="ics_url" value="{{ request.POST.ics_url }}" />
   <input type="hidden" name="lenght" value="{{ months|length }}" />
   <div class="accordion" id="accordionMonth">
       {% for month in months %}
@@ -73,7 +74,7 @@
                   <div class="col">
                     <div class="mb-3">
                       <label class="form-label" for="background-color-{{ month.id }}">Hintergrundfarbe:</label>
-                      <input class="form-control" type="color" id="background-color-{{ month.id }}" name="background_color_{{ month.id }}" value="{{ request.POST.background_color }}">
+                      <input class="form-control form-control-color" type="color" id="background-color-{{ month.id }}" name="background_color_{{ month.id }}" value="{{ request.POST.background_color }}">
                     </div>
                   </div>
                 </div>

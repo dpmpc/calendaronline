@@ -49,7 +49,10 @@ class Design1FotoCalendar(FotoCalendar):
             pdf.set_font(size=10)
             pdf.cell(7, line_height, txt=matrix[day]["day"], border=self.table_border, align="R", new_y="TOP", fill=True)
             pdf.set_font(size=6)
-            pdf.cell(col_width - 7, line_height, txt=self._dayNameAbbrev(matrix[day]["dayOfWeek"]), border=self.table_border, align="L", new_y="NEXT", fill=True)
+            text = self._dayNameAbbrev(matrix[day]["dayOfWeek"])
+            if len(matrix[day]['events']) > 0:
+                text += " " + matrix[day]['events'][0].summary
+            pdf.cell(col_width - 7, line_height, txt=text, border=self.table_border, align="L", new_y="NEXT", fill=True)
 
         pdf.set_x(grid_left)
         self._set_fill_color(self.__bright)

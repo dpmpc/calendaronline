@@ -21,6 +21,7 @@ def create_from_request(request):
     calendar = create_for_format(request.POST.get('format', ''))
     calendar.set_center_month(request.POST.get('center_month', '') == '1')
     calendar.set_table_border(request.POST.get('table_border', '') == '1')
+    calendar.set_ics_url(request.POST.get('ics_url', ''))
 
     calendar.addTitle()
 
