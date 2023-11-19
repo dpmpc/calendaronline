@@ -24,11 +24,19 @@ class LandscapeFotoCalendar(FotoCalendar):
         pdf.cell(txt=self.get_month_name_with_year(date), w=pdf.epw, align=self.month_align, new_x="LEFT", new_y="NEXT")
         pdf.set_font(size=8)
         for day in matrix:
-            pdf.set_font(style=matrix[day]["weigth"])
+            pdf.set_font(style=self._fontWeight(matrix[day]))
             pdf.cell(col_width, txt=self._dayNameAbbrev(matrix[day]["dayOfWeek"]), border=0, align="C", new_y="TOP")
         pdf.ln()
         pdf.set_font(size=15)
         pdf.set_line_width(0.01)
+        events = []
         for day in matrix:
-            pdf.set_font(style=matrix[day]["weigth"])
+            pdf.set_font(style=self._fontWeight(matrix[day]))
             pdf.cell(col_width, line_height, txt=matrix[day]["day"], border=self.table_border, align="C", new_y="TOP")
+            for event in matrix[day]["events"]:
+                events.append(matrix[day]["day"] + ". " + event)
+
+        if len(events) > 0:
+            pdf.set_y(195)
+            pdf.set_font(style="", size=8)
+            pdf.cell(txt=' - '.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")

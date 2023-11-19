@@ -2,6 +2,8 @@ from fpdf import FPDF, ViewerPreferences
 from calendar import monthrange
 from icalevents.icalparser import parse_events
 from icalevents.icaldownload import ICalDownload
+from icalevents.icalevents import events
+from datetime import date, timedelta, datetime
 
 
 class FotoCalendar:
@@ -17,7 +19,8 @@ class FotoCalendar:
         self.image_with = image_with
         self.image_height = image_height
         self.month_align = 'L'
-        self.ics_content = None
+        self.eventlist_align = 'C'
+        self.eventlist = {}
 
         pdf = FPDF(orientation=orientation, format="A4")
         self.fpdf = pdf
@@ -60,6 +63,8 @@ class FotoCalendar:
         print("Set background to ", background, " --> ", backgroundRgb)
         pdf = self.fpdf
         pdf.set_page_background(backgroundRgb)
+        
+        return backgroundRgb
 
     def set_center_month(self, center_month):
         self.month_align = 'C' if center_month else 'L'
@@ -69,10 +74,16 @@ class FotoCalendar:
 
     def set_ics_url(self, ics_url):
         if ics_url != "":
-            ical_download = ICalDownload()
-            self.ics_content = ical_download.data_from_url(ics_url)
+            start = date(2024, 1, 1)
+            end = date(2024, 12, 31)
+            evts = events(url=ics_url, start=start, end=end)
+            for evt in evts:
+                datekey = evt.start.strftime("%Y%m%d")
+                if datekey not in self.eventlist:
+                    self.eventlist[datekey] = []
+                self.eventlist[datekey].append(evt.summary)
         else:
-            self.ics_content = None
+            self.eventlist = {}
 
     def _generateMonthMatrix(self, date):
         matrix = {}
@@ -85,13 +96,16 @@ class FotoCalendar:
 
     def _createDay(self, date):
         dayOfWeek = date.isoweekday()
+        events = self._get_events(date)
         return {
             "day": str(date.day),
             "dayOfWeek": dayOfWeek,
             "week": date.isocalendar().week,
             "color": "#000000",
-            "weigth": "B" if dayOfWeek >= 6 else "",
-            "events": self._get_events(date)
+            "events": events,
+            "isSunday": dayOfWeek == 7,
+            "isStaurday": dayOfWeek == 6,
+            "hasEvents": len(events) > 0
         }
 
     def get_month_name(self, date):
@@ -101,13 +115,13 @@ class FotoCalendar:
         return self.get_month_name(date) + " " + self._year(date)
 
     def _get_events(self, date):
-        events = []
-        if self.ics_content is not None:
-            end = date
-            # return events(string_content=self.ics_content, start=date, end=end)
-            events += parse_events(content=self.ics_content, start=date, end=end)
-        print("Events for", date, events)
-        return events
+        datekey = date.strftime("%Y%m%d")
+        if datekey in self.eventlist:
+            for evt in self.eventlist[datekey]:
+                print("Event for ", datekey, ":", evt)
+            return self.eventlist[datekey]
+        else:
+            return []
 
     def _year(self, date):
         return str(date.year)
@@ -117,6 +131,9 @@ class FotoCalendar:
 
     def _dayNameAbbrev(self, dayOfWeek):
         return self._dayNamesAbbrev[dayOfWeek - 1]
+
+    def _fontWeight(self, day):
+        return "B" if day["isSunday"] or day["isStaurday"] or day["hasEvents"] else ""
 
     def _hex_color_to_tuple(self, color):
         if color.startswith('#'):

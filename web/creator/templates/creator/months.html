@@ -11,94 +11,77 @@
 {% endblock %}
 
 {% block content %}
-<form action="create" method="post" enctype="multipart/form-data" name="months">
+<form target="_blank"  action="create" method="post" enctype="multipart/form-data" name="months">
   {% csrf_token %} 
   <input type="hidden" name="format" value="{{ request.POST.format }}" />
   <input type="hidden" name="center_month" value="{{ request.POST.center_month }}" />
   <input type="hidden" name="table_border" value="{{ request.POST.table_border }}" />
   <input type="hidden" name="ics_url" value="{{ request.POST.ics_url }}" />
   <input type="hidden" name="lenght" value="{{ months|length }}" />
-  <div class="accordion" id="accordionMonth">
-      {% for month in months %}
+  <ul class="nav nav-tabs" id="monthTabs" role="tablist">
+    {% for month in months %}
+      <li class="nav-item" role="presentation">
+        <button class="nav-link{% if forloop.first %} active{% endif %}" id="month_tab_{{ month.id }}" data-bs-toggle="tab" data-bs-target="#month_pane_{{ month.id }}" type="button" role="tab" aria-controls="month_pane_{{ month.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">{{ month.name }}</button>
+      </li>  
+    {% endfor %}
+  </ul>
+  <div class="tab-content" id="monthTabsContent">
+    {% for month in months %}
+      <div class="tab-pane fade{% if forloop.first %} show active{% endif %}" id="month_pane_{{ month.id }}" role="tabpanel" aria-labelledby="month_tab_{{ month.id }}" tabindex="0">
         <input type="hidden" name="date_{{ month.id }}" value="{{ month.date }}" />
         <input type="hidden" name="crop_x_{{ month.id }}" value="" />
         <input type="hidden" name="crop_y_{{ month.id }}" value="" />
         <input type="hidden" name="crop_width_{{ month.id }}" value="" />
         <input type="hidden" name="crop_height_{{ month.id }}" value="" />
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingMonth{{ month.id }}">
-            <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMonth{{ month.id }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" aria-controls="collapseMonth{{ month.id }}">
-                {{ month.name }}
-            </button>
-          </h2>
-          <div id="collapseMonth{{ month.id }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" aria-labelledby="headingMonth{{ month.id }}" data-bs-parent="#accordionMonth">
-            <div class="accordion-body">
-              
-              <div class="container">
-                <div class="row">
-                  <div class="col">
-                      <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" style="display: block; max-width: 100%;">
-                  </div>
-                </div>
-            
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label" for="image-{{ month.id }}">Bild:</label>
-                      <input class="form-control" name="image_{{ month.id }}" type="file" id="image-{{ month.id }}" onchange="updatePreview(this, {{ month.id }})">
-                    </div>
-                  </div>
-                </div>
-
-                <!--
-                <div class="row">
-                  <div class="col">
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" role="switch" id="border-{{ month.id }}" name="boder_{{ month.id }}" value="1">
-                      <label class="form-check-label" for="border-{{ month.id }}">Rahmen um das Bild</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col">
-                    <div class="form-check form-switch">
-                      <input class="form-check-input" type="checkbox" role="switch" id="shadow-{{ month.id }}" name="shadow_{{ month.id }}" value="1">
-                      <label class="form-check-label" for="shadow-{{ month.id }}">Schatten unter dem Bild</label>
-                    </div>
-                  </div>
-                </div>
-                -->
-
-                <div class="row">
-                  <div class="col">
-                    <div class="mb-3">
-                      <label class="form-label" for="background-color-{{ month.id }}">Hintergrundfarbe:</label>
-                      <input class="form-control form-control-color" type="color" id="background-color-{{ month.id }}" name="background_color_{{ month.id }}" value="{{ request.POST.background_color }}">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="col">
-                    {% if not forloop.first %}
-                      <button type="button" class="btn btn-secondary" onclick="toggle('collapseMonth{{ month.id|add:-1}}')">Zurück</button>
-                    {% endif %}
-
-                    {% if forloop.last %}
-                      <button type="submit" class="btn btn-primary">Erzeugen</button>
-                    {% else %}
-                      <button type="button" class="btn btn-primary" onclick="toggle('collapseMonth{{ month.id|add:1}}')">Weiter</button>
-                    {% endif %}
-                  </div>
-                </div>
+        
+        <div class="container-fluid pt-3">
+          <div class="row">
+            <div class="col">
+                <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" class="img-fluid">
+            </div>
+          </div>
+      
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <label class="form-label" for="image-{{ month.id }}">Bild:</label>
+                <input class="form-control" name="image_{{ month.id }}" type="file" id="image-{{ month.id }}" onchange="updatePreview(this, {{ month.id }})">
               </div>
             </div>
           </div>
+
+          <!--div class="row">
+            <div class="col">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="border-{{ month.id }}" name="boder_{{ month.id }}" value="1">
+                <label class="form-check-label" for="border-{{ month.id }}">Rahmen um das Bild</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="shadow-{{ month.id }}" name="shadow_{{ month.id }}" value="1">
+                <label class="form-check-label" for="shadow-{{ month.id }}">Schatten unter dem Bild</label>
+              </div>
+            </div>
+          </div-->
+
+          <div class="row">
+            <div class="col">
+              <div class="mb-3">
+                <label class="form-label" for="background-color-{{ month.id }}">Hintergrundfarbe:</label>
+                <input class="form-control form-control-color" type="color" id="background-color-{{ month.id }}" name="background_color_{{ month.id }}" value="{{ request.POST.background_color }}">
+              </div>
+            </div>
+          </div>
+
         </div>
-        </script>
-      {% endfor %}
+      </div>
+    {% endfor %}
   </div>
+  <button type="submit" class="btn btn-primary">Erzeugen</button>
 </form>
 <script>
 function toggle(name) {

@@ -22,7 +22,12 @@ def month(request):
     firstMonth = datetime.strptime(start, '%Y-%m-%d')
     months = []
     for month in range(12):
-        months.append({"id": month, "date": firstMonth.strftime("%Y-%m-01"), "name": calendar.get_month_name_with_year(firstMonth)})
+        months.append({
+            "id": month,
+            "date": firstMonth.strftime("%Y-%m-01"),
+            "name": calendar.get_month_name(firstMonth)
+            # "name": calendar.get_month_name_with_year(firstMonth)
+        })
         firstMonth += relativedelta(months=1)
     aspectRatio = calendar.get_image_aspect_ratio()
 

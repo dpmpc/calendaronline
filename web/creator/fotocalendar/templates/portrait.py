@@ -25,18 +25,26 @@ class PortraitFotoCalendar(FotoCalendar):
         pdf.ln()
         pdf.set_line_width(0.01)
         weeks = self.__toWeekMatrix(matrix)
+        events = []
         for weekId in weeks:
             for dayId in weeks[weekId]:
                 day = weeks[weekId][dayId]
                 txt = ''
                 if day:
-                    pdf.set_font(style=day["weigth"], size=15)
+                    pdf.set_font(style=self._fontWeight(day), size=15)
                     txt = day["day"]
+                    for event in day["events"]:
+                        events.append(day["day"] + ". " + event)
                 pdf.cell(col_width, line_height, txt=txt, border=self.table_border, align="C", new_y="TOP")
 
             pdf.set_font(style='', size=8)
             pdf.cell(col_width, line_height, txt=str(weekId), border=0, align="L", new_y="TOP")
             pdf.ln()
+
+        if len(events) > 0:
+            pdf.ln()
+            pdf.set_font(style="", size=8)
+            pdf.cell(txt=' - '.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")
 
     def set_table_border(self, table_border):
         self.table_border = 'BT' if table_border else 0
