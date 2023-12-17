@@ -6,8 +6,10 @@
 {% endblock %}
 
 {% block head %}
-  <link  href="{% static 'cropper.js-1.5.13/cropper.min.css' %}" rel="stylesheet">
-  <script src="{% static 'cropper.js-1.5.13/cropper.min.js' %}"></script>
+  <link  href="{% static 'cropper.js-1.6.1/cropper.min.css' %}" rel="stylesheet">
+  <script src="{% static 'cropper.js-1.6.1/cropper.min.js' %}">
+    import Cropper from 'cropperjs';
+  </script>
 {% endblock %}
 
 {% block content %}
@@ -37,7 +39,7 @@
         <div class="container-fluid pt-3">
           <div class="row">
             <div class="col">
-                <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" class="img-fluid">
+                <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" class="img-fluid" style="max-height:700px">
             </div>
           </div>
       
@@ -84,6 +86,7 @@
   <button type="submit" class="btn btn-primary">Erzeugen</button>
 </form>
 <script>
+
 function toggle(name) {
   var myCollapse = document.getElementById(name);
   var bsCollapse = new bootstrap.Collapse(myCollapse, {
@@ -91,25 +94,31 @@ function toggle(name) {
   });
 }
 function updatePreview(input, id) {
-    let file = input.files[0];
-    let reader = new FileReader();
+  let img = document.getElementById("image-preview-" + id);
 
-    reader.readAsDataURL(file);
-    reader.onload = function () {
+  if (cropper[id]) {
+    cropper[id].destroy();
+  }
+
+  cropper[id] = enableCropper(img, id);
+
+  let file = input.files[0];
+  let reader = new FileReader();
+
+  reader.readAsDataURL(file);
+  reader.onload = function () {
       cropper[id].replace(reader.result);
-    }
+  }
 }
-function enableCropper(id) {
-  const img = document.getElementById("image-preview-" + id);
+
+function enableCropper(img, id) {
+
   return new Cropper(img, {
+    dragMode: 'move',
     aspectRatio: {{ aspectRatio }},
-    autoCropArea: 1.0,
-    viewMode: 1,
-    dragMode: 'none',
-    movable: false,
-    rotatable: false,
-    //scalable: false,
-    //zoomable: false,
+    autoCropArea: 0.8,
+    viewMode: 3,
+    restore: false,
     crop(event) {
       document.forms['months']['crop_x_' + id].value = event.detail.x
       document.forms['months']['crop_y_' + id].value = event.detail.y
@@ -120,9 +129,5 @@ function enableCropper(id) {
 }
 
 const cropper = [];
-{% for month in months %}
-cropper[{{ month.id }}] = enableCropper('{{ month.id }}');
-{% endfor %}
-
 </script>
 {% endblock %}
