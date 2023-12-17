@@ -1,6 +1,7 @@
 from creator.fotocalendar.templates.landscape import LandscapeFotoCalendar
 from creator.fotocalendar.templates.portrait import PortraitFotoCalendar
 from creator.fotocalendar.templates.design1 import Design1FotoCalendar
+from creator.fotocalendar.templates.fullscreen import FullScreenFotoCalendar
 from PIL import Image
 from datetime import datetime
 
@@ -12,6 +13,9 @@ def create_for_format(format):
     elif format == '1':
         print("Creating Design1FotoCalendar for format", format)
         return Design1FotoCalendar()
+    elif format == 'F':
+        print("Creating FullscreenFotoCalendar for format", format)
+        return FullScreenFotoCalendar()
     else:
         print("Creating PortraitFotoCalendar for format", format)
         return PortraitFotoCalendar()
@@ -56,6 +60,8 @@ def create_preview(format):
         image = image.crop((352, 9, 1343, 1107))
     elif format == '1':
         image = image.crop((389, 24, 1596, 1031))
+    elif format == 'F':
+        image = image.crop((307, 335, 1703, 1120))
     elif format == 'L':
         image = image.crop((367, 255, 1763, 1040))
     calendar.addMonth(month, image)

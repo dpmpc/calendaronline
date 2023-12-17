@@ -119,6 +119,7 @@ function enableCropper(img, id) {
     autoCropArea: 0.8,
     viewMode: 3,
     restore: false,
+    rotatable: true,
     crop(event) {
       document.forms['months']['crop_x_' + id].value = event.detail.x
       document.forms['months']['crop_y_' + id].value = event.detail.y
