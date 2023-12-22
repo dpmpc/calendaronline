@@ -1,4 +1,5 @@
-from fpdf import FPDF, ViewerPreferences
+from fpdf import FPDF
+from fpdf.drawing import color_from_hex_string
 from calendar import monthrange
 from icalevents.icalparser import parse_events
 from icalevents.icaldownload import ICalDownload
@@ -10,6 +11,13 @@ class FotoCalendar:
     _dayNamesAbbrev = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
     _dayNames = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
     _monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+    _borderWith = 3
+    _borderColor = [128, 128, 128]
+    _text_background_round_corners = True
+    _text_background_corner_radius = 2
+
+    default_table_borders = True
+    default_center_month = False
 
     def __init__(self, orientation, margin, image_with, image_height):
         self.border = False
@@ -23,13 +31,14 @@ class FotoCalendar:
         self.eventlist = {}
 
         pdf = FPDF(orientation=orientation, format="A4")
-        self.fpdf = pdf
         pdf.set_display_mode(zoom="fullpage")
         pdf.set_auto_page_break(False)
         pdf.set_font('Helvetica')
         pdf.set_producer("k51.de - Simple create foto calendars as PDF")
         pdf.set_margin(self.margin)
         pdf.set_top_margin(self.tmargin)
+
+        self.fpdf = pdf
 
     def addTitle(self, title='', image=None):
         pdf = self.fpdf
@@ -43,7 +52,23 @@ class FotoCalendar:
 
     def addMonth(self, date, image=None, border=False, shadow=False, crop=None, background_color=None):
         pdf = self.fpdf
+
+        if background_color is not None:
+            bgRgb = color_from_hex_string(background_color)
+            print("Set background to ", background_color, " --> ", bgRgb)
+            pdf.set_page_background(bgRgb)
+
         pdf.add_page()
+        if border:
+            print("Add border with witdth ", self._borderWith, " and color ", self._borderColor)
+            pdf.set_line_width(self._borderWith)
+            pdf.set_draw_color(self._borderColor)
+            x = self.margin - self._borderWith / 2
+            y = self.tmargin - self._borderWith / 2
+            h = self.image_height + self._borderWith
+            w = self.image_with + self._borderWith
+            pdf.rect(x, y, w, h)
+
         if image:
             pdf.image(image, h=self.image_height, w=self.image_with, x=self.margin, y=self.tmargin)
 
@@ -57,14 +82,6 @@ class FotoCalendar:
 
     def set_image_shadow(self, shadow):
         self.shadow = shadow
-
-    def set_page_background(self, background):
-        backgroundRgb = self._hex_color_to_tuple(background)
-        print("Set background to ", background, " --> ", backgroundRgb)
-        pdf = self.fpdf
-        pdf.set_page_background(backgroundRgb)
-        
-        return backgroundRgb
 
     def set_center_month(self, center_month):
         self.month_align = 'C' if center_month else 'L'

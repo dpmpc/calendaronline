@@ -11,8 +11,11 @@ def index(request):
 
 
 def options(request):
+    calendar = create_for_format(request.GET.get('format', ''))
+    table_borders = calendar.default_table_borders
+    center_month = calendar.default_center_month
     template = loader.get_template('creator/options.html')
-    return HttpResponse(template.render({"page": "options"}, request))
+    return HttpResponse(template.render({"page": "options", "table_borders": table_borders, "center_month": center_month}, request))
 
 
 def month(request):
@@ -26,7 +29,6 @@ def month(request):
             "id": month,
             "date": firstMonth.strftime("%Y-%m-01"),
             "name": calendar.get_month_name(firstMonth)
-            # "name": calendar.get_month_name_with_year(firstMonth)
         })
         firstMonth += relativedelta(months=1)
     aspectRatio = calendar.get_image_aspect_ratio()

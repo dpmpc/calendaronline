@@ -27,14 +27,14 @@
     
               <div class="col-12">
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="center-month" name="center_month" value="1">
+                    <input class="form-check-input" type="checkbox" role="switch" id="center-month" name="center_month" value="1"{% if center_month %} checked{% endif %}>
                     <label class="form-check-label" for="center-month">Montatsname zentriert</label>
                 </div>
               </div>
 
               <div class="col-12">
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="table-border" name="table_border" value="1" checked>
+                    <input class="form-check-input" type="checkbox" role="switch" id="table-border" name="table_border" value="1"{% if table_borders %} checked{% endif %}>
                     <label class="form-check-label" for="table-border">Datumstabelle mit Rahmen</label>
                 </div>
               </div>

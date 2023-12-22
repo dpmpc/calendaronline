@@ -1,6 +1,6 @@
-django==4.2.3
-fpdf2==2.7.5
-Pillow==10.0.1
+django==4.2.8
+fpdf2==2.7.7
+Pillow==10.1.0
 python-dateutil
 gunicorn==21.2.0
-icalevents=0.1.27
+icalevents==0.1.27

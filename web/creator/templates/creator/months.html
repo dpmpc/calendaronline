@@ -52,16 +52,16 @@
             </div>
           </div>
 
-          <!--div class="row">
+          <div class="row">
             <div class="col">
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="border-{{ month.id }}" name="boder_{{ month.id }}" value="1">
+                <input class="form-check-input" type="checkbox" role="switch" id="border-{{ month.id }}" name="border_{{ month.id }}" value="1">
                 <label class="form-check-label" for="border-{{ month.id }}">Rahmen um das Bild</label>
               </div>
             </div>
           </div>
 
-          <div class="row">
+          <!--div class="row">
             <div class="col">
               <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" role="switch" id="shadow-{{ month.id }}" name="shadow_{{ month.id }}" value="1">
@@ -116,16 +116,16 @@ function enableCropper(img, id) {
   return new Cropper(img, {
     dragMode: 'move',
     aspectRatio: {{ aspectRatio }},
-    autoCropArea: 0.8,
-    viewMode: 3,
+    autoCropArea: 1.0,
+    viewMode: 2,
     restore: false,
     rotatable: true,
     crop(event) {
-      document.forms['months']['crop_x_' + id].value = event.detail.x
-      document.forms['months']['crop_y_' + id].value = event.detail.y
-      document.forms['months']['crop_width_' + id].value = event.detail.width
-      document.forms['months']['crop_height_' + id].value = event.detail.height
-    },
+      document.forms['months']['crop_x_' + id].value = event.detail.x;
+      document.forms['months']['crop_y_' + id].value = event.detail.y;
+      document.forms['months']['crop_width_' + id].value = event.detail.width;
+      document.forms['months']['crop_height_' + id].value = event.detail.height;
+    }
   });
 }
 
