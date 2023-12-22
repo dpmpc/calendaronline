@@ -1,10 +1,8 @@
 from fpdf import FPDF
 from fpdf.drawing import color_from_hex_string
 from calendar import monthrange
-from icalevents.icalparser import parse_events
-from icalevents.icaldownload import ICalDownload
 from icalevents.icalevents import events
-from datetime import date, timedelta, datetime
+from datetime import date
 
 
 class FotoCalendar:

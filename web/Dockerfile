@@ -19,7 +19,7 @@ RUN apk add gcc
 RUN pip install --upgrade pip
 RUN pip install flake8==6.0.0
 COPY . /usr/src/app/
-RUN flake8 --ignore=E501,F401 .
+RUN flake8 --ignore=E501 .
 
 # install python dependencies
 COPY ./requirements.txt .

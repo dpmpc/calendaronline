@@ -47,7 +47,7 @@
             <div class="col">
               <div class="mb-3">
                 <label class="form-label" for="image-{{ month.id }}">Bild:</label>
-                <input class="form-control" name="image_{{ month.id }}" type="file" id="image-{{ month.id }}" onchange="updatePreview(this, {{ month.id }})">
+                <input class="form-control" name="image_{{ month.id }}" type="file" id="image-{{ month.id }}" onchange="updatePreview(this, '{{ month.id }}')">
               </div>
             </div>
           </div>
@@ -122,7 +122,7 @@ function enableCropper(img, id, storedCropperKey) {
 
   return new Cropper(img, {
     dragMode: 'move',
-    aspectRatio: {{ aspectRatio }},
+    aspectRatio: '{{ aspectRatio }}',
     autoCropArea: 1.0,
     viewMode: 2,
     restore: false,
