@@ -1,9 +1,7 @@
 name: Lint Python
 
 on:
-  push:
-    paths:
-      - '*.py'
+  push
 
 jobs:
   lint_python:
