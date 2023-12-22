@@ -100,18 +100,25 @@ function updatePreview(input, id) {
     cropper[id].destroy();
   }
 
-  cropper[id] = enableCropper(img, id);
 
   let file = input.files[0];
-  let reader = new FileReader();
+  key = "{{ request.POST.format }}-" + file.name + "-" + file.size
 
+  cropper[id] = enableCropper(img, id, key);
+
+  let reader = new FileReader();
   reader.readAsDataURL(file);
   reader.onload = function () {
-      cropper[id].replace(reader.result);
+    cropper[id].imageReplaced = true;
+    cropper[id].replace(reader.result);
   }
 }
 
-function enableCropper(img, id) {
+function enableCropper(img, id, storedCropperKey) {
+  var storedCropperData = false
+  if (localStorage.getItem(storedCropperKey)) {
+    storedCropperData = JSON.parse(localStorage.getItem(storedCropperKey))
+  }
 
   return new Cropper(img, {
     dragMode: 'move',
@@ -125,6 +132,13 @@ function enableCropper(img, id) {
       document.forms['months']['crop_y_' + id].value = event.detail.y;
       document.forms['months']['crop_width_' + id].value = event.detail.width;
       document.forms['months']['crop_height_' + id].value = event.detail.height;
+      localStorage.setItem(storedCropperKey, JSON.stringify(this.cropper.getData(true)));
+    },
+    ready() {
+      if (this.cropper.imageReplaced && storedCropperData) {
+        console.log("Restoring cropper data", storedCropperData)
+        this.cropper.setData(storedCropperData)
+      }
     }
   });
 }

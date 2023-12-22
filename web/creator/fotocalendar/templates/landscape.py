@@ -24,7 +24,7 @@ class LandscapeFotoCalendar(FotoCalendar):
 
     def _addText(self, date, matrix):
         pdf = self.fpdf
-       
+
         if self._text_background is not None:
             pdf.set_margin(16)
             with pdf.local_context(fill_opacity=0.7, stroke_opacity=0, fill_color=self._text_background):

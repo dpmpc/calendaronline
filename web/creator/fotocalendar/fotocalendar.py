@@ -12,7 +12,7 @@ class FotoCalendar:
     _dayNames = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
     _monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
     _borderWith = 3
-    _borderColor = [128, 128, 128]
+    _borderColor = [0, 0, 0]
     _text_background_round_corners = True
     _text_background_corner_radius = 2
 
@@ -68,6 +68,7 @@ class FotoCalendar:
             h = self.image_height + self._borderWith
             w = self.image_with + self._borderWith
             pdf.rect(x, y, w, h)
+            pdf.set_draw_color(0, 0, 0)
 
         if image:
             pdf.image(image, h=self.image_height, w=self.image_with, x=self.margin, y=self.tmargin)
