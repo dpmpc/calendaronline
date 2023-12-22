@@ -72,7 +72,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'calendaronline.wsgi.application'
 
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
