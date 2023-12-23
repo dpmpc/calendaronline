@@ -78,21 +78,29 @@
               </div>
             </div>
           </div>
-
+          {% if forloop.last %}
+          <button type="submit" class="btn btn-primary">Kalender erzeugen</button>
+          {% else %}
+          <button type="submit" class="btn btn-outline-secondary">Kalender erzeugen</button>
+          <button type="button" class="btn btn-primary" onclick="showTab('month_tab_{{ month.id|add:1}}')">Nächster Monat</button>
+          {% endif %}
         </div>
       </div>
+      
     {% endfor %}
   </div>
-  <button type="submit" class="btn btn-primary">Erzeugen</button>
+ 
 </form>
 <script>
 
-function toggle(name) {
-  var myCollapse = document.getElementById(name);
-  var bsCollapse = new bootstrap.Collapse(myCollapse, {
-    toggle: true
-  });
+const cropper = [];
+
+function showTab(name) {
+  var monthTabTrigger = document.getElementById(name);
+  var tab = new bootstrap.Tab(monthTabTrigger)
+  tab.show()
 }
+
 function updatePreview(input, id) {
   let img = document.getElementById("image-preview-" + id);
 
@@ -142,7 +150,5 @@ function enableCropper(img, id, storedCropperKey) {
     }
   });
 }
-
-const cropper = [];
 </script>
 {% endblock %}
