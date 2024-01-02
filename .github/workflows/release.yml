@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Standart Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set Version Number
         run: |
@@ -22,19 +22,20 @@ jobs:
           echo "DOCKER_NGINX_TAG=ghcr.io/dpmpc/calendaronline-nginx" >> $GITHUB_ENV
         shell: bash
 
+      - name: Build Docker Nginx Image
+        run: |
+          cd nginx
+          mv ../web/creator/static .
+          docker build -t ${{ env.DOCKER_NGINX_IMAGE }} .
+          docker tag ${{ env.DOCKER_NGINX_IMAGE }} ${{ env.DOCKER_NGINX_TAG}}:latest
+          docker tag ${{ env.DOCKER_NGINX_IMAGE }} ${{ env.DOCKER_NGINX_TAG}}:${{ env.VERSION_NUMBER }}
+
       - name: Build Docker App Image
         run: |
           cd web
           docker build -t ${{ env.DOCKER_APP_IMAGE }} .
           docker tag ${{ env.DOCKER_APP_IMAGE }} ${{ env.DOCKER_APP_TAG}}:latest
           docker tag ${{ env.DOCKER_APP_IMAGE }} ${{ env.DOCKER_APP_TAG}}:${{ env.VERSION_NUMBER }}
- 
-      - name: Build Docker Nginx Image
-        run: |
-          cd nginx
-          docker build -t ${{ env.DOCKER_NGINX_IMAGE }} .
-          docker tag ${{ env.DOCKER_NGINX_IMAGE }} ${{ env.DOCKER_NGINX_TAG}}:latest
-          docker tag ${{ env.DOCKER_NGINX_IMAGE }} ${{ env.DOCKER_NGINX_TAG}}:${{ env.VERSION_NUMBER }}
         
 
       - name: Push Docker Images

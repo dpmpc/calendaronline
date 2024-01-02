@@ -13,8 +13,6 @@ services:
   calendaronline-nginx:
     image: ghcr.io/dpmpc/calendaronline-nginx:latest
     restart: always
-    volumes:
-      - web_static:/static:ro
     ports:
       - "8000:80"
     depends_on: 
@@ -25,11 +23,6 @@ services:
     restart: always
     environment:
       - CSRF_TRUSTED_ORIGINS=https://localhost:8000
-    volumes:
-      - web_static:/home/calendaronline/web/creator/static
-
-volumes:
-  web_static:
 ```
 
 ## Used libraries
