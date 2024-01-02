@@ -9,22 +9,27 @@ class FotoCalendar:
     _dayNamesAbbrev = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
     _dayNames = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
     _monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
-    _borderWith = 3
-    _borderColor = [0, 0, 0]
+    _month_align = 'L'
+
+    _background_color = None
+
+    _table_border = True
+    _table_background_color = [255, 255, 255]
+    _table_background_tansparency = 0.7
+
+    _image_border = False
+    _image_border_width = 3
+    _image_border_color = [0, 0, 0]
+
     _text_background_round_corners = True
     _text_background_corner_radius = 2
 
-    default_table_borders = True
-    default_center_month = False
-
     def __init__(self, orientation, margin, image_with, image_height):
-        self.border = False
-        self.shadow = False
         self.margin = margin
         self.tmargin = 20
         self.image_with = image_with
         self.image_height = image_height
-        self.month_align = 'L'
+
         self.eventlist_align = 'C'
         self.eventlist = {}
 
@@ -48,23 +53,21 @@ class FotoCalendar:
             if image:
                 pdf.image(image, h=pdf.eph, w=pdf.epw, x=0, y=0)
 
-    def addMonth(self, date, image=None, border=False, shadow=False, crop=None, background_color=None):
+    def addMonth(self, date, image=None):
         pdf = self.fpdf
 
-        if background_color is not None:
-            bgRgb = color_from_hex_string(background_color)
-            print("Set background to ", background_color, " --> ", bgRgb)
-            pdf.set_page_background(bgRgb)
+        if self._background_color is not None:
+            pdf.set_page_background(self._background_color)
 
         pdf.add_page()
-        if border:
-            print("Add border with witdth ", self._borderWith, " and color ", self._borderColor)
-            pdf.set_line_width(self._borderWith)
-            pdf.set_draw_color(self._borderColor)
-            x = self.margin - self._borderWith / 2
-            y = self.tmargin - self._borderWith / 2
-            h = self.image_height + self._borderWith
-            w = self.image_with + self._borderWith
+        if self._image_border:
+            print("Add border with witdth ", self._image_border_width, " and color ", self._image_border_color)
+            pdf.set_line_width(self._image_border_width)
+            pdf.set_draw_color(self._image_border_color)
+            x = self.margin - self._image_border_width / 2
+            y = self.tmargin - self._image_border_width / 2
+            h = self.image_height + self._image_border_width
+            w = self.image_with + self._image_border_width
             pdf.rect(x, y, w, h)
             pdf.set_draw_color(0, 0, 0)
 
@@ -76,17 +79,51 @@ class FotoCalendar:
     def _addText(date, matrix):
         pass
 
-    def set_image_border(self, border):
-        self.border = border
+    def set_background_color(self, background_color):
+        if background_color is not None:
+            self._background_color = color_from_hex_string(background_color)
+
+    def set_table_border(self, table_border):
+        self._table_border = True if table_border is not None and table_border else False
+
+    def set_table_background_color(self, table_background_color):
+        if table_background_color is not None:
+            self._table_background_color = color_from_hex_string(table_background_color)
+
+    def set_table_background_tansparency(self, table_background_tansparency):
+        if table_background_tansparency is not None:
+            self._table_background_tansparency = float(table_background_tansparency) / 100
+
+    def set_image_border(self, image_border):
+        if image_border is not None:
+            self._image_border = 1 if image_border else 0
+
+    def set_image_border_color(self, image_border_color):
+        if image_border_color is not None:
+            self._image_border_color = color_from_hex_string(image_border_color)
+
+    def set_image_border_widht(self, image_border_width):
+        if image_border_width is not None:
+            self._image_border_width = float(image_border_width) / 10
 
     def set_image_shadow(self, shadow):
         self.shadow = shadow
 
     def set_center_month(self, center_month):
-        self.month_align = 'C' if center_month else 'L'
+        if center_month is not None:
+            self._month_align = 'C' if center_month else 'L'
 
-    def set_table_border(self, table_border):
-        self.table_border = 1 if table_border else 0
+    def set_options_from_request(self, request, postfix=''):
+        self.set_background_color(request.POST.get('background_color' + postfix))
+        self.set_center_month(request.POST.get('center_month' + postfix))
+
+        self.set_table_border(request.POST.get('table_border' + postfix))
+        self.set_table_background_color(request.POST.get('table_background_color' + postfix))
+        self.set_table_background_tansparency(request.POST.get('table_background_tansparency' + postfix))
+
+        self.set_image_border(request.POST.get('image_border' + postfix))
+        self.set_image_border_color(request.POST.get('image_border_color' + postfix))
+        self.set_image_border_widht(request.POST.get('image_border_width' + postfix))
 
     def set_ics_url(self, ics_url):
         if ics_url != "":

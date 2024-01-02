@@ -10,54 +10,132 @@
   <h2>Neuen Kalender erstellen</h2>
   <p class="lead">Hier können Sie die Optionen für den neuen Kalender bestimmen. Im nächsten Schritt wählen Sie dann die Fotos für die jeweiligen Monate aus.</p>
 </div>
-<form action="month" method="POST">
+<form action="month" method="POST" name="options">
     {% csrf_token %}
     <input type="hidden" name="format" value="{{ request.GET.format }}" />
 
-
-    <div class="row g-5">
-        <div class="col-md-7 col-lg-8">
-          <h4 class="mb-3">Optionen für den Kalender</h4>
+          <h5 class="mb-3">Optionen für den Kalender</h5>
     
-              <div class="col-12">
-                  <label for="startDate" class="form-label">Erster Monat:</label>
-                  <input id="startDate" class="form-control" type="date" name="start" value="2023-01-01"/>
-                  <span id="startDateSelected"></span>
-              </div>
-    
-              <div class="col-12">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="center-month" name="center_month" value="1"{% if center_month %} checked{% endif %}>
-                    <label class="form-check-label" for="center-month">Montatsname zentriert</label>
-                </div>
+              <div class="row mb-3">
+                  <label for="startDate" class="col-sm-2 col-form-label">Erster Monat</label>
+                  <div class="col-sm-10">
+                    <input id="startDate" class="form-control" type="date" name="start" value="{{ first_month }}"/>
+                    <span id="startDateSelected"></span>
+                  </div>
               </div>
 
-              <div class="col-12">
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="table-border" name="table_border" value="1"{% if table_borders %} checked{% endif %}>
-                    <label class="form-check-label" for="table-border">Datumstabelle mit Rahmen</label>
-                </div>
-              </div>
-
-              <div class="col-12">
-                <div class="mb-3">
-                    <label class="form-label" for="background-color">Hintergrundfarbe:</label>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="background-color">Hintergrundfarbe</label>
+                <div class="col-sm-10">
+                  <div class="mb-3">
                     <input class="form-control form-control-color" type="color" id="background-color" name="background_color" value="#ffffff">
+                  </div>
+                </div>
+              </div>
+    
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-check-label" for="center-month">Montatsname zentriert</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="center-month" name="center_month" value="1"{% if center_month %} checked{% endif %}>
+                  </div>
                 </div>
               </div>
 
-              <div class="col-12">
-                <div class="mb-3">
-                    <label class="form-label" for="ics-url">Ereignisse von Kalender laden:</label>
+              <h5 class="mb-3">Optionen für die Liste der Tage</h5>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-check-label" for="table-border">Rahmen um Tage</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="table-border" name="table_border" value="1"{% if table_borders %} checked{% endif %}>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="table-background-color">Hintergrundfarbe</label>
+                <div class="col-sm-10">
+                  <div class="mb-3">
+                    <input class="form-control form-control-color" type="color" id="table-background-color" name="table_background_color" value="#ffffff">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-check-label" for="table-background-tansparency">Transparenz Hintergrund</label>
+                <div class="col-sm-10">
+                  <input type="range" class="form-range" min="0" max="100" value="{{ table_background_transparency }}" id="table-background-tansparency" name="table_background_tansparency">
+                </div>
+              </div>
+
+              <h5 class="mb-3">Optionen für das Bild</h5>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-check-label" for="image_border">Rahmen um Bild</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="image_border" name="image_border" value="1">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="image-border-color">Hintergrundfarbe</label>
+                <div class="col-sm-10">
+                  <div class="mb-3">
+                    <input class="form-control form-control-color" type="color" id="image-border-color" name="image_border_color" value="#000000">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-check-label" for="image-border-width">Rahmenbreite</label>
+                <div class="col-sm-10">
+                  <input type="range" class="form-range" min="0" max="100" value="10" id="image-border-width" name="image_border_width">
+                </div>
+              </div>
+
+
+              <!--
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="ics-url">Ereignisse von Kalender laden:</label>
+                <div class="col-sm-10">
                     <input class="form-control" type="text" id="ics-url" name="ics_url" placeholder="https://onlinekalender.info/feiertage/deutschland/nordrhein-westfalen.ics">
                 </div>
               </div>
+              -->
 
               <hr class="my-4">
 
-              <button class="w-100 btn btn-primary btn-lg" type="submit">Weiter zur Fotoauswahl</button>
+              <button type="submit" class="btn btn-primary">Weiter zur Fotoauswahl</button>
+              <button type="button" class="btn btn-outline-secondary" onclick="createPreview()">Vorschau</button>
 
-        </div>
-    </div>
+
 </form>
+<script>
+function createPreview() {
+  console.log("Creating Preview uploadImages");
+  var formData = new FormData(document.forms['options']);
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "preview");
+  xhr.responseType = 'blob';
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      showBlob(xhr.response, "preview.pdf")
+    } else {
+      alert("Hochladen der Bilder ist fehlgeschlagen! Bitte versuchen Sie es erneut.");
+    }
+  };
+  xhr.send(formData);
+}
+
+function showBlob(blob, filename) {
+  var a = document.createElement('a');
+  a.href = window.URL.createObjectURL(blob);
+  a.download = filename;
+  a.dispatchEvent(new MouseEvent('click'));
+}
+
+</script>
 {% endblock %}

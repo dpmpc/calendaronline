@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
-from creator.fotocalendar.creator import create_for_format, create_from_request, create_preview
+from creator.fotocalendar.creator import create_for_format, create_from_request, create_preview_from_request
 
 
 def index(request):
@@ -12,10 +12,16 @@ def index(request):
 
 def options(request):
     calendar = create_for_format(request.GET.get('format', ''))
-    table_borders = calendar.default_table_borders
-    center_month = calendar.default_center_month
+    first_month = datetime.now() + relativedelta(months=1)
+    context = {
+        "page": "options",
+        "table_borders": calendar._table_border,
+        "center_month": False,
+        "first_month": first_month.strftime("%Y-%m-01"),
+        "table_background_transparency": "70"
+    }
     template = loader.get_template('creator/options.html')
-    return HttpResponse(template.render({"page": "options", "table_borders": table_borders, "center_month": center_month}, request))
+    return HttpResponse(template.render(context, request))
 
 
 def month(request):
@@ -39,7 +45,6 @@ def month(request):
 
 def create(request):
     if request.method == 'POST':
-        # print(request.POST)
         calendar = create_from_request(request)
         return HttpResponse(calendar.output(), content_type="application/pdf")
     else:
@@ -47,7 +52,7 @@ def create(request):
 
 
 def preview(request):
-    calendar = create_preview(request.GET.get('format', 'L'))
+    calendar = create_preview_from_request(request)
     return HttpResponse(calendar.output(), content_type="application/pdf")
 
 

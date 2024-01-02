@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block content %}
-<form target="_blank"  action="create" method="post" enctype="multipart/form-data" name="months">
+<form enctype="multipart/form-data" name="months">
   {% csrf_token %} 
   <input type="hidden" name="format" value="{{ request.POST.format }}" />
   <input type="hidden" name="center_month" value="{{ request.POST.center_month }}" />
@@ -31,59 +31,103 @@
     {% for month in months %}
       <div class="tab-pane fade{% if forloop.first %} show active{% endif %}" id="month_pane_{{ month.id }}" role="tabpanel" aria-labelledby="month_tab_{{ month.id }}" tabindex="0">
         <input type="hidden" name="date_{{ month.id }}" value="{{ month.date }}" />
-        <input type="hidden" name="crop_x_{{ month.id }}" value="" />
-        <input type="hidden" name="crop_y_{{ month.id }}" value="" />
-        <input type="hidden" name="crop_width_{{ month.id }}" value="" />
-        <input type="hidden" name="crop_height_{{ month.id }}" value="" />
         
         <div class="container-fluid pt-3">
-          <div class="row">
-            <div class="col">
+          <div class="row mb-3">
+            <div class="col text-center">
                 <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" class="img-fluid" style="max-height:700px">
             </div>
           </div>
       
-          <div class="row">
-            <div class="col">
-              <div class="mb-3">
-                <label class="form-label" for="image-{{ month.id }}">Bild:</label>
-                <input class="form-control" name="image_{{ month.id }}" type="file" id="image-{{ month.id }}" onchange="updatePreview(this, '{{ month.id }}')">
-              </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="image-{{ month.id }}">Bild</label>
+            <div class="col-sm-10">
+              <input class="form-control" name="image_{{ month.id }}" type="file" id="image-{{ month.id }}" onchange="updatePreview(this, '{{ month.id }}')">
             </div>
           </div>
 
-          <div class="row">
-            <div class="col">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="border-{{ month.id }}" name="border_{{ month.id }}" value="1">
-                <label class="form-check-label" for="border-{{ month.id }}">Rahmen um das Bild</label>
-              </div>
-            </div>
-          </div>
+          {% if forloop.last %}
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#upload-images-modal" onclick="uploadImages()">Kalender erzeugen</button>
+          {% else %}
+          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#upload-images-modal" onclick="uploadImages()">Kalender erzeugen</button>
+          <button type="button" class="btn btn-primary" onclick="showTab('month_tab_{{ month.id|add:1}}')">Nächster Monat</button>
+          {% endif %}
 
-          <!--div class="row">
-            <div class="col">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="shadow-{{ month.id }}" name="shadow_{{ month.id }}" value="1">
-                <label class="form-check-label" for="shadow-{{ month.id }}">Schatten unter dem Bild</label>
-              </div>
-            </div>
-          </div-->
+          <hr class="my-4">
 
-          <div class="row">
-            <div class="col">
+          <h5 class="mb-3">Optionen für den Monat</h5>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="background-color-{{ month.id }}">Hintergrundfarbe</label>
+            <div class="col-sm-10">
               <div class="mb-3">
-                <label class="form-label" for="background-color-{{ month.id }}">Hintergrundfarbe:</label>
                 <input class="form-control form-control-color" type="color" id="background-color-{{ month.id }}" name="background_color_{{ month.id }}" value="{{ request.POST.background_color }}">
               </div>
             </div>
           </div>
-          {% if forloop.last %}
-          <button type="submit" class="btn btn-primary">Kalender erzeugen</button>
-          {% else %}
-          <button type="submit" class="btn btn-outline-secondary">Kalender erzeugen</button>
-          <button type="button" class="btn btn-primary" onclick="showTab('month_tab_{{ month.id|add:1}}')">Nächster Monat</button>
-          {% endif %}
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-check-label" for="center-month-{{ month.id }}">Montatsname zentriert</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="center-month-{{ month.id }}" name="center_month_{{ month.id }}" value="1"{% if request.POST.center_month %} checked{% endif %}>
+              </div>
+            </div>
+          </div>
+
+          <h5 class="mb-3">Optionen für die Liste der Tage</h5>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-check-label" for="table-border-{{ month.id }}">Rahmen um Tage</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="table-border-{{ month.id }}" name="table_border_{{ month.id }}" value="1"{% if request.POST.table_border %} checked{% endif %}>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="table-background-color-{{ month.id }}">Hintergrundfarbe</label>
+            <div class="col-sm-10">
+              <div class="mb-3">
+                <input class="form-control form-control-color" type="color" id="table-background-color-{{ month.id }}" name="table_background_color_{{ month.id }}" value="{{ request.POST.table_background_color }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-check-label" for="table-background-tansparency-{{ month.id }}">Transparenz Hintergrund</label>
+            <div class="col-sm-10">
+              <input type="range" class="form-range" min="0" max="100" value="{{ request.POST.table_background_tansparency }}" id="table-background-tansparency-{{ month.id }}" name="table_background_tansparency_{{ month.id }}">
+            </div>
+          </div>
+
+          <h5 class="mb-3">Optionen für das Bild</h5>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-check-label" for="image_border-{{ month.id }}">Rahmen um Bild</label>
+            <div class="col-sm-10">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="image_border-{{ month.id }}" name="image_border_{{ month.id }}" value="1"{% if request.POST.image_border %} checked{% endif %}>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="image-border-color-{{ month.id }}">Hintergrundfarbe</label>
+            <div class="col-sm-10">
+              <div class="mb-3">
+                <input class="form-control form-control-color" type="color" id="image-border-color-{{ month.id }}" name="image_border_color_{{ month.id }}" value="{{ request.POST.image_border_color }}">
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-check-label" for="image-border-width-{{ month.id }}">Rahmenbreite</label>
+            <div class="col-sm-10">
+              <input type="range" class="form-range" min="0" max="100" value="{{ request.POST.image_border_width }}" id="image-border-width-{{ month.id }}" name="image_border_width_{{ month.id }}">
+            </div>
+          </div>
         </div>
       </div>
       
@@ -91,6 +135,23 @@
   </div>
  
 </form>
+<!-- Modal -->
+<div class="modal fade" id="upload-images-modal" tabindex="-1" aria-labelledby="upload-images-modal-label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="upload-images-modal-label">Lade Bilder zum Server</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="progress">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Fortschritt" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 
 const cropper = [];
@@ -99,6 +160,55 @@ function showTab(name) {
   var monthTabTrigger = document.getElementById(name);
   var tab = new bootstrap.Tab(monthTabTrigger)
   tab.show()
+}
+
+function uploadImages() {
+  console.log("Starting uploadImages");
+  var formData = new FormData(document.forms['months']);
+  {% for month in months %}
+  if (cropper[{{ month.id }}]) {
+    cropperData = cropper[{{ month.id }}].getData(true);
+    formData.append("crop_x_{{ month.id }}", cropperData.x);
+    formData.append("crop_y_{{ month.id }}", cropperData.y);
+    formData.append("crop_width_{{ month.id }}", cropperData.width);
+    formData.append("crop_height_{{ month.id }}", cropperData.height);
+  }
+  {% endfor %}
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "create", true);
+  xhr.responseType = 'blob';
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      closeModal("upload-images-modal")
+      showBlob(xhr.response, "kalender.pdf")
+    } else {
+      closeModal("upload-images-modal")
+      alert("Hochladen der Bilder ist fehlgeschlagen! Bitte versuchen Sie es erneut.");
+    }
+  };
+  xhr.upload.onprogress = function(event) {
+    var progress = (event.loaded / event.total) * 100;
+    console.log("XHR progress", progress);
+    var x=document.querySelector('.progress-bar');
+    x.style.width=progress+"%";          
+    x.innerHTML=progress+"%";
+  };
+
+  xhr.send(formData);
+}
+
+function closeModal(modalId) {
+  var modalEl = document.getElementById(modalId);
+  var modal = bootstrap.Modal.getInstance(modalEl)
+  modal.hide();
+}
+
+function showBlob(blob, filename) {
+  var a = document.createElement('a');
+  a.href = window.URL.createObjectURL(blob);
+  a.download = filename;
+  a.dispatchEvent(new MouseEvent('click'));
 }
 
 function updatePreview(input, id) {
@@ -136,10 +246,6 @@ function enableCropper(img, id, storedCropperKey) {
     restore: false,
     rotatable: true,
     crop(event) {
-      document.forms['months']['crop_x_' + id].value = event.detail.x;
-      document.forms['months']['crop_y_' + id].value = event.detail.y;
-      document.forms['months']['crop_width_' + id].value = event.detail.width;
-      document.forms['months']['crop_height_' + id].value = event.detail.height;
       localStorage.setItem(storedCropperKey, JSON.stringify(this.cropper.getData(true)));
     },
     ready() {

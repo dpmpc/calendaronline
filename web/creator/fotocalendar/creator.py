@@ -25,9 +25,7 @@ def create_for_format(format):
 
 
 def create_from_request(request):
-    calendar = create_for_format(request.POST.get('format', ''))
-    calendar.set_center_month(request.POST.get('center_month', '') == '1')
-    calendar.set_table_border(request.POST.get('table_border', '') == '1')
+    calendar = create_for_format(request.POST.get('format'))
     calendar.set_ics_url(request.POST.get('ics_url', ''))
 
     calendar.addTitle()
@@ -36,8 +34,7 @@ def create_from_request(request):
     for i in range(lenght):
         id = '_' + str(i)
         month = datetime.strptime(request.POST.get('date' + id), '%Y-%m-%d')
-        background = request.POST.get('background_color' + id, None)
-        border = request.POST.get('border' + id, None) is not None
+        calendar.set_options_from_request(request, id)
         image = None
         if request.FILES.get('image' + id):
             image = Image.open(request.FILES.get('image' + id))
@@ -52,16 +49,22 @@ def create_from_request(request):
             print("Cropping image to ", box)
             image = image.crop(box)
 
-            calendar.addMonth(date=month, image=image, border=border, background_color=background)
+            calendar.addMonth(date=month, image=image)
 
     return calendar
 
 
-def create_preview(format):
-    calendar = create_for_format(format)
-    calendar.set_center_month(calendar.default_center_month)
-    calendar.set_table_border(calendar.default_table_borders)
-    month = datetime.now()
+def create_preview_from_request(request):
+    if request.method == 'POST':
+        format = request.POST.get('format', 'P')
+        month = datetime.strptime(request.POST.get('start'), '%Y-%m-%d')
+        calendar = create_for_format(format)
+        calendar.set_options_from_request(request)
+    else:
+        format = request.GET.get('format', 'P')
+        month = datetime.now()
+        calendar = create_for_format(format)
+
     image = Image.open('files/images/example.jpg')
     if format == 'P':
         image = image.crop((352, 34, 1343, 999))
