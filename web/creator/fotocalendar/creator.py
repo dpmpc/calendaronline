@@ -64,7 +64,7 @@ def create_preview(format):
     month = datetime.now()
     image = Image.open('files/images/example.jpg')
     if format == 'P':
-        image = image.crop((352, 9, 1343, 1107))
+        image = image.crop((352, 34, 1343, 999))
     elif format == '1':
         image = image.crop((389, 24, 1596, 1031))
     elif format == 'LF':
@@ -72,6 +72,6 @@ def create_preview(format):
     elif format == 'PF':
         image = image.crop((350, 115, 1200, 1320))
     elif format == 'L':
-        image = image.crop((367, 255, 1763, 1040))
+        image = image.crop((304, 290, 1700, 1000))
     calendar.addMonth(month, image)
     return calendar

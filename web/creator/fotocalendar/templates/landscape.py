@@ -12,7 +12,7 @@ class LandscapeFotoCalendar(FotoCalendar):
             self.tmargin = 0
             self.default_table_borders = False
         else:
-            super().__init__("L", 16, 263.5, 148.2)
+            super().__init__("L", 10, 277, 141)
 
         pdf = self.fpdf
 

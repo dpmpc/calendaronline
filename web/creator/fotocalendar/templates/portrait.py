@@ -12,7 +12,7 @@ class PortraitFotoCalendar(FotoCalendar):
             self.tmargin = 0
             self.default_table_borders = False
         else:
-            super().__init__("P", 16, 176, 195)
+            super().__init__("P", 10, 190, 185)
 
         pdf = self.fpdf
         pdf.add_font(fname="files/font/Arial Rounded MT Regular.ttf", family="ArialRounded")
