@@ -27,10 +27,10 @@ services:
 
 ## Used libraries
 - [Python 3](https://www.python.org/)
-- [django 4.2](https://docs.djangoproject.com/en/4.2/)
+- [django 5.0](https://docs.djangoproject.com/en/4.2/)
 - [Boostrap 5.3](https://getbootstrap.com/docs/5.3)
 - [PyFPDF/fpdf2 2.7](https://pyfpdf.github.io/fpdf2/index.html)
-- [Pillow (PIL Fork) 10.0](https://pillow.readthedocs.io/en/stable/installation.html)
+- [Pillow (PIL Fork) 10.2](https://pillow.readthedocs.io/en/stable/installation.html)
 - [Cropper.js 1.6.1](https://fengyuanchen.github.io/cropperjs/)
 - [gunicorn 2.21](https://gunicorn.org/)
 - [NGINX 1.25](https://www.nginx.com/)

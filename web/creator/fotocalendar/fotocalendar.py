@@ -60,19 +60,23 @@ class FotoCalendar:
             pdf.set_page_background(self._background_color)
 
         pdf.add_page()
+        x = self.margin
+        y = self.tmargin
+        h = self.image_height
+        w = self.image_with
         if self._image_border:
             print("Add border with witdth ", self._image_border_width, " and color ", self._image_border_color)
             pdf.set_line_width(self._image_border_width)
             pdf.set_draw_color(self._image_border_color)
-            x = self.margin - self._image_border_width / 2
-            y = self.tmargin - self._image_border_width / 2
-            h = self.image_height + self._image_border_width
-            w = self.image_with + self._image_border_width
-            pdf.rect(x, y, w, h)
+            pdf.rect(x + self._image_border_width / 2, y + self._image_border_width / 2, w - self._image_border_width, h - self._image_border_width)
             pdf.set_draw_color(0, 0, 0)
-
+            x = self.margin + self._image_border_width
+            y = self.tmargin + self._image_border_width
+            h = self.image_height - self._image_border_width * 2
+            w = self.image_with - self._image_border_width * 2
+            
         if image:
-            pdf.image(image, h=self.image_height, w=self.image_with, x=self.margin, y=self.tmargin)
+            pdf.image(image, h=h, w=w, x=x, y=y)
 
         self._addText(date, self._generateMonthMatrix(date))
 
