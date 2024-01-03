@@ -74,7 +74,7 @@ class FotoCalendar:
             y = self.tmargin + self._image_border_width
             h = self.image_height - self._image_border_width * 2
             w = self.image_with - self._image_border_width * 2
-            
+
         if image:
             pdf.image(image, h=h, w=w, x=x, y=y)
 
