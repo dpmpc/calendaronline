@@ -33,10 +33,10 @@ jobs:
       - name: Build Docker App Image
         run: |
           cd web
+          echo "${{ env.VERSION_NUMBER }}" > creator/templates/creator/version.html
           docker build -t ${{ env.DOCKER_APP_IMAGE }} .
           docker tag ${{ env.DOCKER_APP_IMAGE }} ${{ env.DOCKER_APP_TAG}}:latest
           docker tag ${{ env.DOCKER_APP_IMAGE }} ${{ env.DOCKER_APP_TAG}}:${{ env.VERSION_NUMBER }}
-        
 
       - name: Push Docker Images
         run: |

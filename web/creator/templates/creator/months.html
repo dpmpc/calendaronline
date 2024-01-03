@@ -178,21 +178,24 @@ function uploadImages() {
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "create", true);
   xhr.responseType = 'blob';
+  
   xhr.onload = function() {
     if (xhr.status === 200) {
       closeModal("upload-images-modal")
       showBlob(xhr.response, "kalender.pdf")
     } else {
       closeModal("upload-images-modal")
+      console.error("Hochladen der Bilder ist mit Status " + xhr.status + " fehlgeschlagen:", xhr.response);
       alert("Hochladen der Bilder ist fehlgeschlagen! Bitte versuchen Sie es erneut.");
     }
   };
+
   xhr.upload.onprogress = function(event) {
-    var progress = (event.loaded / event.total) * 100;
+    var progress = Math.round(event.loaded / event.total * 100);
     console.log("XHR progress", progress);
     var x=document.querySelector('.progress-bar');
-    x.style.width=progress+"%";          
-    x.innerHTML=progress+"%";
+    x.style.width = progress + "%";
+    x.innerHTML = progress < 99 ? progress+" %" : "Verarbeite...";
   };
 
   xhr.send(formData);
