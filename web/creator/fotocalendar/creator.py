@@ -1,7 +1,7 @@
 from creator.fotocalendar.templates.landscape import LandscapeFotoCalendar
 from creator.fotocalendar.templates.portrait import PortraitFotoCalendar
 from creator.fotocalendar.templates.design1 import Design1FotoCalendar
-from PIL import Image, ImageOps
+from PIL import Image
 
 from datetime import datetime
 
@@ -35,21 +35,8 @@ def create_from_request(request):
         id = '_' + str(i)
         month = datetime.strptime(request.POST.get('date' + id), '%Y-%m-%d')
         calendar.set_options_from_request(request, id)
-        image = None
         if request.FILES.get('image' + id):
-            image = Image.open(request.FILES.get('image' + id))
-            image = ImageOps.exif_transpose(image)
-
-            x = int(float(request.POST.get('crop_x' + id, '0')))
-            y = int(float(request.POST.get('crop_y' + id, '0')))
-            w = int(float(request.POST.get('crop_width' + id, '0')))
-            h = int(float(request.POST.get('crop_height' + id, '0')))
-            box = (x, y, x + w, y + h)
-
-            print("Cropping image to ", box)
-            image = image.crop(box)
-
-            calendar.addMonth(date=month, image=image)
+            calendar.addMonth(date=month, image=request.FILES.get('image' + id))
 
     return calendar
 

@@ -34,4 +34,5 @@ services:
 - [Cropper.js 1.6.1](https://fengyuanchen.github.io/cropperjs/)
 - [gunicorn 2.21](https://gunicorn.org/)
 - [NGINX 1.25](https://www.nginx.com/)
+- [Font Awesome 6.5](https://fontawesome.com/)
 
