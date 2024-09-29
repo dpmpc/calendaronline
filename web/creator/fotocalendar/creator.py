@@ -2,6 +2,8 @@ from creator.fotocalendar.templates.landscape import LandscapeFotoCalendar
 from creator.fotocalendar.templates.portrait import PortraitFotoCalendar
 from creator.fotocalendar.templates.design1 import Design1FotoCalendar
 from PIL import Image
+from creator.fotocalendar.icsparser import get_events_from_post
+
 
 from datetime import datetime
 
@@ -26,15 +28,15 @@ def create_for_format(format):
 
 def create_from_request(request):
     calendar = create_for_format(request.POST.get('format'))
-    calendar.set_ics_url(request.POST.get('ics_url', ''))
-
     calendar.addTitle()
+
+    eventlist = get_events_from_post(request.POST.getlist('event-date'), request.POST.getlist('event-text'), [])
+    calendar.set_events(eventlist)
 
     lenght = int(request.POST.get('lenght'))
     for i in range(lenght):
         id = '_' + str(i)
         month = datetime.strptime(request.POST.get('date' + id), '%Y-%m-%d')
-        calendar.set_options_from_request(request, id)
         if request.FILES.get('image' + id):
             calendar.addMonth(date=month, image=request.FILES.get('image' + id))
 

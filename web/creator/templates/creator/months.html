@@ -15,8 +15,7 @@
 {% block content %}
 <form enctype="multipart/form-data" name="months">
   {% csrf_token %} 
-  <input type="hidden" name="format" value="{{ request.POST.format }}" />
-  <input type="hidden" name="ics_url" value="{{ request.POST.ics_url }}" />
+  <input type="hidden" name="format" value="{{ format }}" />
   <input type="hidden" name="lenght" value="{{ months|length }}" />
   <ul class="nav nav-tabs" id="monthTabs" role="tablist">
     {% for month in months %}
@@ -97,7 +96,7 @@
             <label class="col-sm-2 col-form-label" for="background-color-{{ month.id }}">Hintergrundfarbe</label>
             <div class="col-sm-10">
               <div class="mb-3">
-                <input class="form-control form-control-color" type="color" id="background-color-{{ month.id }}" name="background_color_{{ month.id }}" value="{{ request.POST.background_color }}">
+                <input class="form-control form-control-color" type="color" id="background-color-{{ month.id }}" name="background_color_{{ month.id }}" value="{{ background_color }}">
               </div>
             </div>
           </div>
@@ -106,7 +105,7 @@
             <label class="col-sm-2 col-form-check-label" for="center-month-{{ month.id }}">Montatsname zentriert</label>
             <div class="col-sm-10">
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="center-month-{{ month.id }}" name="center_month_{{ month.id }}" value="1"{% if request.POST.center_month %} checked{% endif %}>
+                <input class="form-check-input" type="checkbox" role="switch" id="center-month-{{ month.id }}" name="center_month_{{ month.id }}" value="1"{% if center_month %} checked{% endif %}>
               </div>
             </div>
           </div>
@@ -117,7 +116,7 @@
             <label class="col-sm-2 col-form-check-label" for="table-border-{{ month.id }}">Rahmen um Tage</label>
             <div class="col-sm-10">
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="table-border-{{ month.id }}" name="table_border_{{ month.id }}" value="1"{% if request.POST.table_border %} checked{% endif %}>
+                <input class="form-check-input" type="checkbox" role="switch" id="table-border-{{ month.id }}" name="table_border_{{ month.id }}" value="1"{% if table_border %} checked{% endif %}>
               </div>
             </div>
           </div>
@@ -126,7 +125,7 @@
             <label class="col-sm-2 col-form-label" for="table-background-color-{{ month.id }}">Hintergrundfarbe</label>
             <div class="col-sm-10">
               <div class="mb-3">
-                <input class="form-control form-control-color" type="color" id="table-background-color-{{ month.id }}" name="table_background_color_{{ month.id }}" value="{{ request.POST.table_background_color }}">
+                <input class="form-control form-control-color" type="color" id="table-background-color-{{ month.id }}" name="table_background_color_{{ month.id }}" value="{{ table_background_color }}">
               </div>
             </div>
           </div>
@@ -134,7 +133,7 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-check-label" for="table-background-tansparency-{{ month.id }}">Transparenz Hintergrund</label>
             <div class="col-sm-10">
-              <input type="range" class="form-range" min="0" max="100" value="{{ request.POST.table_background_tansparency }}" id="table-background-tansparency-{{ month.id }}" name="table_background_tansparency_{{ month.id }}">
+              <input type="range" class="form-range" min="0" max="100" value="{{ table_background_tansparency }}" id="table-background-tansparency-{{ month.id }}" name="table_background_tansparency_{{ month.id }}">
             </div>
           </div>
 
@@ -144,7 +143,7 @@
             <label class="col-sm-2 col-form-check-label" for="image_border-{{ month.id }}">Rahmen um Bild</label>
             <div class="col-sm-10">
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="image_border-{{ month.id }}" name="image_border_{{ month.id }}" value="1"{% if request.POST.image_border %} checked{% endif %}>
+                <input class="form-check-input" type="checkbox" role="switch" id="image_border-{{ month.id }}" name="image_border_{{ month.id }}" value="1"{% if image_border %} checked{% endif %}>
               </div>
             </div>
           </div>
@@ -153,7 +152,7 @@
             <label class="col-sm-2 col-form-label" for="image-border-color-{{ month.id }}">Hintergrundfarbe</label>
             <div class="col-sm-10">
               <div class="mb-3">
-                <input class="form-control form-control-color" type="color" id="image-border-color-{{ month.id }}" name="image_border_color_{{ month.id }}" value="{{ request.POST.image_border_color }}">
+                <input class="form-control form-control-color" type="color" id="image-border-color-{{ month.id }}" name="image_border_color_{{ month.id }}" value="{{ image_border_color }}">
               </div>
             </div>
           </div>
@@ -161,9 +160,25 @@
           <div class="row mb-3">
             <label class="col-sm-2 col-form-check-label" for="image-border-width-{{ month.id }}">Rahmenbreite</label>
             <div class="col-sm-10">
-              <input type="range" class="form-range" min="0" max="100" value="{{ request.POST.image_border_width }}" id="image-border-width-{{ month.id }}" name="image_border_width_{{ month.id }}">
+              <input type="range" class="form-range" min="0" max="100" value="{{ image_border_width }}" id="image-border-width-{{ month.id }}" name="image_border_width_{{ month.id }}">
             </div>
           </div>
+
+          {% if supports_events %} 
+          <h5 class="mb-3">Termine</h5>
+          <div class="list-group" id="events-group-{{ month.id }}">
+          </div>
+
+          <div class="row  pt-3">
+            <div class="col docs-buttons">
+              <button type="button" class="btn btn-primary" onclick="addEvent({{month.id}}, '{{ month.date }}', '')" >
+                <span class="fa fa-calendar-plus"></span> Termin hinzufügen
+              </button>
+            </div>
+          </div>
+          
+          {% endif %} 
+
         </div>
       </div>
       
@@ -191,6 +206,7 @@
 <script>
 
 const cropper = [];
+let globalAppointmentId = 0;
 
 function showTab(name) {
   var monthTabTrigger = document.getElementById(name);
@@ -206,6 +222,74 @@ function selectImage(id) {
   input.accept="image/*";
   input.onchange = function() { updatePreview(input, id) }
   input.click();
+}
+
+function addEvent(monthId, date, text, isHoliday) {
+  let eventId = "-" + monthId + '-' + globalAppointmentId++;
+  const list = document.getElementById("events-group-" + monthId);
+
+  var div = document.createElement('div');
+  div.setAttribute('id', 'event' + eventId)
+  div.classList.add("input-group")
+
+  var label1 = document.createElement('span');
+  label1.append("Datum");
+  label1.classList.add("input-group-text")
+
+  var label2 = document.createElement('span');
+  label2.append("Beschreibung");
+  label2.classList.add("input-group-text")
+
+  var label3 = document.createElement('span');
+  label3.append("Feiertag");
+  label3.classList.add("input-group-text")
+
+  var inputDate = document.createElement('input');
+  inputDate.classList.add("form-control")
+  inputDate.setAttribute('type', 'date')
+  inputDate.setAttribute('name', 'event-date')
+  inputDate.value = date
+
+  var inputText = document.createElement('input')
+  inputText.classList.add("form-control")
+  inputText.setAttribute('type', 'text')
+  inputText.setAttribute('name', 'event-text')
+  inputText.value = text
+
+  /*
+  var bankHoliday = document.createElement('div')
+  bankHoliday.classList.add("input-group-text")
+
+  var bankHolidayCheck = document.createElement('input')
+  bankHolidayCheck.classList.add("form-check-input")
+  bankHolidayCheck.classList.add("mt-0")
+
+  bankHolidayCheck.setAttribute('type', 'checkbox')
+  bankHolidayCheck.setAttribute('name', 'event-holiday')
+  bankHolidayCheck.checked = isHoliday
+
+  bankHoliday.append(bankHolidayCheck)
+  */
+
+
+  var deleteButton = document.createElement('button')
+  deleteButton.classList.add("btn")
+  deleteButton.classList.add("btn-danger")
+  deleteButton.title = "Termin löschen"
+  deleteButton.onclick = () => div.remove()
+
+  var deleteIcon = document.createElement('span');
+  deleteIcon.classList.add("fa")
+  deleteIcon.classList.add("fa-calendar-minus")
+
+  deleteButton.append(deleteIcon)
+  div.append(label1)
+  div.append(inputDate)
+  div.append(label2)
+  div.append(inputText)
+  div.append(deleteButton)
+  list.append(div)
+
 }
 
 function uploadImages() {
@@ -286,7 +370,7 @@ function updatePreview(input, id) {
   }
 
   let file = input.files[0];
-  key = "{{ request.POST.format }}-" + file.name + "-" + file.size
+  key = "{{ format }}-" + file.name + "-" + file.size
 
   cropper[id] = enableCropper(img, id, key);
 
@@ -320,7 +404,17 @@ function enableCropper(img, id, storedCropperKey) {
         this.cropper.setData(storedCropperData)
       }
     }
-  });
+  })
 }
+
+{% if supports_events %}
+$( document ).ready(function() {
+  {% for month in months %}
+    {% for event in month.appointments %}
+    addEvent({{month.id}}, '{{ event.date }}', '{{ event.text }}', true);
+    {% endfor %}
+  {% endfor %}
+});
+{% endif %} 
 </script>
 {% endblock %}

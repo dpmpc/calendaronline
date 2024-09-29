@@ -96,15 +96,16 @@
                 </div>
               </div>
 
+              {% if supports_events %} 
+              <h5 class="mb-3">Termine</h5>
 
-              <!--
               <div class="row mb-3">
                 <label class="col-sm-2 col-form-label" for="ics-url">Ereignisse von Kalender laden:</label>
                 <div class="col-sm-10">
-                    <input class="form-control" type="text" id="ics-url" name="ics_url" placeholder="https://onlinekalender.info/feiertage/deutschland/nordrhein-westfalen.ics">
+                    <input class="form-control" type="text" id="ics-url" name="ics_url">
                 </div>
               </div>
-              -->
+              {% endif %}
 
               <button type="button" class="btn btn-outline-secondary" onclick="createPreview()"><span class="fa fa-eye"></span> Vorschau</button>
               <button type="submit" class="btn btn-primary"><span class="fa fa-arrow-circle-right"></span> Weiter zur Fotoauswahl</button>

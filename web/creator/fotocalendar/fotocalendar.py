@@ -1,8 +1,6 @@
 from fpdf import FPDF
 from fpdf.drawing import color_from_hex_string
 from calendar import monthrange
-from icalevents.icalevents import events
-from datetime import date
 
 
 class FotoCalendar:
@@ -23,6 +21,8 @@ class FotoCalendar:
 
     _text_background_round_corners = True
     _text_background_corner_radius = 2
+
+    _supports_events = False
 
     def __init__(self, orientation, margin, image_with, image_height):
         self.margin = margin
@@ -117,30 +117,20 @@ class FotoCalendar:
         if center_month is not None:
             self._month_align = 'C' if center_month else 'L'
 
-    def set_options_from_request(self, request, postfix=''):
-        self.set_background_color(request.POST.get('background_color' + postfix))
-        self.set_center_month(request.POST.get('center_month' + postfix))
+#    def set_options_from_request(self, request, postfix=''):
+#        self.set_background_color(request.POST.get('background_color' + postfix))
+#        self.set_center_month(request.POST.get('center_month' + postfix))#
+#
+#        self.set_table_border(request.POST.get('table_border' + postfix))
+#        self.set_table_background_color(request.POST.get('table_background_color' + postfix))
+#        self.set_table_background_tansparency(request.POST.get('table_background_tansparency' + postfix))
+#
+#        self.set_image_border(request.POST.get('image_border' + postfix))
+#        self.set_image_border_color(request.POST.get('image_border_color' + postfix))
+#        self.set_image_border_widht(request.POST.get('image_border_width' + postfix))
 
-        self.set_table_border(request.POST.get('table_border' + postfix))
-        self.set_table_background_color(request.POST.get('table_background_color' + postfix))
-        self.set_table_background_tansparency(request.POST.get('table_background_tansparency' + postfix))
-
-        self.set_image_border(request.POST.get('image_border' + postfix))
-        self.set_image_border_color(request.POST.get('image_border_color' + postfix))
-        self.set_image_border_widht(request.POST.get('image_border_width' + postfix))
-
-    def set_ics_url(self, ics_url):
-        if ics_url != "":
-            start = date(2024, 1, 1)
-            end = date(2024, 12, 31)
-            evts = events(url=ics_url, start=start, end=end)
-            for evt in evts:
-                datekey = evt.start.strftime("%Y%m%d")
-                if datekey not in self.eventlist:
-                    self.eventlist[datekey] = []
-                self.eventlist[datekey].append(evt.summary)
-        else:
-            self.eventlist = {}
+    def set_events(self, eventlist):
+        self.eventlist = eventlist
 
     def _generateMonthMatrix(self, date):
         matrix = {}
@@ -153,7 +143,8 @@ class FotoCalendar:
 
     def _createDay(self, date):
         dayOfWeek = date.isoweekday()
-        events = self._get_events(date)
+        events = self._get_event_texts(date)
+        isHoliday = self._get_is_holiday(date)
         return {
             "day": str(date.day),
             "dayOfWeek": dayOfWeek,
@@ -162,7 +153,7 @@ class FotoCalendar:
             "events": events,
             "isSunday": dayOfWeek == 7,
             "isStaurday": dayOfWeek == 6,
-            "hasEvents": len(events) > 0
+            "isHoliday": isHoliday
         }
 
     def get_month_name(self, date):
@@ -172,13 +163,24 @@ class FotoCalendar:
         return self.get_month_name(date) + " " + self._year(date)
 
     def _get_events(self, date):
-        datekey = date.strftime("%Y%m%d")
+        datekey = date.strftime("%Y-%m-%d")
         if datekey in self.eventlist:
-            for evt in self.eventlist[datekey]:
-                print("Event for ", datekey, ":", evt)
             return self.eventlist[datekey]
         else:
             return []
+
+    def _get_event_texts(self, date):
+        event_text_list = []
+        for evt in self._get_events(date):
+            event_text_list.append(evt["text"])
+
+        return event_text_list
+
+    def _get_is_holiday(self, date):
+        for evt in self._get_events(date):
+            if evt['isHoliday']:
+                return True
+        return False
 
     def _year(self, date):
         return str(date.year)
@@ -190,7 +192,7 @@ class FotoCalendar:
         return self._dayNamesAbbrev[dayOfWeek - 1]
 
     def _fontWeight(self, day):
-        return "B" if day["isSunday"] or day["isStaurday"] or day["hasEvents"] else ""
+        return "B" if day["isSunday"] or day["isStaurday"] or day["isHoliday"] else ""
 
     def _hex_color_to_tuple(self, color):
         if color.startswith('#'):

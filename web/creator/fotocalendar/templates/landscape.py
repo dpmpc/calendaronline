@@ -4,6 +4,8 @@ from creator.fotocalendar.fotocalendar import FotoCalendar
 class LandscapeFotoCalendar(FotoCalendar):
 
     def __init__(self, fullscreen=False):
+        self._supports_events = True
+
         if fullscreen:
             super().__init__("L", 0, 297, 210)
             self._text_background = [255, 255, 255]
@@ -52,4 +54,4 @@ class LandscapeFotoCalendar(FotoCalendar):
         if len(events) > 0:
             pdf.set_y(195)
             pdf.set_font(style="", size=8)
-            pdf.cell(txt=' - '.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")
+            pdf.cell(txt=' • '.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")

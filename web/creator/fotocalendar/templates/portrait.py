@@ -4,6 +4,8 @@ from creator.fotocalendar.fotocalendar import FotoCalendar
 class PortraitFotoCalendar(FotoCalendar):
 
     def __init__(self, fullscreen=False):
+        self._supports_events = True
+
         if fullscreen:
             super().__init__("P", 0, 210, 297)
             self._text_background = [255, 255, 255]

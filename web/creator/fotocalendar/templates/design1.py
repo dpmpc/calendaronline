@@ -10,6 +10,7 @@ class Design1FotoCalendar(FotoCalendar):
 
     def __init__(self):
         super().__init__("L", 3, 224, 187)
+        self._supports_events = True
         pdf = self.fpdf
 
         pdf.add_font(fname="files/font/Purisa.ttf")
@@ -32,7 +33,7 @@ class Design1FotoCalendar(FotoCalendar):
         pdf.cell(20, 10, txt=self._year(date), align="R", new_x="LEFT", new_y="NEXT", fill=True)
 
         for day in matrix:
-            if matrix[day]["isSunday"] or matrix[day]['hasEvents']:
+            if matrix[day]["isSunday"] or matrix[day]['isHoliday']:
                 self._set_text_color(self.__fg_bright)
                 self._set_fill_color(self.__medium1)
             elif matrix[day]["isStaurday"]:
@@ -46,7 +47,7 @@ class Design1FotoCalendar(FotoCalendar):
             pdf.cell(7, line_height, txt=matrix[day]["day"], border='T' if self._table_border else 0, align="R", new_y="TOP", fill=True)
             pdf.set_font(size=6)
             text = self._dayNameAbbrev(matrix[day]["dayOfWeek"])
-            if matrix[day]['hasEvents']:
+            if matrix[day]['isHoliday']:
                 text += " " + matrix[day]['events'][0]
             pdf.cell(col_width - 7, line_height, txt=text, border='T' if self._table_border else 0, align="L", new_y="NEXT", fill=True)
 
