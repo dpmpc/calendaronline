@@ -21,6 +21,7 @@ class LandscapeFotoCalendar(FotoCalendar):
         pdf.add_font(fname="files/font/Sawasdee.ttf")
         pdf.add_font(fname="files/font/Sawasdee-Bold.ttf", style="B", family="Sawasdee")
         pdf.set_font("Sawasdee", size=64)
+        pdf.set_text_shaping(True)
 
     def _addText(self, date, matrix):
         pdf = self.fpdf

@@ -23,6 +23,8 @@ class FotoCalendar:
     _text_background_corner_radius = 2
 
     _supports_events = False
+    _supports_weeks = False
+    _show_weeks = True
 
     def __init__(self, orientation, margin, image_with, image_height):
         self.margin = margin
@@ -111,23 +113,17 @@ class FotoCalendar:
             self._image_border_width = float(image_border_width) / 10
 
     def set_image_shadow(self, shadow):
-        self.shadow = shadow
+        self.shadow = True if shadow else False
+
+    def is_center_month(self):
+        return self._month_align == 'C'
 
     def set_center_month(self, center_month):
         if center_month is not None:
             self._month_align = 'C' if center_month else 'L'
 
-#    def set_options_from_request(self, request, postfix=''):
-#        self.set_background_color(request.POST.get('background_color' + postfix))
-#        self.set_center_month(request.POST.get('center_month' + postfix))#
-#
-#        self.set_table_border(request.POST.get('table_border' + postfix))
-#        self.set_table_background_color(request.POST.get('table_background_color' + postfix))
-#        self.set_table_background_tansparency(request.POST.get('table_background_tansparency' + postfix))
-#
-#        self.set_image_border(request.POST.get('image_border' + postfix))
-#        self.set_image_border_color(request.POST.get('image_border_color' + postfix))
-#        self.set_image_border_widht(request.POST.get('image_border_width' + postfix))
+    def set_show_weeks(self, show_weeks):
+        self._show_weeks = True if show_weeks else False
 
     def set_events(self, eventlist):
         self.eventlist = eventlist

@@ -16,6 +16,7 @@ class Design1FotoCalendar(FotoCalendar):
         pdf.add_font(fname="files/font/Purisa.ttf")
         pdf.add_font(fname="files/font/Purisa-Bold.ttf", style="B", family="Purisa")
         pdf.set_font("Purisa", size=64)
+        pdf.set_text_shaping(True)
 
     def _addText(self, date, matrix):
         pdf = self.fpdf

@@ -1,5 +1,6 @@
 {% extends "master.html" %}
 {% load static %}
+{% load prefix %}
 
 {% block title %}
   Neuen Kalender erzeugen
@@ -73,7 +74,7 @@
               </div>
 
               <div class="btn-group">
-                <button type="button" class="btn btn-primary" title="Vorschau" disabled>
+                <button type="button" id="button-preview-{{ month.id }}" class="btn btn-primary" title="Vorschau" data-bs-toggle="modal" data-bs-target="#upload-images-modal" onclick="uploadImages([ {{ month.id }} ])" disabled>
                   <span class="fa fa-eye"></span> Vorschau
                 </button>
                
@@ -92,77 +93,7 @@
       
           <h5 class="mb-3">Optionen für den Monat</h5>
 
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="background-color-{{ month.id }}">Hintergrundfarbe</label>
-            <div class="col-sm-10">
-              <div class="mb-3">
-                <input class="form-control form-control-color" type="color" id="background-color-{{ month.id }}" name="background_color_{{ month.id }}" value="{{ background_color }}">
-              </div>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-check-label" for="center-month-{{ month.id }}">Montatsname zentriert</label>
-            <div class="col-sm-10">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="center-month-{{ month.id }}" name="center_month_{{ month.id }}" value="1"{% if center_month %} checked{% endif %}>
-              </div>
-            </div>
-          </div>
-
-          <h5 class="mb-3">Optionen für die Liste der Tage</h5>
-
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-check-label" for="table-border-{{ month.id }}">Rahmen um Tage</label>
-            <div class="col-sm-10">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="table-border-{{ month.id }}" name="table_border_{{ month.id }}" value="1"{% if table_border %} checked{% endif %}>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="table-background-color-{{ month.id }}">Hintergrundfarbe</label>
-            <div class="col-sm-10">
-              <div class="mb-3">
-                <input class="form-control form-control-color" type="color" id="table-background-color-{{ month.id }}" name="table_background_color_{{ month.id }}" value="{{ table_background_color }}">
-              </div>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-check-label" for="table-background-tansparency-{{ month.id }}">Transparenz Hintergrund</label>
-            <div class="col-sm-10">
-              <input type="range" class="form-range" min="0" max="100" value="{{ table_background_tansparency }}" id="table-background-tansparency-{{ month.id }}" name="table_background_tansparency_{{ month.id }}">
-            </div>
-          </div>
-
-          <h5 class="mb-3">Optionen für das Bild</h5>
-
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-check-label" for="image_border-{{ month.id }}">Rahmen um Bild</label>
-            <div class="col-sm-10">
-              <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="image_border-{{ month.id }}" name="image_border_{{ month.id }}" value="1"{% if image_border %} checked{% endif %}>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="image-border-color-{{ month.id }}">Hintergrundfarbe</label>
-            <div class="col-sm-10">
-              <div class="mb-3">
-                <input class="form-control form-control-color" type="color" id="image-border-color-{{ month.id }}" name="image_border_color_{{ month.id }}" value="{{ image_border_color }}">
-              </div>
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-check-label" for="image-border-width-{{ month.id }}">Rahmenbreite</label>
-            <div class="col-sm-10">
-              <input type="range" class="form-range" min="0" max="100" value="{{ image_border_width }}" id="image-border-width-{{ month.id }}" name="image_border_width_{{ month.id }}">
-            </div>
-          </div>
+          {% include "creator/options_general.html" with fieldpostfix=month.id|prefix:"_"  %}
 
           {% if supports_events %} 
           <h5 class="mb-3">Termine</h5>
@@ -171,7 +102,7 @@
 
           <div class="row  pt-3">
             <div class="col docs-buttons">
-              <button type="button" class="btn btn-primary" onclick="addEvent({{month.id}}, '{{ month.date }}', '')" >
+              <button type="button" class="btn btn-primary" onclick="addEvent({{ month.id }}, '{{ month.date }}', '')" >
                 <span class="fa fa-calendar-plus"></span> Termin hinzufügen
               </button>
             </div>
@@ -292,8 +223,11 @@ function addEvent(monthId, date, text, isHoliday) {
 
 }
 
-function uploadImages() {
-  console.log("Starting uploadImages");
+function uploadImages(months) {
+  console.log("Starting uploadImages", months);
+  if (!months) {
+    var months = [ {% for month in months %}{{ month.id}}{% if not forloop.last %},{% endif %}{% endfor %} ];
+  }
   var formData = new FormData(document.forms['months']);
   var croppedCanvasOptions = {
     minWidth: 256,
@@ -325,26 +259,24 @@ function uploadImages() {
   };
 
   var expectedBlobs = 0;
-  {% for month in months %}
-  if (cropper[{{ month.id }}]) expectedBlobs++;
-  {% endfor %}
+  for (month of months) {
+    if (cropper[month]) expectedBlobs++;
+  }
 
   console.log("About to create " + expectedBlobs + " blobs...")
 
-  {% for month in months %}
-  if (cropper[{{ month.id }}]) {
-    cropper[{{ month.id }}].getCroppedCanvas(croppedCanvasOptions).toBlob((blob) => {
-      formData.append('image_{{ month.id }}', blob, 'month{{ month.id }}.jpeg');
-      if (expectedBlobs-- > 1) {
-        console.log("Still to create " + expectedBlobs + " blobs...")
-      }
-      else {
-        console.log("Submitting xhr");
-        xhr.send(formData);
-      }
-    }, 'image/jpeg');
+  for (month of months) {
+    if (cropper[month]) {
+      console.log("Creating blob for month " + month)
+      cropper[month].getCroppedCanvas(croppedCanvasOptions).toBlob((blob) => {
+        formData.append('image_' + month, blob, 'month' + month + '.jpeg');
+        if (expectedBlobs-- < 1) {
+          console.log("Submitting xhr");
+          xhr.send(formData);
+        }
+      }, 'image/jpeg');
+    }
   }
-  {% endfor %}
 }
 
 function closeModal(modalId) {

@@ -1,0 +1,82 @@
+<div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="background-color{{ fieldpostfix }}">Hintergrundfarbe</label>
+    <div class="col-sm-10">
+      <div class="mb-3">
+        <input class="form-control form-control-color" type="color" id="background-color{{ fieldpostfix }}" name="background_color{{ fieldpostfix }}" value="{{ background_color }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label" for="center-month{{ fieldpostfix }}">Montatsname zentriert</label>
+    <div class="col-sm-10">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="center-month{{ fieldpostfix }}" name="center_month{{ fieldpostfix }}" value="1"{% if center_month %} checked{% endif %}>
+      </div>
+    </div>
+  </div>
+
+  <h5 class="mb-3">Optionen für die Liste der Tage</h5>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label" for="table-border{{ fieldpostfix }}">Rahmen um Tage</label>
+    <div class="col-sm-10">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="table-border{{ fieldpostfix }}" name="table_border{{ fieldpostfix }}" value="1"{% if table_border %} checked{% endif %}>
+      </div>
+    </div>
+  </div>
+
+  {% if supports_weeks %} 
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label" for="show-weeks{{ fieldpostfix }}">Kalenderwoche anzeigen</label>
+    <div class="col-sm-10">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="show-weeks{{ fieldpostfix }}" name="show_weeks{{ fieldpostfix }}" value="1"{% if show_weeks %} checked{% endif %}>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="table-background-color{{ fieldpostfix }}">Hintergrundfarbe</label>
+    <div class="col-sm-10">
+      <div class="mb-3">
+        <input class="form-control form-control-color" type="color" id="table-background-color{{ fieldpostfix }}" name="table_background_color{{ fieldpostfix }}" value="{{ table_background_color }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label" for="table-background-tansparency{{ fieldpostfix }}">Transparenz Hintergrund</label>
+    <div class="col-sm-10">
+      <input type="range" class="form-range" min="0" max="100" value="{{ table_background_transparency }}" id="table-background-tansparency{{ fieldpostfix }}" name="table_background_transparency{{ fieldpostfix }}">
+    </div>
+  </div>
+
+  <h5 class="mb-3">Optionen für das Bild</h5>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label" for="image_border{{ fieldpostfix }}">Rahmen um Bild</label>
+    <div class="col-sm-10">
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="image_border{{ fieldpostfix }}" name="image_border{{ fieldpostfix }}" value="1"{% if image_border %} checked{% endif %}>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="image-border-color{{ fieldpostfix }}">Rahmenfarbe</label>
+    <div class="col-sm-10">
+      <div class="mb-3">
+        <input class="form-control form-control-color" type="color" id="image-border-color{{ fieldpostfix }}" name="image_border_color{{ fieldpostfix }}" value="{{ image_border_color }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label" for="image-border-width{{ fieldpostfix }}">Rahmenbreite</label>
+    <div class="col-sm-10">
+      <input type="range" class="form-range" min="0" max="100" value="{{ image_border_width }}" id="image-border-width{{ fieldpostfix }}" name="image_border_width{{ fieldpostfix }}">
+    </div>
+  </div>

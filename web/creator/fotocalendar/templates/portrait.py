@@ -3,14 +3,21 @@ from creator.fotocalendar.fotocalendar import FotoCalendar
 
 class PortraitFotoCalendar(FotoCalendar):
 
-    def __init__(self, fullscreen=False):
+    def __init__(self, fullscreen=False, fullwidth=False):
         self._supports_events = True
+        self._supports_weeks = True
 
         if fullscreen:
             super().__init__("P", 0, 210, 297)
             self._text_background = [255, 255, 255]
             self.tmargin = 0
             self._table_border = False
+        elif fullwidth:
+            super().__init__("P", 0, 210, 205)
+            self.tmargin = 0
+            self._table_border = False
+            self._show_weeks = False
+            self._month_align = 'C'
         else:
             super().__init__("P", 10, 190, 185)
 
@@ -52,8 +59,10 @@ class PortraitFotoCalendar(FotoCalendar):
                         events.append(day["day"] + ". " + event)
                 pdf.cell(col_width, line_height, txt=txt, border='BT' if self._table_border else 0, align="C", new_y="TOP")
 
-            pdf.set_font(style='', size=8)
-            pdf.cell(col_width, line_height, txt=str(weekId), border=0, align="L", new_y="TOP")
+            if self._show_weeks:
+                pdf.set_font(style='', size=8)
+                pdf.cell(col_width, line_height, txt=str(weekId), border=0, align="L", new_y="TOP")
+
             pdf.ln()
 
         if len(events) > 0:
