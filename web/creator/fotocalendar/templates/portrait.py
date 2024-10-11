@@ -3,6 +3,8 @@ from creator.fotocalendar.fotocalendar import FotoCalendar
 
 class PortraitFotoCalendar(FotoCalendar):
 
+    _event_serparator = ' • '
+
     def __init__(self, fullscreen=False, fullwidth=False):
         self._supports_events = True
         self._supports_weeks = True
@@ -21,9 +23,9 @@ class PortraitFotoCalendar(FotoCalendar):
         else:
             super().__init__("P", 10, 190, 185)
 
+        self._add_font("ArialRounded")
+
         pdf = self.fpdf
-        pdf.add_font(fname="files/font/Arial Rounded MT Regular.ttf", family="ArialRounded")
-        pdf.add_font(fname="files/font/Arial Rounded MT Bold Regular.ttf", style="B", family="ArialRounded")
         pdf.set_font("ArialRounded", size=64)
 
     def _addText(self, date, matrix):
@@ -45,7 +47,6 @@ class PortraitFotoCalendar(FotoCalendar):
         for day in self._dayNames:
             pdf.cell(col_width, txt=day, border=0, align="C", new_y="TOP")
         pdf.ln()
-        pdf.set_line_width(0.01)
         weeks = self.__toWeekMatrix(matrix)
         events = []
         for weekId in weeks:
@@ -53,10 +54,10 @@ class PortraitFotoCalendar(FotoCalendar):
                 day = weeks[weekId][dayId]
                 txt = ''
                 if day:
-                    pdf.set_font(style=self._fontWeight(day), size=15)
+                    pdf.set_font(style=self._font_style_for_day(day), size=15)
                     txt = day["day"]
-                    for event in day["events"]:
-                        events.append(day["day"] + ". " + event)
+                    if len(day["events"]) > 0:
+                        events.append(day["day"] + ". " + self._event_serparator.join(day["events"]))
                 pdf.cell(col_width, line_height, txt=txt, border='BT' if self._table_border else 0, align="C", new_y="TOP")
 
             if self._show_weeks:
@@ -68,7 +69,7 @@ class PortraitFotoCalendar(FotoCalendar):
         if len(events) > 0:
             pdf.ln()
             pdf.set_font(style="", size=8)
-            pdf.cell(txt=' - '.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")
+            pdf.cell(txt=self._event_serparator.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")
 
     def __toWeekMatrix(self, monthMatrix):
         weeks = {}

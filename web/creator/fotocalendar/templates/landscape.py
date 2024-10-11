@@ -3,6 +3,8 @@ from creator.fotocalendar.fotocalendar import FotoCalendar
 
 class LandscapeFotoCalendar(FotoCalendar):
 
+    _event_serparator = ' • '
+
     def __init__(self, fullscreen=False):
         self._supports_events = True
 
@@ -14,12 +16,10 @@ class LandscapeFotoCalendar(FotoCalendar):
         else:
             super().__init__("L", 10, 277, 141)
 
+        self._add_font("Sawasdee")
+
         pdf = self.fpdf
-
         pdf.set_top_margin(self.tmargin)
-
-        pdf.add_font(fname="files/font/Sawasdee.ttf")
-        pdf.add_font(fname="files/font/Sawasdee-Bold.ttf", style="B", family="Sawasdee")
         pdf.set_font("Sawasdee", size=64)
         pdf.set_text_shaping(True)
 
@@ -40,19 +40,19 @@ class LandscapeFotoCalendar(FotoCalendar):
         pdf.set_y(182)
         pdf.set_font(size=7)
         for day in matrix:
-            pdf.set_font(style=self._fontWeight(matrix[day]))
+            pdf.set_font(style=self._font_style_for_day(matrix[day]))
             pdf.cell(col_width, txt=self._dayNameAbbrev(matrix[day]["dayOfWeek"]), border=0, align="C", new_y="TOP")
         pdf.ln()
         pdf.set_font(size=11)
         pdf.set_line_width(0.01)
         events = []
         for day in matrix:
-            pdf.set_font(style=self._fontWeight(matrix[day]))
+            pdf.set_font(style=self._font_style_for_day(matrix[day]))
             pdf.cell(col_width, line_height, txt=matrix[day]["day"], border=1 if self._table_border else 0, align="C", new_y="TOP")
-            for event in matrix[day]["events"]:
-                events.append(matrix[day]["day"] + ". " + event)
+            if len(matrix[day]["events"]) > 0:
+                events.append(matrix[day]["day"] + ". " + self._event_serparator.join(matrix[day]["events"]))
 
         if len(events) > 0:
             pdf.set_y(195)
             pdf.set_font(style="", size=8)
-            pdf.cell(txt=' • '.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")
+            pdf.cell(txt=self._event_serparator.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")

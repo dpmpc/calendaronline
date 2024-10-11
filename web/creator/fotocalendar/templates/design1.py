@@ -11,10 +11,9 @@ class Design1FotoCalendar(FotoCalendar):
     def __init__(self):
         super().__init__("L", 3, 224, 187)
         self._supports_events = True
-        pdf = self.fpdf
+        self._add_font("Purisa")
 
-        pdf.add_font(fname="files/font/Purisa.ttf")
-        pdf.add_font(fname="files/font/Purisa-Bold.ttf", style="B", family="Purisa")
+        pdf = self.fpdf
         pdf.set_font("Purisa", size=64)
         pdf.set_text_shaping(True)
 
@@ -48,7 +47,7 @@ class Design1FotoCalendar(FotoCalendar):
             pdf.cell(7, line_height, txt=matrix[day]["day"], border='T' if self._table_border else 0, align="R", new_y="TOP", fill=True)
             pdf.set_font(size=6)
             text = self._dayNameAbbrev(matrix[day]["dayOfWeek"])
-            if matrix[day]['isHoliday']:
+            if len(matrix[day]["events"]) > 0:
                 text += " " + matrix[day]['events'][0]
             pdf.cell(col_width - 7, line_height, txt=text, border='T' if self._table_border else 0, align="L", new_y="NEXT", fill=True)
 

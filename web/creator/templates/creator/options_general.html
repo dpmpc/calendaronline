@@ -27,6 +27,86 @@
     </div>
   </div>
 
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label">Schrift Wochentage</label>
+    <div class="col-sm-10">
+        <div class="btn-toolbar mb-3" role="toolbar">
+            <div class="btn-group me-2" role="group">
+                <input type="checkbox" class="btn-check" id="font-weekday-bold{{ fieldpostfix }}" name="font_weekday_bold{{ fieldpostfix }}" value="1"{% if font_weekday_bold %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="font-weekday-bold{{ fieldpostfix }}"><span class="fa fa-bold"></span></label>
+                
+                <input type="checkbox" class="btn-check" id="font-weekday-italic{{ fieldpostfix }}" name="font_weekday_italic{{ fieldpostfix }}" value="1"{% if font_weekday_italic %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="font-weekday-italic{{ fieldpostfix }}"><span class="fa fa-italic"></span></label>
+
+                <input type="checkbox" class="btn-check" id="font-weekday-underline{{ fieldpostfix }}" name="font_weekday_underline{{ fieldpostfix }}" value="1"{% if font_weekday_underline %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="font-weekday-underline{{ fieldpostfix }}"><span class="fa fa-underline"></span></label>
+            </div>
+            
+            <input class="form-control form-control-color" type="color" name="font_weekday_color{{ fieldpostfix }}" value="{{ font_weekday_color }}">
+        </div>  
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label">Schrift Samstage</label>
+    <div class="col-sm-10">
+        <div class="btn-toolbar mb-3" role="toolbar">
+            <div class="btn-group me-2" role="group">
+                <input type="checkbox" class="btn-check" id="font-saturday-bold{{ fieldpostfix }}" name="font_saturday_bold{{ fieldpostfix }}" value="B"{% if font_saturday_bold %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="font-saturday-bold{{ fieldpostfix }}"><span class="fa fa-bold"></span></label>
+                
+                <input type="checkbox" class="btn-check" id="font-saturday-italic{{ fieldpostfix }}" name="font_saturday_italic{{ fieldpostfix }}" value="I"{% if font_saturday_italic %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="font-saturday-italic{{ fieldpostfix }}"><span class="fa fa-italic"></span></label>
+
+                <input type="checkbox" class="btn-check" id="font-saturday-underline{{ fieldpostfix }}" name="font_saturday_underline{{ fieldpostfix }}" value="U"{% if font_saturday_underline %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="font-saturday-underline{{ fieldpostfix }}"><span class="fa fa-underline"></span></label>
+            </div>
+            
+            <input class="form-control form-control-color" type="color" name="font_saturday_color{{ fieldpostfix }}" value="{{ font_saturday_color }}">
+        </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label">Schrift Sonntage</label>
+    <div class="col-sm-10">
+    <div class="btn-toolbar mb-3" role="toolbar">
+        <div class="btn-group me-2" role="group">
+            <input type="checkbox" class="btn-check" id="font-sunday-bold{{ fieldpostfix }}" name="font_sunday_bold{{ fieldpostfix }}" value="1"{% if font_sunday_bold %} checked{% endif %}>
+            <label class="btn btn-outline-primary" for="font-sunday-bold{{ fieldpostfix }}"><span class="fa fa-bold"></span></label>
+            
+            <input type="checkbox" class="btn-check" id="font-sunday-italic{{ fieldpostfix }}" name="font_sunday_italic{{ fieldpostfix }}" value="1"{% if font_sunday_italic %} checked{% endif %}>
+            <label class="btn btn-outline-primary" for="font-sunday-italic{{ fieldpostfix }}"><span class="fa fa-italic"></span></label>
+
+            <input type="checkbox" class="btn-check" id="font-sunday-underline{{ fieldpostfix }}" name="font_sunday_underline{{ fieldpostfix }}" value="1"{% if font_sunday_underline %} checked{% endif %}>
+            <label class="btn btn-outline-primary" for="font-sunday-underline{{ fieldpostfix }}"><span class="fa fa-underline"></span></label>
+        </div>
+        
+        <input class="form-control form-control-color" type="color" name="font_sunday_color{{ fieldpostfix }}" value="{{ font_sunday_color }}">
+    </div>  
+</div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label">Schrift Termine</label>
+    <div class="col-sm-10">
+        <div class="btn-toolbar mb-3" role="toolbar">
+            <div class="btn-group me-2" role="group">
+                <input type="checkbox" class="btn-check" id="font-event-bold{{ fieldpostfix }}" name="font_event_bold{{ fieldpostfix }}" value="1"{% if font_event_bold %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="font-event-bold{{ fieldpostfix }}"><span class="fa fa-bold"></span></label>
+                
+                <input type="checkbox" class="btn-check" id="font_event-italic{{ fieldpostfix }}" name="font_event_italic{{ fieldpostfix }}" value="1"{% if font_event_italic %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="font-event-italic{{ fieldpostfix }}"><span class="fa fa-italic"></span></label>
+
+                <input type="checkbox" class="btn-check" id="font-event-underline{{ fieldpostfix }}" name="font_event_underline{{ fieldpostfix }}" value="1"{% if font_event_underline %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="font-event-underline{{ fieldpostfix }}"><span class="fa fa-underline"></span></label>
+            </div>
+            
+            <input class="form-control form-control-color" type="color" name="font_event_color{{ fieldpostfix }}" value="{{ font_event_color }}">
+        </div>  
+    </div>
+  </div>
+
   {% if supports_weeks %} 
   <div class="row mb-3">
     <label class="col-sm-2 col-form-check-label" for="show-weeks{{ fieldpostfix }}">Kalenderwoche anzeigen</label>

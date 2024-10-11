@@ -22,9 +22,50 @@ class FotoCalendar:
     _text_background_round_corners = True
     _text_background_corner_radius = 2
 
+    _font_style_bold_weekday = False
+    _font_style_italic_weekday = False
+    _font_style_underline_weekday = False
+    _font_color_weekday = '#000000'
+
+    _font_style_bold_saturday = True
+    _font_style_italic_saturday = False
+    _font_style_underline_saturday = False
+    _font_color_saturday = '#000000'
+
+    _font_style_bold_sunday = True
+    _font_style_italic_sunday = False
+    _font_style_underline_sunday = False
+    _font_color_sunday = '#000000'
+
+    _font_style_bold_event = False
+    _font_style_italic_event = False
+    _font_style_underline_event = False
+    _font_color_event = '#000000'
+
     _supports_events = False
     _supports_weeks = False
     _show_weeks = True
+
+    _fonts = {
+        'Sawasdee': {
+            'R': 'files/font/Sawasdee.ttf',
+            'B': 'files/font/Sawasdee-Bold.ttf',
+            'I': 'files/font/Sawasdee-Oblique.ttf',
+            'BI': 'files/font/Sawasdee-BoldOblique.ttf'
+        },
+        'ArialRounded': {
+            'R': 'files/font/Arial Rounded MT Regular.ttf',
+            'B': 'files/font/Arial Rounded MT Bold Regular.ttf',
+            'I': 'files/font/Arial Rounded MT Regular.ttf',
+            'BI': 'files/font/Arial Rounded MT Bold Regular.ttf'
+        },
+        'Purisa': {
+            'R': 'files/font/Purisa.ttf',
+            'B': 'files/font/Purisa-Bold.ttf',
+            'I': 'files/font/Purisa-Oblique.ttf',
+            'BI': 'files/font/Purisa-BoldOblique.ttf'
+        }
+    }
 
     def __init__(self, orientation, margin, image_with, image_height):
         self.margin = margin
@@ -128,6 +169,15 @@ class FotoCalendar:
     def set_events(self, eventlist):
         self.eventlist = eventlist
 
+    def _add_font(self, family):
+        if family in self._fonts:
+            pdf = self.fpdf
+            font = self._fonts[family]
+            pdf.add_font(fname=font['R'], family=family)
+            pdf.add_font(fname=font['B'], style="B", family=family)
+            pdf.add_font(fname=font['I'], style="I", family=family)
+            pdf.add_font(fname=font['BI'], style="BI", family=family)
+
     def _generateMonthMatrix(self, date):
         matrix = {}
         max_days = monthrange(date.year, date.month)[1]
@@ -187,9 +237,26 @@ class FotoCalendar:
     def _dayNameAbbrev(self, dayOfWeek):
         return self._dayNamesAbbrev[dayOfWeek - 1]
 
-    def _fontWeight(self, day):
-        return "B" if day["isSunday"] or day["isStaurday"] or day["isHoliday"] else ""
-
+    def _font_style_for_day(self, day):
+        if day["isStaurday"]:
+            return self._toFontStyle(self._font_style_bold_saturday, self._font_style_italic_saturday, self._font_style_underline_saturday)
+        elif day["isSunday"]:
+            return self._toFontStyle(self._font_style_bold_sunday, self._font_style_italic_sunday, self._font_style_underline_sunday)
+        elif day["isHoliday"]:
+            return self._toFontStyle(self._font_style_bold_event, self._font_style_italic_event, self._font_style_underline_event)
+        
+        return self._toFontStyle(self._font_style_bold_weekday, self._font_style_italic_weekday, self._font_style_underline_weekday)
+        
+    def _toFontStyle(self, bold, italic, underline):
+        style = ''
+        if bold:
+            style += 'B'
+        if italic:
+            style += 'I'
+        if underline:
+            style += 'U'
+        return style
+    
     def _hex_color_to_tuple(self, color):
         if color.startswith('#'):
             color = color.lstrip('#')

@@ -44,7 +44,23 @@ def create_options_context_for_request(request):
         "table_background_color": "#ffffff",
         "image_border": False,
         "image_border_color": "#000000",
-        "image_border_width": 10
+        "image_border_width": 10,
+        "font_weekday_bold": calendar._font_style_bold_weekday,
+        "font_weekday_italic": calendar._font_style_italic_weekday,
+        "font_weekday_underline": calendar._font_style_underline_weekday,
+        "font_weekday_color": calendar._font_color_weekday,
+        "font_saturday_bold": calendar._font_style_bold_saturday,
+        "font_saturday_italic": calendar._font_style_italic_saturday,
+        "font_saturday_underline": calendar._font_style_underline_saturday,
+        "font_saturday_color": calendar._font_color_saturday,
+        "font_sunday_bold": calendar._font_style_bold_sunday,
+        "font_sunday_italic": calendar._font_style_italic_sunday,
+        "font_sunday_underline": calendar._font_style_underline_sunday,
+        "font_sunday_color": calendar._font_color_sunday,
+        "font_event_bold": calendar._font_style_bold_event,
+        "font_event_italic": calendar._font_style_underline_event,
+        "font_event_underline": calendar._font_style_underline_event,
+        "font_event_color": calendar._font_color_event
     }
 
 
@@ -87,7 +103,23 @@ def create_months_context_for_request(request):
         "table_background_transparency": request.POST.get('table_background_transparency'),
         "image_border": request.POST.get('image_border'),
         "image_border_color": request.POST.get('image_border_color'),
-        "image_border_width": request.POST.get('image_border_width')
+        "image_border_width": request.POST.get('image_border_width'),
+        "font_weekday_bold": request.POST.get('font_weekday_bold'),
+        "font_weekday_italic": request.POST.get('font_weekday_italic'),
+        "font_weekday_underline": request.POST.get('font_weekday_underline'),
+        "font_weekday_color": request.POST.get('font_weekday_color'),
+        "font_saturday_bold": request.POST.get('font_saturday_bold'),
+        "font_saturday_italic": request.POST.get('font_saturday_italic'),
+        "font_saturday_underline": request.POST.get('font_saturday_underline'),
+        "font_saturday_color": request.POST.get('font_saturday_color'),
+        "font_sunday_bold": request.POST.get('font_sunday_bold'),
+        "font_sunday_italic": request.POST.get('font_sunday_italic'),
+        "font_sunday_underline": request.POST.get('font_sunday_underline'),
+        "font_sunday_color": request.POST.get('font_sunday_color'),
+        "font_event_bold": request.POST.get('font_event_bold'),
+        "font_event_italic": request.POST.get('font_event_italic'),
+        "font_event_underline": request.POST.get('font_event_underline'),
+        "font_event_color": request.POST.get('font_event_color')
     }
 
 
@@ -121,6 +153,23 @@ def _set_options_from_request(calendar, request, postfix=''):
     calendar.set_image_border(request.POST.get('image_border' + postfix))
     calendar.set_image_border_color(request.POST.get('image_border_color' + postfix))
     calendar.set_image_border_widht(request.POST.get('image_border_width' + postfix))
+
+    calendar._font_style_bold_weekday = True if request.POST.get('font_weekday_bold' + postfix) else False
+    calendar._font_style_italic_weekday = True if request.POST.get('font_weekday_italic' + postfix) else False
+    calendar._font_style_underline_weekday = True if request.POST.get('font_weekday_underline' + postfix) else False
+    calendar._font_color_weekday = True if request.POST.get('font_weekday_color' + postfix) else False
+    calendar._font_style_bold_saturday = True if request.POST.get('font_saturday_bold' + postfix) else False
+    calendar._font_style_italic_saturday = True if request.POST.get('font_saturday_italic' + postfix) else False
+    calendar._font_style_underline_saturday = True if request.POST.get('font_saturday_underline' + postfix) else False
+    calendar._font_color_saturday = True if request.POST.get('font_saturday_color' + postfix) else False
+    calendar._font_style_bold_sunday = True if request.POST.get('font_sunday_bold' + postfix) else False
+    calendar._font_style_italic_sunday = True if request.POST.get('font_sunday_italic' + postfix) else False
+    calendar._font_style_underline_sunday = True if request.POST.get('font_sunday_underline' + postfix) else False
+    calendar._font_color_sunday = True if request.POST.get('font_sunday_color' + postfix) else False
+    calendar._font_style_bold_event = True if request.POST.get('font_event_bold' + postfix) else False
+    calendar._font_style_underline_event = True if request.POST.get('font_event_italic' + postfix) else False
+    calendar._font_style_underline_event = True if request.POST.get('font_event_underline' + postfix) else False
+    calendar._font_color_event = True if request.POST.get('font_event_color' + postfix) else False
 
 
 def create_preview_from_request(request):
