@@ -5,13 +5,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Kalender,PDF,Fotokalender,selber machen,ausdrucken,Template,Vorlage,drucken,Kalender {% now 'Y' %},Fotokalender {% now 'Y' %}">
     <title>{% block title %}{% endblock %}</title>
+
     <link href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.min.css' %}" rel="stylesheet">
     <link rel="icon" href="{% static 'images/iconmonstr-calendar-8.svg' %}" type="image/svg+xml">
     <link href="{% static 'fontawesome-free-6.5.1-web/css/fontawesome.min.css' %}" rel="stylesheet">
     <link href="{% static 'fontawesome-free-6.5.1-web/css/solid.min.css' %}" rel="stylesheet">
     <script src="{% static 'jquery-3.7.1.slim.min.js' %}"></script>
-
     {% block head %}
     {% endblock %}
   </head>

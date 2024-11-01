@@ -141,7 +141,8 @@ class FotoCalendar:
 
     def set_background_color(self, background_color):
         if background_color is not None:
-            self._background_color = color_from_hex_string(background_color)
+            # Use colors as a fpdf's add_page is (not yet) capabe of handling DeviceGray colors (which is returned when r==g==b)
+            self._background_color = color_from_hex_string(background_color).colors255
 
     def set_table_border(self, table_border):
         self._table_border = True if table_border is not None and table_border else False

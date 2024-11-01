@@ -1,5 +1,5 @@
 from creator.fotocalendar.templates.portrait import PortraitFotoCalendar
-import math 
+import math
 
 
 class VintageFotoCalendar(PortraitFotoCalendar):
@@ -19,8 +19,9 @@ class VintageFotoCalendar(PortraitFotoCalendar):
         self._font_size_dayname = 8
         self._font_size_day = 8
         self._font_size_week = 8
-        self._font_size_events = 8   
+        self._font_size_events = 8
         self._table_border = False
+        self._show_weeks = False
 
     def get_month_name_with_year(self, date):
         month_name = super().get_month_name_with_year(date)

@@ -29,6 +29,7 @@ services:
 - [Python 3](https://www.python.org/)
 - [django 5.1](https://docs.djangoproject.com/en/5.1/)
 - [Boostrap 5.3](https://getbootstrap.com/docs/5.3)
+- [jQuery 3.7.1](https://api.jquery.com/category/version/3.7/)
 - [PyFPDF/fpdf2 2.8](https://pyfpdf.github.io/fpdf2/index.html)
 - [Pillow (PIL Fork) 11](https://pillow.readthedocs.io/en/stable/installation.html)
 - [Cropper.js 1.6.2](https://fengyuanchen.github.io/cropperjs/)
