@@ -9,13 +9,9 @@ class Design1FotoCalendar(FotoCalendar):
     __fg_bright = (255, 255, 255)
 
     def __init__(self):
+        self._font = "Purisa"
         super().__init__("L", 3, 224, 187)
         self._supports_events = True
-        self._add_font("Purisa")
-
-        pdf = self.fpdf
-        pdf.set_font("Purisa", size=64)
-        pdf.set_text_shaping(True)
 
     def _addText(self, date, matrix):
         pdf = self.fpdf

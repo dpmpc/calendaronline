@@ -4,11 +4,18 @@ from creator.fotocalendar.fotocalendar import FotoCalendar
 class PortraitFotoCalendar(FotoCalendar):
 
     _event_serparator = ' • '
+    _font = "ArialRounded"
 
-    def __init__(self, fullscreen=False, fullwidth=False):
-        self._supports_events = True
-        self._supports_weeks = True
+    _font_size_month = 20
+    _font_size_dayname = 8
+    _font_size_day = 15
+    _font_size_week = 8
+    _font_size_events = 8
 
+    _supports_events = True
+    _supports_weeks = True
+
+    def __init__(self, fullscreen=False, fullwidth=False, margin=10, image_with=190, image_height=185):
         if fullscreen:
             super().__init__("P", 0, 210, 297)
             self._text_background = [255, 255, 255]
@@ -21,12 +28,7 @@ class PortraitFotoCalendar(FotoCalendar):
             self._show_weeks = False
             self._month_align = 'C'
         else:
-            super().__init__("P", 10, 190, 185)
-
-        self._add_font("ArialRounded")
-
-        pdf = self.fpdf
-        pdf.set_font("ArialRounded", size=64)
+            super().__init__("P", margin, image_with, image_height)
 
     def _addText(self, date, matrix):
         pdf = self.fpdf
@@ -35,17 +37,17 @@ class PortraitFotoCalendar(FotoCalendar):
             pdf.rect(10, 215, 190, 73, round_corners=self._text_background_round_corners, corner_radius=self._text_background_corner_radius, style="F")
 
         pdf.set_margins(16.75, 20)
-        pdf.set_font(style='B', size=20)
+        pdf.set_font(style='B', size=self._font_size_month)
         line_height = 8.5
         col_width = 25
 
         pdf.set_y(222)
-        pdf.cell(txt=self.get_month_name_with_year(date), w=pdf.epw, align=self._month_align, new_x="LMARGIN", new_y="NEXT")
+        pdf.multi_cell(txt=self.get_month_name_with_year(date), w=pdf.epw, align=self._month_align, new_x="LMARGIN", new_y="NEXT")
 
         pdf.set_y(233)
-        pdf.set_font(size=8)
+        pdf.set_font(size=self._font_size_dayname)
         for day in self._dayNames:
-            pdf.cell(col_width, txt=day, border=0, align="C", new_y="TOP")
+            pdf.multi_cell(col_width, txt=day, border=0, align="C", new_y="TOP")
         pdf.ln()
         weeks = self.__toWeekMatrix(matrix)
         events = []
@@ -54,21 +56,21 @@ class PortraitFotoCalendar(FotoCalendar):
                 day = weeks[weekId][dayId]
                 txt = ''
                 if day:
-                    pdf.set_font(style=self._font_style_for_day(day), size=15)
+                    pdf.set_font(style=self._font_style_for_day(day), size=self._font_size_day)
                     txt = day["day"]
                     if len(day["events"]) > 0:
                         events.append(day["day"] + ". " + self._event_serparator.join(day["events"]))
                 pdf.cell(col_width, line_height, txt=txt, border='BT' if self._table_border else 0, align="C", new_y="TOP")
 
             if self._show_weeks:
-                pdf.set_font(style='', size=8)
+                pdf.set_font(style='', size=self._font_size_week)
                 pdf.cell(col_width, line_height, txt=str(weekId), border=0, align="L", new_y="TOP")
 
             pdf.ln()
 
         if len(events) > 0:
             pdf.ln()
-            pdf.set_font(style="", size=8)
+            pdf.set_font(style="", size=self._font_size_events)
             pdf.cell(txt=self._event_serparator.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")
 
     def __toWeekMatrix(self, monthMatrix):

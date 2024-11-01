@@ -45,7 +45,9 @@ class FotoCalendar:
     _supports_events = False
     _supports_weeks = False
     _show_weeks = True
+    _supports_fonts = True
 
+    _font = 'Helveticat'
     _fonts = {
         'Sawasdee': {
             'R': 'files/font/Sawasdee.ttf',
@@ -64,6 +66,12 @@ class FotoCalendar:
             'B': 'files/font/Purisa-Bold.ttf',
             'I': 'files/font/Purisa-Oblique.ttf',
             'BI': 'files/font/Purisa-BoldOblique.ttf'
+        },
+        'Tippa': {
+            'R': 'files/font/Tippa/Tippa.ttf',
+            'B': 'files/font/Tippa/Tippa.ttf',
+            'I': 'files/font/Tippa/Tippa.ttf',
+            'BI': 'files/font/Tippa/Tippa.ttf'
         }
     }
 
@@ -79,12 +87,13 @@ class FotoCalendar:
         pdf = FPDF(orientation=orientation, format="A4")
         pdf.set_display_mode(zoom="fullpage")
         pdf.set_auto_page_break(False)
-        pdf.set_font('Helvetica')
         pdf.set_producer("k51.de - Simple create foto calendars as PDF")
         pdf.set_margin(self.margin)
         pdf.set_top_margin(self.tmargin)
 
         self.fpdf = pdf
+        self._add_font(self._font)
+        pdf.set_font(self._font)
 
     def addTitle(self, title='', image=None):
         pdf = self.fpdf
@@ -103,12 +112,21 @@ class FotoCalendar:
             pdf.set_page_background(self._background_color)
 
         pdf.add_page()
+        pdf.start_section(self.get_month_name_with_year(date), 0)
+        if image:
+            self._addImage(image)
+        self._addText(date, self._generateMonthMatrix(date))
+
+    def _addText(date, matrix):
+        pass
+
+    def _addImage(self, image):
+        pdf = self.fpdf
         x = self.margin
         y = self.tmargin
         h = self.image_height
         w = self.image_with
         if self._image_border:
-            print("Add border with witdth ", self._image_border_width, " and color ", self._image_border_color)
             pdf.set_line_width(self._image_border_width)
             pdf.set_draw_color(self._image_border_color)
             pdf.rect(x + self._image_border_width / 2, y + self._image_border_width / 2, w - self._image_border_width, h - self._image_border_width)
@@ -120,11 +138,6 @@ class FotoCalendar:
 
         if image:
             pdf.image(image, h=h, w=w, x=x, y=y)
-
-        self._addText(date, self._generateMonthMatrix(date))
-
-    def _addText(date, matrix):
-        pass
 
     def set_background_color(self, background_color):
         if background_color is not None:
@@ -177,6 +190,7 @@ class FotoCalendar:
             pdf.add_font(fname=font['B'], style="B", family=family)
             pdf.add_font(fname=font['I'], style="I", family=family)
             pdf.add_font(fname=font['BI'], style="BI", family=family)
+            pdf.set_text_shaping(True)
 
     def _generateMonthMatrix(self, date):
         matrix = {}
@@ -244,9 +258,9 @@ class FotoCalendar:
             return self._toFontStyle(self._font_style_bold_sunday, self._font_style_italic_sunday, self._font_style_underline_sunday)
         elif day["isHoliday"]:
             return self._toFontStyle(self._font_style_bold_event, self._font_style_italic_event, self._font_style_underline_event)
-        
+
         return self._toFontStyle(self._font_style_bold_weekday, self._font_style_italic_weekday, self._font_style_underline_weekday)
-        
+
     def _toFontStyle(self, bold, italic, underline):
         style = ''
         if bold:
@@ -256,7 +270,7 @@ class FotoCalendar:
         if underline:
             style += 'U'
         return style
-    
+
     def _hex_color_to_tuple(self, color):
         if color.startswith('#'):
             color = color.lstrip('#')

@@ -1,6 +1,7 @@
 from creator.fotocalendar.templates.landscape import LandscapeFotoCalendar
 from creator.fotocalendar.templates.portrait import PortraitFotoCalendar
 from creator.fotocalendar.templates.design1 import Design1FotoCalendar
+from creator.fotocalendar.templates.vintage import VintageFotoCalendar
 from creator.fotocalendar.icsparser import get_events_from_post, get_events_from_ics
 from PIL import Image
 from dateutil.relativedelta import relativedelta
@@ -23,6 +24,9 @@ def create_for_format(format):
     elif format == 'PW':
         print("Creating PortraitFotoCalendar (fullwidth) for format", format)
         return PortraitFotoCalendar(False, True)
+    elif format == 'V':
+        print("Creating HandmadeFotoCalendar for format", format)
+        return VintageFotoCalendar()
     else:
         print("Creating PortraitFotoCalendar for format", format)
         return PortraitFotoCalendar()
@@ -36,6 +40,7 @@ def create_options_context_for_request(request):
         "table_border": calendar._table_border,
         "supports_events": calendar._supports_events,
         "supports_weeks": calendar._supports_weeks,
+        "supports_fonts": calendar._supports_fonts,
         "center_month": calendar.is_center_month(),
         "show_weeks": calendar._show_weeks,
         "first_month": first_month.strftime("%Y-%m-01"),
@@ -93,6 +98,7 @@ def create_months_context_for_request(request):
         "format": format,
         "supports_events": calendar._supports_events,
         "supports_weeks": calendar._supports_weeks,
+        "supports_fonts": calendar._supports_fonts,
         "months": months,
         "aspectRatio": calendar.get_image_aspect_ratio(),
         "background_color": request.POST.get('background_color'),
@@ -185,16 +191,35 @@ def create_preview_from_request(request):
 
     image = Image.open('files/images/example.jpg')
     if format == 'P':
-        image = image.crop((352, 34, 1343, 999))
+        x = 352
+        y = 34
+        w = 1000
+    if format == 'V':
+        x = 320
+        y = 350
+        w = 1000
     elif format == '1':
-        image = image.crop((389, 24, 1596, 1031))
+        x = 389
+        y = 24
+        w = 1200
     elif format == 'LF':
-        image = image.crop((307, 335, 1703, 1120))
+        x = 307
+        y = 335
+        w = 1400
     elif format == 'PF':
-        image = image.crop((350, 115, 1200, 1320))
+        x = 350
+        y = 115
+        w = 850
     elif format == 'PW':
-        image = image.crop((312, 0, 1303, 1060))
+        x = 312
+        y = 0
+        w = 1000
     elif format == 'L':
-        image = image.crop((304, 290, 1700, 1000))
+        x = 304
+        y = 290
+        w = 1400
+
+    h = w / float(calendar.get_image_aspect_ratio())
+    image = image.crop((x, y, x + w, y + h))
     calendar.addMonth(month, image)
     return calendar

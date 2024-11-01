@@ -4,6 +4,7 @@ from creator.fotocalendar.fotocalendar import FotoCalendar
 class LandscapeFotoCalendar(FotoCalendar):
 
     _event_serparator = ' • '
+    _font = "Sawasdee"
 
     def __init__(self, fullscreen=False):
         self._supports_events = True
@@ -20,8 +21,6 @@ class LandscapeFotoCalendar(FotoCalendar):
 
         pdf = self.fpdf
         pdf.set_top_margin(self.tmargin)
-        pdf.set_font("Sawasdee", size=64)
-        pdf.set_text_shaping(True)
 
     def _addText(self, date, matrix):
         pdf = self.fpdf
