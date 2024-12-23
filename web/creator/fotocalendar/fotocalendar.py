@@ -72,6 +72,12 @@ class FotoCalendar:
             'B': 'files/font/Tippa/Tippa.ttf',
             'I': 'files/font/Tippa/Tippa.ttf',
             'BI': 'files/font/Tippa/Tippa.ttf'
+        },
+        'MonsieurLaDoulaise': {
+            'R': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf',
+            'B': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf',
+            'I': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf',
+            'BI': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf'
         }
     }
 

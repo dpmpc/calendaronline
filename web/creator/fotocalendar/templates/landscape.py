@@ -24,24 +24,34 @@ class LandscapeFotoCalendar(FotoCalendar):
 
     def _addText(self, date, matrix):
         pdf = self.fpdf
+        self._addBackground()
+        self._addMonthName(date)
+        self._addDays(matrix, pdf.l_margin, 182, pdf.epw)
 
+    def _addBackground(self):
+        pdf = self.fpdf
         pdf.set_margin(16)
         with pdf.local_context(fill_opacity=self._table_background_tansparency, stroke_opacity=0, fill_color=self._table_background_color):
             pdf.rect(10, 165, 277, 35, round_corners=self._text_background_round_corners, corner_radius=self._text_background_corner_radius, style="F")
 
-        pdf.set_font(style='B', size=20)
-        line_height = 8.5
-        col_width = 8.5
+    def _addMonthName(self, date):
+        pdf = self.fpdf
+        pdf.set_font(family=self._font, style='B', size=20)
 
         pdf.set_y(171)
-        pdf.cell(txt=self.get_month_name_with_year(date), w=pdf.epw, align=self._month_align, new_x="LEFT", new_y="NEXT")
+        pdf.cell(txt=self.get_month_name_with_year(date), w=pdf.epw, align=self._month_align, new_x="LEFT")
 
-        pdf.set_y(182)
-        pdf.set_font(size=7)
+    def _addDays(self, matrix, x, y, width):
+        pdf = self.fpdf
+        col_width = width / len(matrix)
+        line_height = 8.5
+
+        pdf.set_xy(x, y)
+        pdf.set_font(family=self._font, size=7)
         for day in matrix:
             pdf.set_font(style=self._font_style_for_day(matrix[day]))
             pdf.cell(col_width, txt=self._dayNameAbbrev(matrix[day]["dayOfWeek"]), border=0, align="C", new_y="TOP")
-        pdf.ln()
+        pdf.set_xy(x, y + pdf._lasth)
         pdf.set_font(size=11)
         pdf.set_line_width(0.01)
         events = []

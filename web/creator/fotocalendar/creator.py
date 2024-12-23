@@ -2,6 +2,8 @@ from creator.fotocalendar.templates.landscape import LandscapeFotoCalendar
 from creator.fotocalendar.templates.portrait import PortraitFotoCalendar
 from creator.fotocalendar.templates.design1 import Design1FotoCalendar
 from creator.fotocalendar.templates.vintage import VintageFotoCalendar
+from creator.fotocalendar.templates.landscape_modern import LandscapeModernFotoCalendar
+
 from creator.fotocalendar.icsparser import get_events_from_post, get_events_from_ics
 from PIL import Image
 from dateutil.relativedelta import relativedelta
@@ -27,6 +29,9 @@ def create_for_format(format):
     elif format == 'V':
         print("Creating HandmadeFotoCalendar for format", format)
         return VintageFotoCalendar()
+    elif format == 'LM':
+        print("Creating LandscapeModernFotoCalendar for format", format)
+        return LandscapeModernFotoCalendar()
     else:
         print("Creating PortraitFotoCalendar for format", format)
         return PortraitFotoCalendar()
@@ -187,6 +192,8 @@ def create_preview_from_request(request):
     else:
         format = request.GET.get('format', 'P')
         month = datetime.now()
+        monthOverride = int(request.GET.get('month', '0'))
+        month = month + relativedelta(months=monthOverride)
         calendar = create_for_format(format)
 
     image = Image.open('files/images/example.jpg')
@@ -214,7 +221,7 @@ def create_preview_from_request(request):
         x = 312
         y = 0
         w = 1000
-    elif format == 'L':
+    elif format == 'L' or format == 'LM':
         x = 304
         y = 290
         w = 1400
