@@ -1,4 +1,4 @@
-django==5.1.5
+django==5.1.6
 fpdf2==2.8.2
 Pillow==11.1.0
 python-dateutil
