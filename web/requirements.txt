@@ -4,4 +4,4 @@ Pillow==11.1.0
 python-dateutil
 gunicorn==23.0.0
 icalevents==0.2.1
-uharfbuzz==0.45.0
+uharfbuzz==0.48.0
