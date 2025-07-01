@@ -49,14 +49,15 @@ class LandscapeFotoCalendar(FotoCalendar):
         pdf.set_xy(x, y)
         pdf.set_font(family=self._font, size=7)
         for day in matrix:
-            pdf.set_font(style=self._font_style_for_day(matrix[day]))
+            pdf.set_font(style=matrix[day]["fontStyle"])
             pdf.cell(col_width, txt=self._dayNameAbbrev(matrix[day]["dayOfWeek"]), border=0, align="C", new_y="TOP")
         pdf.set_xy(x, y + pdf._lasth)
         pdf.set_font(size=11)
         pdf.set_line_width(0.01)
         events = []
         for day in matrix:
-            pdf.set_font(style=self._font_style_for_day(matrix[day]))
+            pdf.set_font(style=matrix[day]["fontStyle"])
+            pdf.set_text_color(matrix[day]["color"])
             pdf.cell(col_width, line_height, txt=matrix[day]["day"], border=1 if self._table_border else 0, align="C", new_y="TOP")
             if len(matrix[day]["events"]) > 0:
                 events.append(matrix[day]["day"] + ". " + self._event_serparator.join(matrix[day]["events"]))

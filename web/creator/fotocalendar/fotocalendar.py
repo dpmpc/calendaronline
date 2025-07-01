@@ -46,6 +46,7 @@ class FotoCalendar:
     _supports_weeks = False
     _show_weeks = True
     _supports_fonts = True
+    _supports_italic = True
 
     _font = 'Helveticat'
     _fonts = {
@@ -210,16 +211,32 @@ class FotoCalendar:
 
     def _createDay(self, date):
         dayOfWeek = date.isoweekday()
+        isSaturday = dayOfWeek == 6
+        isSunday = dayOfWeek == 7
         events = self._get_event_texts(date)
         isHoliday = self._get_is_holiday(date)
+        if isHoliday:
+            color = color_from_hex_string(self._font_color_event)
+            fontStyle = self._toFontStyle(self._font_style_bold_event, self._font_style_italic_event, self._font_style_underline_event)
+        elif isSaturday:
+            color = color_from_hex_string(self._font_color_saturday)
+            fontStyle = self._toFontStyle(self._font_style_bold_saturday, self._font_style_italic_saturday, self._font_style_underline_saturday)
+        elif isSunday:
+            color = color_from_hex_string(self._font_color_sunday)
+            fontStyle = self._toFontStyle(self._font_style_bold_sunday, self._font_style_italic_sunday, self._font_style_underline_sunday)
+        else:
+            color = color_from_hex_string(self._font_color_weekday)
+            fontStyle = self._toFontStyle(self._font_style_bold_weekday, self._font_style_italic_weekday, self._font_style_underline_weekday)
+
         return {
             "day": str(date.day),
             "dayOfWeek": dayOfWeek,
             "week": date.isocalendar().week,
-            "color": "#000000",
+            "color": color,
+            "fontStyle": fontStyle,
             "events": events,
-            "isSunday": dayOfWeek == 7,
-            "isStaurday": dayOfWeek == 6,
+            "isSunday": isSunday,
+            "isSaturday": isSaturday,
             "isHoliday": isHoliday
         }
 
@@ -259,7 +276,7 @@ class FotoCalendar:
         return self._dayNamesAbbrev[dayOfWeek - 1]
 
     def _font_style_for_day(self, day):
-        if day["isStaurday"]:
+        if day["isSaturday"]:
             return self._toFontStyle(self._font_style_bold_saturday, self._font_style_italic_saturday, self._font_style_underline_saturday)
         elif day["isSunday"]:
             return self._toFontStyle(self._font_style_bold_sunday, self._font_style_italic_sunday, self._font_style_underline_sunday)

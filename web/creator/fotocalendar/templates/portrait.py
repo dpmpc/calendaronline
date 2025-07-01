@@ -14,6 +14,7 @@ class PortraitFotoCalendar(FotoCalendar):
 
     _supports_events = True
     _supports_weeks = True
+    _supports_italic = False
 
     def __init__(self, fullscreen=False, fullwidth=False, margin=10, image_with=190, image_height=185):
         if fullscreen:
@@ -56,13 +57,15 @@ class PortraitFotoCalendar(FotoCalendar):
                 day = weeks[weekId][dayId]
                 txt = ''
                 if day:
-                    pdf.set_font(style=self._font_style_for_day(day), size=self._font_size_day)
+                    pdf.set_font(style=day["fontStyle"], size=self._font_size_day)
+                    pdf.set_text_color(day["color"])
                     txt = day["day"]
                     if len(day["events"]) > 0:
                         events.append(day["day"] + ". " + self._event_serparator.join(day["events"]))
                 pdf.cell(col_width, line_height, txt=txt, border='BT' if self._table_border else 0, align="C", new_y="TOP")
 
             if self._show_weeks:
+                pdf.set_text_color(0, 0, 0)
                 pdf.set_font(style='', size=self._font_size_week)
                 pdf.cell(col_width, line_height, txt=str(weekId), border=0, align="L", new_y="TOP")
 
@@ -70,6 +73,7 @@ class PortraitFotoCalendar(FotoCalendar):
 
         if len(events) > 0:
             pdf.ln()
+            pdf.set_text_color(0, 0, 0)
             pdf.set_font(style="", size=self._font_size_events)
             pdf.cell(txt=self._event_serparator.join(events), w=pdf.epw, align=self.eventlist_align, new_x="LEFT", new_y="NEXT")
 

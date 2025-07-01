@@ -32,7 +32,7 @@ class Design1FotoCalendar(FotoCalendar):
             if matrix[day]["isSunday"] or matrix[day]['isHoliday']:
                 self._set_text_color(self.__fg_bright)
                 self._set_fill_color(self.__medium1)
-            elif matrix[day]["isStaurday"]:
+            elif matrix[day]["isSaturday"]:
                 self._set_text_color(self.__dark)
                 self._set_fill_color(self.__medium2)
             else:

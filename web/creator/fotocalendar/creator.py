@@ -46,6 +46,7 @@ def create_options_context_for_request(request):
         "supports_events": calendar._supports_events,
         "supports_weeks": calendar._supports_weeks,
         "supports_fonts": calendar._supports_fonts,
+        "supports_italic": calendar._supports_italic,
         "center_month": calendar.is_center_month(),
         "show_weeks": calendar._show_weeks,
         "first_month": first_month.strftime("%Y-%m-01"),
@@ -168,19 +169,19 @@ def _set_options_from_request(calendar, request, postfix=''):
     calendar._font_style_bold_weekday = True if request.POST.get('font_weekday_bold' + postfix) else False
     calendar._font_style_italic_weekday = True if request.POST.get('font_weekday_italic' + postfix) else False
     calendar._font_style_underline_weekday = True if request.POST.get('font_weekday_underline' + postfix) else False
-    calendar._font_color_weekday = True if request.POST.get('font_weekday_color' + postfix) else False
+    calendar._font_color_weekday = request.POST.get('font_weekday_color' + postfix, calendar._font_color_weekday)
     calendar._font_style_bold_saturday = True if request.POST.get('font_saturday_bold' + postfix) else False
     calendar._font_style_italic_saturday = True if request.POST.get('font_saturday_italic' + postfix) else False
     calendar._font_style_underline_saturday = True if request.POST.get('font_saturday_underline' + postfix) else False
-    calendar._font_color_saturday = True if request.POST.get('font_saturday_color' + postfix) else False
+    calendar._font_color_saturday = request.POST.get('font_saturday_color' + postfix, calendar._font_color_saturday)
     calendar._font_style_bold_sunday = True if request.POST.get('font_sunday_bold' + postfix) else False
     calendar._font_style_italic_sunday = True if request.POST.get('font_sunday_italic' + postfix) else False
     calendar._font_style_underline_sunday = True if request.POST.get('font_sunday_underline' + postfix) else False
-    calendar._font_color_sunday = True if request.POST.get('font_sunday_color' + postfix) else False
+    calendar._font_color_sunday = request.POST.get('font_sunday_color' + postfix, calendar._font_color_sunday)
     calendar._font_style_bold_event = True if request.POST.get('font_event_bold' + postfix) else False
     calendar._font_style_underline_event = True if request.POST.get('font_event_italic' + postfix) else False
     calendar._font_style_underline_event = True if request.POST.get('font_event_underline' + postfix) else False
-    calendar._font_color_event = True if request.POST.get('font_event_color' + postfix) else False
+    calendar._font_color_event = request.POST.get('font_event_color' + postfix, calendar._font_color_event)
 
 
 def create_preview_from_request(request):
