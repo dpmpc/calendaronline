@@ -1,5 +1,6 @@
 from fpdf import FPDF
 from fpdf.drawing import color_from_hex_string
+from fpdf.pattern import LinearGradient, RadialGradient
 from calendar import monthrange
 
 
@@ -9,7 +10,9 @@ class FotoCalendar:
     _monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
     _month_align = 'L'
 
+    _background_type = 'N'
     _background_color = None
+    _background_color_b = None
 
     _table_border = True
     _table_background_color = [255, 255, 255]
@@ -115,14 +118,45 @@ class FotoCalendar:
     def addMonth(self, date, image=None):
         pdf = self.fpdf
 
-        if self._background_color is not None:
+        if self._background_type == 'S' and self._background_color is not None:
             pdf.set_page_background(self._background_color)
+        else:
+            pdf.set_page_background(None)
 
         pdf.add_page()
+
+        self._createBackgroundGradient()
         pdf.start_section(self.get_month_name_with_year(date), 0)
         if image:
             self._addImage(image)
         self._addText(date, self._generateMonthMatrix(date))
+
+    def _createBackgroundGradient(self):
+        pdf = self.fpdf
+        print("Background colors:", self._background_color, self._background_color_b)
+        colors = [self._background_color, self._background_color_b]
+
+        if self._background_type == 'V':
+            grad = LinearGradient(pdf, 0, 0, pdf.w, 0, colors)
+        elif self._background_type == 'H':
+            grad = LinearGradient(pdf, 0, 0, 0, pdf.h, colors)
+        elif self._background_type == 'D':
+            grad = LinearGradient(pdf, 0, 0, pdf.w, pdf.h, colors)
+        elif self._background_type == 'R':
+            center_x = pdf.w / 2
+            center_y = pdf.h / 2
+            if pdf.w > pdf.h:
+                r = pdf.w / 2
+            else:
+                r = pdf.h / 2
+            grad = RadialGradient(pdf, center_x, center_y, 0, center_x, center_y, r, colors, self._background_color_b)
+        else:
+            grad = None
+
+        if grad is not None:
+            with pdf.use_pattern(grad):
+                # Draw a rectangle that will be filled with the gradient
+                pdf.rect(x=0, y=0, w=pdf.w, h=pdf.h, style="FD")
 
     def _addText(date, matrix):
         pass
@@ -150,6 +184,14 @@ class FotoCalendar:
         if background_color is not None:
             # Use colors as a fpdf's add_page is (not yet) capabe of handling DeviceGray colors (which is returned when r==g==b)
             self._background_color = color_from_hex_string(background_color).colors255
+    
+    def set_background_color_b(self, background_color):
+        if background_color is not None:
+            # Use colors as a fpdf's add_page is (not yet) capabe of handling DeviceGray colors (which is returned when r==g==b)
+            self._background_color_b = color_from_hex_string(background_color).colors255
+
+    def set_background_type(self, background_type):
+        self._background_type = background_type
 
     def set_table_border(self, table_border):
         self._table_border = True if table_border is not None and table_border else False

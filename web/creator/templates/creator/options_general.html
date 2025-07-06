@@ -1,8 +1,29 @@
-<div class="row mb-3">
-    <label class="col-sm-2 col-form-label" for="background-color{{ fieldpostfix }}">Hintergrundfarbe</label>
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="background-type{{ fieldpostfix }}">Hintergrund</label>
     <div class="col-sm-10">
       <div class="mb-3">
-        <input class="form-control form-control-color" type="color" id="background-color{{ fieldpostfix }}" name="background_color{{ fieldpostfix }}" value="{{ background_color }}">
+        <select class="form-select" id="background-type{{ fieldpostfix }}" name="background_type{{ fieldpostfix }}">
+          <option value="N"{% if background_type  == "N" %} selected{% endif %}selected>Keine Hintergrundfarbe</option>
+          <option value="S"{% if background_type  == "S" %} selected{% endif %}>Einfarbig</option>
+          <option value="H"{% if background_type  == 'H' %} selected{% endif %}>Fabrverlauf horizontal</option>
+          <option value="V"{% if background_type  == 'V' %} selected{% endif %}>Fabrverlauf vertikal</option>
+          <option value="D"{% if background_type  == 'D' %} selected{% endif %}>Fabrverlauf diagonal</option>
+          <option value="R"{% if background_type  == 'R' %} selected{% endif %}>Farbverlauf kreisförmig</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="background-color{{ fieldpostfix }}">Hintergrundfarbe</label>
+    <div class="col-sm-10">
+      <div class="btn-toolbar mb-3" role="toolbar">
+        <div class="mb-3">
+          <input class="form-control form-control-color" type="color" id="background-color{{ fieldpostfix }}" name="background_color{{ fieldpostfix }}" value="{{ background_color }}">
+        </div>
+        <div class="mb-3">
+          <input class="form-control form-control-color" type="color" id="background-color-b{{ fieldpostfix }}" name="background_color_b{{ fieldpostfix }}" value="{{ background_color_b }}">
+        </div>
       </div>
     </div>
   </div>

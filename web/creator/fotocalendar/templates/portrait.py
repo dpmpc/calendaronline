@@ -52,6 +52,7 @@ class PortraitFotoCalendar(FotoCalendar):
         pdf.ln()
         weeks = self.__toWeekMatrix(matrix)
         events = []
+        pdf.set_line_width(0.2)
         for weekId in weeks:
             for dayId in weeks[weekId]:
                 day = weeks[weekId][dayId]

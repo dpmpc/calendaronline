@@ -51,7 +51,9 @@ def create_options_context_for_request(request):
         "show_weeks": calendar._show_weeks,
         "first_month": first_month.strftime("%Y-%m-01"),
         "table_background_transparency": "70",
+        "background_type": calendar._background_type,
         "background_color": "#ffffff",
+        "background_color_b": "#aaaaaa",
         "table_background_color": "#ffffff",
         "image_border": False,
         "image_border_color": "#000000",
@@ -107,7 +109,9 @@ def create_months_context_for_request(request):
         "supports_fonts": calendar._supports_fonts,
         "months": months,
         "aspectRatio": calendar.get_image_aspect_ratio(),
+        "background_type": request.POST.get('background_type'),
         "background_color": request.POST.get('background_color'),
+        "background_color_b": request.POST.get('background_color_b'),
         "center_month": request.POST.get('center_month'),
         "show_weeks": request.POST.get('show_weeks'),
         "table_border": request.POST.get('table_border'),
@@ -154,7 +158,9 @@ def create_from_request(request):
 
 
 def _set_options_from_request(calendar, request, postfix=''):
+    calendar.set_background_type(request.POST.get('background_type' + postfix))
     calendar.set_background_color(request.POST.get('background_color' + postfix))
+    calendar.set_background_color_b(request.POST.get('background_color_b' + postfix))
     calendar.set_center_month(request.POST.get('center_month' + postfix))
     calendar.set_show_weeks(request.POST.get('show_weeks' + postfix))
 
