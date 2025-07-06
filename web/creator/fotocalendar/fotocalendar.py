@@ -184,7 +184,7 @@ class FotoCalendar:
         if background_color is not None:
             # Use colors as a fpdf's add_page is (not yet) capabe of handling DeviceGray colors (which is returned when r==g==b)
             self._background_color = color_from_hex_string(background_color).colors255
-    
+
     def set_background_color_b(self, background_color):
         if background_color is not None:
             # Use colors as a fpdf's add_page is (not yet) capabe of handling DeviceGray colors (which is returned when r==g==b)
