@@ -3,5 +3,5 @@ fpdf2==2.8.3
 Pillow==11.3.0
 python-dateutil
 gunicorn==23.0.0
-icalevents==0.2.1
+icalevents==0.3.0
 uharfbuzz==0.51.2
