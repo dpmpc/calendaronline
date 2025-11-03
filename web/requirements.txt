@@ -1,5 +1,5 @@
 django==5.2.7
-fpdf2==2.8.4
+fpdf2==2.8.5
 Pillow==12.0.0
 python-dateutil
 gunicorn==23.0.0
