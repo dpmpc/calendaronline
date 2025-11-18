@@ -4,7 +4,7 @@ from creator.fotocalendar.fotocalendar import FotoCalendar
 class PortraitFotoCalendar(FotoCalendar):
 
     _event_serparator = ' • '
-    _font = "ArialRounded"
+    _font = "BalsamiqSans"
 
     _font_size_month = 20
     _font_size_dayname = 8

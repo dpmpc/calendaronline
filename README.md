@@ -33,7 +33,16 @@ services:
 - [Cropper.js 1.6.2](https://fengyuanchen.github.io/cropperjs/)
 - [gunicorn 2.23](https://gunicorn.org/)
 - [NGINX 1.29](https://www.nginx.com/)
+
+### Used fonts
 - [Font Awesome 6.5](https://fontawesome.com/)
+- Monsieur La Doulaise - Copyright 2011 Alejandro Paul
+- Noto Sans Display - Copyright 2012 Google Inc.
+- [Pacifico](https://github.com/googlefonts/Pacifico) - Copyright 2018 The Pacifico Project Authors
+- [Purisa](https://linux.thai.net/projects/fonts-tlwg) - Copyright 2003, 2004 Poonlap Veerathanabutr 
+- [Sawasdee](https://linux.thai.net/projects/fonts-tlwg) - Copyright 2007 Pol Udomwittayanukul
+- [Tippa](http://www.catfonts.de ) - Copyright (c) 2015, CAT-Fonts, Peter Wiegel
+
 
 # Developemnt
 Start a developemnt envrionment by the following commands:
