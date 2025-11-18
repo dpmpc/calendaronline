@@ -2,6 +2,8 @@ from fpdf import FPDF
 from fpdf.drawing import color_from_hex_string
 from fpdf.pattern import LinearGradient, RadialGradient
 from calendar import monthrange
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 class FotoCalendar:
@@ -11,16 +13,16 @@ class FotoCalendar:
     _month_align = 'L'
 
     _background_type = 'N'
-    _background_color = None
-    _background_color_b = None
+    _background_color = "#ffffff"
+    _background_color_b = "#aaaaaa"
 
     _table_border = True
-    _table_background_color = [255, 255, 255]
+    _table_background_color = "#ffffff"
     _table_background_tansparency = 0.7
 
     _image_border = False
     _image_border_width = 3
-    _image_border_color = [0, 0, 0]
+    _image_border_color = '#000000'
 
     _text_background_round_corners = True
     _text_background_corner_radius = 2
@@ -44,6 +46,8 @@ class FotoCalendar:
     _font_style_italic_event = False
     _font_style_underline_event = False
     _font_color_event = '#000000'
+
+    _font_color_month = "#000000"
 
     _supports_events = False
     _supports_weeks = False
@@ -82,10 +86,39 @@ class FotoCalendar:
             'B': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf',
             'I': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf',
             'BI': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf'
+        },
+        'Pacifico': {
+            'R': 'files/font/Pacifico/Pacifico-Regular.ttf',
+            'B': 'files/font/Pacifico/Pacifico-Regular.ttf',
+            'I': 'files/font/Pacifico/Pacifico-Regular.ttf',
+            'BI': 'files/font/Pacifico/Pacifico-Regular.ttf'
+        },
+        'NotoSansDisplay': {
+            'R': 'files/font/NotoSansDisplay/NotoSansDisplay_Condensed-Regular.ttf',
+            'B': 'files/font/NotoSansDisplay/NotoSansDisplay_Condensed-Bold.ttf',
+            'I': 'files/font/NotoSansDisplay/NotoSansDisplay_Condensed-Italic.ttf',
+            'BI': 'files/font/NotoSansDisplay/NotoSansDisplay_Condensed-BoldItalic.ttf'
         }
     }
 
+    @property
+    def fpdf(self):
+        if self._fpdf is None:
+            self._fpdf = FPDF(orientation=self.orientation, format="A4")
+            self._fpdf.set_display_mode(zoom="fullpage")
+            self._fpdf.set_auto_page_break(False)
+            self._fpdf.set_producer("k51.de - Simple create foto calendars as PDF")
+            self._fpdf.set_margin(self.margin)
+            self._fpdf.set_top_margin(self.tmargin)
+            self._add_font(self._font)
+            self._fpdf.set_font(self._font)
+
+        return self._fpdf
+
     def __init__(self, orientation, margin, image_with, image_height):
+        self._fpdf = None
+
+        self.orientation = orientation
         self.margin = margin
         self.tmargin = 20
         self.image_with = image_with
@@ -93,17 +126,6 @@ class FotoCalendar:
 
         self.eventlist_align = 'C'
         self.eventlist = {}
-
-        pdf = FPDF(orientation=orientation, format="A4")
-        pdf.set_display_mode(zoom="fullpage")
-        pdf.set_auto_page_break(False)
-        pdf.set_producer("k51.de - Simple create foto calendars as PDF")
-        pdf.set_margin(self.margin)
-        pdf.set_top_margin(self.tmargin)
-
-        self.fpdf = pdf
-        self._add_font(self._font)
-        pdf.set_font(self._font)
 
     def addTitle(self, title='', image=None):
         pdf = self.fpdf
@@ -115,8 +137,9 @@ class FotoCalendar:
             if image:
                 pdf.image(image, h=pdf.eph, w=pdf.epw, x=0, y=0)
 
-    def addMonth(self, date, image=None):
+    def add_month(self, config):
         pdf = self.fpdf
+        self._set_options_from_config(config)
 
         if self._background_type == 'S' and self._background_color is not None:
             pdf.set_page_background(self._background_color)
@@ -126,14 +149,13 @@ class FotoCalendar:
         pdf.add_page()
 
         self._createBackgroundGradient()
-        pdf.start_section(self.get_month_name_with_year(date), 0)
-        if image:
-            self._addImage(image)
-        self._addText(date, self._generateMonthMatrix(date))
+        pdf.start_section(self.get_month_name_with_year(config['date']), 0)
+        if 'image' in config:
+            self._addImage(config['image'])
+        self._addText(config['date'], self._generateMonthMatrix(config['date']))
 
     def _createBackgroundGradient(self):
         pdf = self.fpdf
-        print("Background colors:", self._background_color, self._background_color_b)
         colors = [self._background_color, self._background_color_b]
 
         if self._background_type == 'V':
@@ -200,9 +222,9 @@ class FotoCalendar:
         if table_background_color is not None:
             self._table_background_color = color_from_hex_string(table_background_color)
 
-    def set_table_background_tansparency(self, table_background_tansparency):
-        if table_background_tansparency is not None:
-            self._table_background_tansparency = float(table_background_tansparency) / 100
+    def set_table_background_transparency(self, table_background_transparency):
+        if table_background_transparency is not None:
+            self._table_background_tansparency = float(table_background_transparency) / 100
 
     def set_image_border(self, image_border):
         if image_border is not None:
@@ -359,3 +381,78 @@ class FotoCalendar:
 
     def output(self):
         return bytes(self.fpdf.output())
+
+    def create_default_config(self, first_month=None):
+        if first_month is None:
+            first_month = datetime.now() + relativedelta(months=1)
+
+        return {
+            "page": "options",
+            "table_border": self._table_border,
+            "supports_events": self._supports_events,
+            "supports_weeks": self._supports_weeks,
+            "supports_fonts": self._supports_fonts,
+            "supports_italic": self._supports_italic,
+            "center_month": self.is_center_month(),
+            "show_weeks": self._show_weeks,
+            "months": [],
+            "aspectRatio": self.get_image_aspect_ratio(),
+            "first_month": first_month.strftime("%Y-%m-01"),
+            "table_background_transparency": self._table_background_tansparency * 100,
+            "background_type": self._background_type,
+            "background_color": self._background_color,
+            "background_color_b": self._background_color_b,
+            "table_background_color": self._table_background_color,
+            "image_border": self._image_border,
+            "image_border_color": self._image_border_color,
+            "image_border_width": self._image_border_width,
+            "font_weekday_bold": self._font_style_bold_weekday,
+            "font_weekday_italic": self._font_style_italic_weekday,
+            "font_weekday_underline": self._font_style_underline_weekday,
+            "font_weekday_color": self._font_color_weekday,
+            "font_saturday_bold": self._font_style_bold_saturday,
+            "font_saturday_italic": self._font_style_italic_saturday,
+            "font_saturday_underline": self._font_style_underline_saturday,
+            "font_saturday_color": self._font_color_saturday,
+            "font_sunday_bold": self._font_style_bold_sunday,
+            "font_sunday_italic": self._font_style_italic_sunday,
+            "font_sunday_underline": self._font_style_underline_sunday,
+            "font_sunday_color": self._font_color_sunday,
+            "font_event_bold": self._font_style_bold_event,
+            "font_event_italic": self._font_style_underline_event,
+            "font_event_underline": self._font_style_underline_event,
+            "font_event_color": self._font_color_event
+        }
+
+    def _set_options_from_config(self, config):
+        print(config)
+        self.set_background_type(config['background_type'])
+        self.set_background_color(config['background_color'])
+        self.set_background_color_b(config['background_color_b'])
+        self.set_center_month(config['center_month'])
+        self.set_show_weeks(config['show_weeks'])
+
+        self.set_table_border(config['table_border'])
+        self.set_table_background_color(config['table_background_color'])
+        self.set_table_background_transparency(config['table_background_transparency'])
+
+        self.set_image_border(config['image_border'])
+        self.set_image_border_color(config['image_border_color'])
+        self.set_image_border_widht(config['image_border_width'])
+
+        self._font_style_bold_weekday = config['font_weekday_bold']
+        self._font_style_italic_weekday = config['font_weekday_italic']
+        self._font_style_underline_weekday = config['font_weekday_underline']
+        self._font_color_weekday = config['font_weekday_color']
+        self._font_style_bold_saturday = config['font_saturday_bold']
+        self._font_style_italic_saturday = config['font_saturday_italic']
+        self._font_style_underline_saturday = config['font_saturday_underline']
+        self._font_color_saturday = config['font_saturday_color']
+        self._font_style_bold_sunday = config['font_sunday_bold']
+        self._font_style_italic_sunday = config['font_sunday_italic']
+        self._font_style_underline_sunday = config['font_sunday_underline']
+        self._font_color_sunday = config['font_sunday_color']
+        self._font_style_bold_event = config['font_event_bold']
+        self._font_style_underline_event = config['font_event_italic']
+        self._font_style_underline_event = config['font_event_underline']
+        self._font_color_event = config['font_event_color']
