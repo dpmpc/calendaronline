@@ -58,22 +58,22 @@ class FotoCalendar:
     _font = 'Helveticat'
     _fonts = {
         'Sawasdee': {
-            'R': 'files/font/Sawasdee.ttf',
-            'B': 'files/font/Sawasdee-Bold.ttf',
-            'I': 'files/font/Sawasdee-Oblique.ttf',
-            'BI': 'files/font/Sawasdee-BoldOblique.ttf'
+            'R': 'files/font/TLWG/Sawasdee.ttf',
+            'B': 'files/font/TLWG/Sawasdee-Bold.ttf',
+            'I': 'files/font/TLWG/Sawasdee-Oblique.ttf',
+            'BI': 'files/font/TLWG/Sawasdee-BoldOblique.ttf'
         },
-        'ArialRounded': {
-            'R': 'files/font/Arial Rounded MT Regular.ttf',
-            'B': 'files/font/Arial Rounded MT Bold Regular.ttf',
-            'I': 'files/font/Arial Rounded MT Regular.ttf',
-            'BI': 'files/font/Arial Rounded MT Bold Regular.ttf'
+        'BalsamiqSans': {
+            'R': 'files/font/Balsamiq_Sans/BalsamiqSans-Regular.ttf',
+            'B': 'files/font/Balsamiq_Sans/BalsamiqSans-Bold.ttf',
+            'I': 'files/font/Balsamiq_Sans/BalsamiqSans-Italic.ttf',
+            'BI': 'files/font/Balsamiq_Sans/BalsamiqSans-BoldItalic.ttf'
         },
         'Purisa': {
-            'R': 'files/font/Purisa.ttf',
-            'B': 'files/font/Purisa-Bold.ttf',
-            'I': 'files/font/Purisa-Oblique.ttf',
-            'BI': 'files/font/Purisa-BoldOblique.ttf'
+            'R': 'files/font/TLWG/Purisa.ttf',
+            'B': 'files/font/TLWG/Purisa-Bold.ttf',
+            'I': 'files/font/TLWG/Purisa-Oblique.ttf',
+            'BI': 'files/font/TLWG/Purisa-BoldOblique.ttf'
         },
         'Tippa': {
             'R': 'files/font/Tippa/Tippa.ttf',
