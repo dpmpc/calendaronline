@@ -17,11 +17,6 @@ class LandscapeFotoCalendar(FotoCalendar):
         else:
             super().__init__("L", 10, 277, 141)
 
-        self._add_font("Sawasdee")
-
-        pdf = self.fpdf
-        pdf.set_top_margin(self.tmargin)
-
     def _addText(self, date, matrix):
         pdf = self.fpdf
         self._addBackground()

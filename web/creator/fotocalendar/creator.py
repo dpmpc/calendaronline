@@ -2,6 +2,8 @@ from creator.fotocalendar.templates.landscape import LandscapeFotoCalendar
 from creator.fotocalendar.templates.portrait import PortraitFotoCalendar
 from creator.fotocalendar.templates.design1 import Design1FotoCalendar
 from creator.fotocalendar.templates.vintage import VintageFotoCalendar
+from creator.fotocalendar.templates.design2026 import Design2026FotoCalendar
+
 from creator.fotocalendar.templates.landscape_modern import LandscapeModernFotoCalendar
 
 from creator.fotocalendar.icsparser import get_events_from_post, get_events_from_ics
@@ -32,6 +34,9 @@ def create_for_format(format):
     elif format == 'LM':
         print("Creating LandscapeModernFotoCalendar for format", format)
         return LandscapeModernFotoCalendar()
+    elif format == '26':
+        print("Creating Design2026FotoCalendar for format", format)
+        return Design2026FotoCalendar()
     else:
         print("Creating PortraitFotoCalendar for format", format)
         return PortraitFotoCalendar()
@@ -39,42 +44,7 @@ def create_for_format(format):
 
 def create_options_context_for_request(request):
     calendar = create_for_format(request.GET.get('format', ''))
-    first_month = datetime.now() + relativedelta(months=1)
-    return {
-        "page": "options",
-        "table_border": calendar._table_border,
-        "supports_events": calendar._supports_events,
-        "supports_weeks": calendar._supports_weeks,
-        "supports_fonts": calendar._supports_fonts,
-        "supports_italic": calendar._supports_italic,
-        "center_month": calendar.is_center_month(),
-        "show_weeks": calendar._show_weeks,
-        "first_month": first_month.strftime("%Y-%m-01"),
-        "table_background_transparency": "70",
-        "background_type": calendar._background_type,
-        "background_color": "#ffffff",
-        "background_color_b": "#aaaaaa",
-        "table_background_color": "#ffffff",
-        "image_border": False,
-        "image_border_color": "#000000",
-        "image_border_width": 10,
-        "font_weekday_bold": calendar._font_style_bold_weekday,
-        "font_weekday_italic": calendar._font_style_italic_weekday,
-        "font_weekday_underline": calendar._font_style_underline_weekday,
-        "font_weekday_color": calendar._font_color_weekday,
-        "font_saturday_bold": calendar._font_style_bold_saturday,
-        "font_saturday_italic": calendar._font_style_italic_saturday,
-        "font_saturday_underline": calendar._font_style_underline_saturday,
-        "font_saturday_color": calendar._font_color_saturday,
-        "font_sunday_bold": calendar._font_style_bold_sunday,
-        "font_sunday_italic": calendar._font_style_italic_sunday,
-        "font_sunday_underline": calendar._font_style_underline_sunday,
-        "font_sunday_color": calendar._font_color_sunday,
-        "font_event_bold": calendar._font_style_bold_event,
-        "font_event_italic": calendar._font_style_underline_event,
-        "font_event_underline": calendar._font_style_underline_event,
-        "font_event_color": calendar._font_color_event
-    }
+    return calendar.create_default_config()
 
 
 def create_months_context_for_request(request):
@@ -139,69 +109,97 @@ def create_months_context_for_request(request):
     }
 
 
-def create_from_request(request):
-    calendar = create_for_format(request.POST.get('format'))
-    calendar.addTitle()
+def _empty_config(format):
+    return {
+        'format': format,
+        'title': None,
+        'events': {},
+        'months': []
+    }
 
-    eventlist = get_events_from_post(request.POST.getlist('event-date'), request.POST.getlist('event-text'), [])
-    calendar.set_events(eventlist)
 
+def _get_config_from_request(request):
+    config = _empty_config(request.POST.get('format'))
+    config['events'] = get_events_from_post(request.POST.getlist('event-date'), request.POST.getlist('event-text'), [])
     lenght = int(request.POST.get('lenght'))
     for i in range(lenght):
         id = '_' + str(i)
-        month = datetime.strptime(request.POST.get('date' + id), '%Y-%m-%d')
-        _set_options_from_request(calendar, request, id)
         if request.FILES.get('image' + id):
-            calendar.addMonth(date=month, image=request.FILES.get('image' + id))
+            config['months'].append(_get_month_config_from_request(request, id))
+
+    return config
+
+
+def create_from_request(request):
+    config = _get_config_from_request(request)
+    return create_from_config(config)
+
+
+def create_from_config(config):
+    calendar = create_for_format(config['format'])
+    # if 'title' in config:
+    #    calendar.addTitle(config['title'])
+
+    if 'events' in config:
+        calendar.set_events(config['events'])
+
+    if 'months' in config:
+        for month in config['months']:
+            calendar.add_month(month)
 
     return calendar
 
 
-def _set_options_from_request(calendar, request, postfix=''):
-    calendar.set_background_type(request.POST.get('background_type' + postfix))
-    calendar.set_background_color(request.POST.get('background_color' + postfix))
-    calendar.set_background_color_b(request.POST.get('background_color_b' + postfix))
-    calendar.set_center_month(request.POST.get('center_month' + postfix))
-    calendar.set_show_weeks(request.POST.get('show_weeks' + postfix))
-
-    calendar.set_table_border(request.POST.get('table_border' + postfix))
-    calendar.set_table_background_color(request.POST.get('table_background_color' + postfix))
-    calendar.set_table_background_tansparency(request.POST.get('table_background_tansparency' + postfix))
-
-    calendar.set_image_border(request.POST.get('image_border' + postfix))
-    calendar.set_image_border_color(request.POST.get('image_border_color' + postfix))
-    calendar.set_image_border_widht(request.POST.get('image_border_width' + postfix))
-
-    calendar._font_style_bold_weekday = True if request.POST.get('font_weekday_bold' + postfix) else False
-    calendar._font_style_italic_weekday = True if request.POST.get('font_weekday_italic' + postfix) else False
-    calendar._font_style_underline_weekday = True if request.POST.get('font_weekday_underline' + postfix) else False
-    calendar._font_color_weekday = request.POST.get('font_weekday_color' + postfix, calendar._font_color_weekday)
-    calendar._font_style_bold_saturday = True if request.POST.get('font_saturday_bold' + postfix) else False
-    calendar._font_style_italic_saturday = True if request.POST.get('font_saturday_italic' + postfix) else False
-    calendar._font_style_underline_saturday = True if request.POST.get('font_saturday_underline' + postfix) else False
-    calendar._font_color_saturday = request.POST.get('font_saturday_color' + postfix, calendar._font_color_saturday)
-    calendar._font_style_bold_sunday = True if request.POST.get('font_sunday_bold' + postfix) else False
-    calendar._font_style_italic_sunday = True if request.POST.get('font_sunday_italic' + postfix) else False
-    calendar._font_style_underline_sunday = True if request.POST.get('font_sunday_underline' + postfix) else False
-    calendar._font_color_sunday = request.POST.get('font_sunday_color' + postfix, calendar._font_color_sunday)
-    calendar._font_style_bold_event = True if request.POST.get('font_event_bold' + postfix) else False
-    calendar._font_style_underline_event = True if request.POST.get('font_event_italic' + postfix) else False
-    calendar._font_style_underline_event = True if request.POST.get('font_event_underline' + postfix) else False
-    calendar._font_color_event = request.POST.get('font_event_color' + postfix, calendar._font_color_event)
+def _get_month_config_from_request(request, postfix='', date=None):
+    return {
+        'date': datetime.strptime(request.POST.get('date' + postfix), '%Y-%m-%d') if date is None else date,
+        'image': request.FILES.get('image' + postfix, None),
+        'background_type': request.POST.get('background_type' + postfix),
+        'background_color': request.POST.get('background_color' + postfix),
+        'background_color_b': request.POST.get('background_color_b' + postfix),
+        'center_month': request.POST.get('center_month' + postfix),
+        'show_weeks': request.POST.get('show_weeks' + postfix),
+        'table_border': request.POST.get('table_border' + postfix),
+        'table_background_color': request.POST.get('table_background_color' + postfix),
+        'table_background_transparency': request.POST.get('table_background_transparency' + postfix),
+        'image_border': request.POST.get('image_border' + postfix),
+        'image_border_color': request.POST.get('image_border_color' + postfix),
+        'image_border_width': request.POST.get('image_border_width' + postfix),
+        'font_weekday_bold': True if request.POST.get('font_weekday_bold' + postfix) else False,
+        'font_weekday_italic': True if request.POST.get('font_weekday_italic' + postfix) else False,
+        'font_weekday_underline': True if request.POST.get('font_weekday_underline' + postfix) else False,
+        'font_weekday_color': request.POST.get('font_weekday_color' + postfix),
+        'font_saturday_bold': True if request.POST.get('font_saturday_bold' + postfix) else False,
+        'font_saturday_italic': True if request.POST.get('font_saturday_italic' + postfix) else False,
+        'font_saturday_underline': True if request.POST.get('font_saturday_underline' + postfix) else False,
+        'font_saturday_color': request.POST.get('font_saturday_color' + postfix),
+        'font_sunday_bold': True if request.POST.get('font_sunday_bold' + postfix) else False,
+        'font_sunday_italic': True if request.POST.get('font_sunday_italic' + postfix) else False,
+        'font_sunday_underline': True if request.POST.get('font_sunday_underline' + postfix) else False,
+        'font_sunday_color': request.POST.get('font_sunday_color' + postfix),
+        'font_event_bold': True if request.POST.get('font_event_bold' + postfix) else False,
+        'font_event_italic': True if request.POST.get('font_event_italic' + postfix) else False,
+        'font_event_underline': True if request.POST.get('font_event_underline' + postfix) else False,
+        'font_event_color': request.POST.get('font_event_color' + postfix)
+    }
 
 
 def create_preview_from_request(request):
+
     if request.method == 'POST':
         format = request.POST.get('format', 'P')
-        month = datetime.strptime(request.POST.get('start'), '%Y-%m-%d')
         calendar = create_for_format(format)
-        _set_options_from_request(calendar, request)
+        month = datetime.strptime(request.POST.get('start'), '%Y-%m-%d')
+        month_config = _get_month_config_from_request(request, date=month)
     else:
         format = request.GET.get('format', 'P')
+        calendar = create_for_format(format)
+
         month = datetime.now()
         monthOverride = int(request.GET.get('month', '0'))
         month = month + relativedelta(months=monthOverride)
-        calendar = create_for_format(format)
+        month_config = calendar.create_default_config()
+        month_config['date'] = month
 
     image = Image.open('files/images/example.jpg')
     if format == 'P':
@@ -232,8 +230,14 @@ def create_preview_from_request(request):
         x = 304
         y = 290
         w = 1400
+    elif format == '26':
+        x = 352
+        y = 180
+        w = 1000
 
     h = w / float(calendar.get_image_aspect_ratio())
-    image = image.crop((x, y, x + w, y + h))
-    calendar.addMonth(month, image)
-    return calendar
+    month_config['image'] = image.crop((x, y, x + w, y + h))
+
+    config = _empty_config(format)
+    config['months'].append(month_config)
+    return create_from_config(config)
