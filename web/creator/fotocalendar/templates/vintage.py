@@ -1,4 +1,5 @@
 from creator.fotocalendar.templates.portrait import PortraitFotoCalendar
+from creator.fotocalendar.bo.config import DefaultConfig
 import math
 
 
@@ -6,38 +7,47 @@ class VintageFotoCalendar(PortraitFotoCalendar):
 
     _font = "Tippa"
     _dayNames = ['Montag\n------', 'Dienstag\n--------', 'Mittwoch\n--------', 'Donnerstag\n----------', 'Freitag\n-------', 'Samstag\n-------', 'Sonntag\n-------']
-    _image_border = True
-    _image_border_width = 5
-
-    _supports_fonts = False
-    _supports_weeks = False
 
     def __init__(self):
         super().__init__(False, False, 20, 150, 100)
-        self._month_align = 'C'
-        self._font_size_month = 8
-        self._font_size_dayname = 8
-        self._font_size_day = 8
-        self._font_size_week = 8
-        self._font_size_events = 8
-        self._table_border = False
-        self._show_weeks = False
+
+    def get_default_config(self, date=None) -> DefaultConfig:
+        config = super().get_default_config(date)
+        config.supports_fonts = False
+
+        config.table_border = False
+        config.month_align = 'C'
+        config.show_weeks = False
+
+        config.image_border = True
+        config.image_border_width = 5
+
+        config.event_separator = ' - '
+        config.fonts.month.size = 8
+        config.fonts.dayname.size = 8
+        config.fonts.weekday.size = 8
+        config.fonts.saturday.size = 8
+        config.fonts.sunday.size = 8
+        config.fonts.week.size = 8
+        config.fonts.event.size = 8
+
+        return config
 
     def get_month_name_with_year(self, date):
         month_name = super().get_month_name_with_year(date)
         return " " + month_name + " \n" + "=" * (len(month_name) + 2)
 
-    def _addImage(self, image):
+    def _add_image(self, config):
         pdf = self.fpdf
         x = (pdf.w - self.image_with) / 2
         y = self.tmargin + 40
         h = self.image_height
         w = self.image_with
-        if self._image_border:
+        if config.image_border:
             self._shadow(x, y, w, h)
 
-        if image:
-            pdf.image(image, h=h, w=w, x=x, y=y)
+        if config.image:
+            pdf.image(config.image, h=h, w=w, x=x, y=y)
             self._tesa(x - 15, y + 5, 45)
             self._tesa(x + w - 17, y + h + 2, 40)
             self._tesa(x + w - 6, y - 13, - 50)
