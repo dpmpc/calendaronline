@@ -1,4 +1,5 @@
 from creator.fotocalendar.fotocalendar import FotoCalendar
+from creator.fotocalendar.bo.config import DefaultConfig
 
 
 class Design1FotoCalendar(FotoCalendar):
@@ -11,10 +12,16 @@ class Design1FotoCalendar(FotoCalendar):
     def __init__(self):
         self._font = "Purisa"
         super().__init__("L", 3, 224, 187)
-        self._supports_events = True
 
-    def _addText(self, date, matrix):
+    def get_default_config(self, date=None) -> DefaultConfig:
+        config = super().get_default_config(date)
+        config.table_border = True
+        return config
+
+    def _add_text(self, config, matrix):
         pdf = self.fpdf
+        date = config.date
+
         col_width = 60
         line_height = (pdf.eph - 12) / 31
         grid_left = pdf.epw - col_width
@@ -25,14 +32,14 @@ class Design1FotoCalendar(FotoCalendar):
         self._set_fill_color(self.__bg_bright)
 
         pdf.set_xy(grid_left, self.tmargin)
-        pdf.cell(col_width - 20, 10, txt=self.get_month_name(date), align=self._month_align, new_x="RIGHT", fill=True)
+        pdf.cell(col_width - 20, 10, txt=self.get_month_name(date), align=config.month_align, new_x="RIGHT", fill=True)
         pdf.cell(20, 10, txt=self._year(date), align="R", new_x="LEFT", new_y="NEXT", fill=True)
 
         for day in matrix:
-            if matrix[day]["isSunday"] or matrix[day]['isHoliday']:
+            if matrix[day].is_sunday or matrix[day].is_holiday:
                 self._set_text_color(self.__fg_bright)
                 self._set_fill_color(self.__medium1)
-            elif matrix[day]["isSaturday"]:
+            elif matrix[day].is_saturday:
                 self._set_text_color(self.__dark)
                 self._set_fill_color(self.__medium2)
             else:
@@ -40,13 +47,13 @@ class Design1FotoCalendar(FotoCalendar):
                 self._set_fill_color(self.__bg_bright)
             pdf.set_x(grid_left)
             pdf.set_font(size=10)
-            pdf.cell(7, line_height, txt=matrix[day]["day"], border='T' if self._table_border else 0, align="R", new_y="TOP", fill=True)
+            pdf.cell(7, line_height, txt=matrix[day].day, border='T' if config.table_border else 0, align="R", new_y="TOP", fill=True)
             pdf.set_font(size=6)
-            text = self._dayNameAbbrev(matrix[day]["dayOfWeek"])
-            if len(matrix[day]["events"]) > 0:
-                text += " " + matrix[day]['events'][0]
-            pdf.cell(col_width - 7, line_height, txt=text, border='T' if self._table_border else 0, align="L", new_y="NEXT", fill=True)
+            text = self._dayNameAbbrev(matrix[day].day_of_week)
+            if len(matrix[day].events) > 0:
+                text += " " + matrix[day].events[0]
+            pdf.cell(col_width - 7, line_height, txt=text, border='T' if config.table_border else 0, align="L", new_y="NEXT", fill=True)
 
         pdf.set_x(grid_left)
         self._set_fill_color(self.__bg_bright)
-        pdf.cell(col_width, 2, txt="", border=self._table_border, fill=True)
+        pdf.cell(col_width, 2, txt="", border=config.table_border, fill=True)
