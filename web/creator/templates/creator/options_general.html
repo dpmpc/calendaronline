@@ -32,7 +32,7 @@
     <label class="col-sm-2 col-form-check-label" for="center-month{{ fieldpostfix }}">Montatsname zentriert</label>
     <div class="col-sm-10">
       <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="center-month{{ fieldpostfix }}" name="center_month{{ fieldpostfix }}" value="1"{% if month.center_month %} checked{% endif %}>
+        <input class="form-check-input" type="checkbox" role="switch" id="center-month{{ fieldpostfix }}" name="center_month{{ fieldpostfix }}" value="1"{% if month.month_align == 'C' %} checked{% endif %}>
       </div>
     </div>
   </div>

@@ -4,8 +4,6 @@ from creator.fotocalendar.bo.config import DefaultConfig
 
 class LandscapeModernFotoCalendar(LandscapeFotoCalendar):
     def __init__(self):
-        # super().__init__(False)
-        # self.image_height = 149
         super().__init__(True)
         self.image_height = 167
         self._add_font("MonsieurLaDoulaise")
@@ -23,7 +21,7 @@ class LandscapeModernFotoCalendar(LandscapeFotoCalendar):
         pass
 
     def _add_month_name(self, config):
-        self.fpdf.set_y(177)
+        self.fpdf.set_y(173)
         super()._add_month_name(config)
 
     def _add_days(self, matrix, x, y, width, config):

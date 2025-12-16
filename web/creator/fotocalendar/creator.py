@@ -5,7 +5,7 @@ from creator.fotocalendar.templates.design1 import Design1FotoCalendar
 from creator.fotocalendar.templates.vintage import VintageFotoCalendar
 from creator.fotocalendar.templates.design2026 import Design2026FotoCalendar
 from creator.fotocalendar.templates.landscape_modern import LandscapeModernFotoCalendar
-from creator.fotocalendar.bo.config import CalendarConfig, DefaultConfig
+from creator.fotocalendar.bo.config import CalendarConfig
 from creator.fotocalendar.icsparser import get_events_from_ics
 from PIL import Image
 from dateutil.relativedelta import relativedelta
@@ -13,7 +13,7 @@ from datetime import datetime
 from copy import deepcopy
 
 
-def create_for_format(format) -> FotoCalendar:
+def create_for_format(format: str) -> FotoCalendar:
     if format == 'L':
         print("Creating LandscapeFotoCalendar for format", format)
         return LandscapeFotoCalendar(False)
@@ -43,7 +43,7 @@ def create_for_format(format) -> FotoCalendar:
         return PortraitFotoCalendar()
 
 
-def get_default_config_for_format(format) -> CalendarConfig:
+def get_default_config_for_format(format: str) -> CalendarConfig:
     first_month = datetime.now()
     if first_month.month > 10:
         first_month = first_month + relativedelta(years=1, month=1, day=1)
@@ -56,7 +56,7 @@ def get_default_config_for_format(format) -> CalendarConfig:
     return config
 
 
-def get_default_config_for_request(request, number_of_months=12) -> CalendarConfig:
+def get_default_config_for_request(request, number_of_months: int = 12) -> CalendarConfig:
     config = get_default_config_for_format(request.POST.get('format', 'P'))
     defaut_config = config.months[0]
     defaut_config.update_from_request(request)
@@ -82,7 +82,7 @@ def get_default_config_for_request(request, number_of_months=12) -> CalendarConf
     return config
 
 
-def get_config_for_request(request) -> DefaultConfig:
+def get_config_for_request(request) -> CalendarConfig:
     config = get_default_config_for_format(request.POST.get('format', 'P'))
     defaut_config = config.months[0]
     config.months = []
@@ -103,8 +103,7 @@ def create_calendar_for_request(request) -> FotoCalendar:
     return create_from_config(config)
 
 
-def create_from_config(config):
-    print("Create from Config", config)
+def create_from_config(config: CalendarConfig) -> FotoCalendar:
     calendar = create_for_format(config.format)
     # if 'title' in config:
     #    calendar.addTitle(config['title'])
@@ -115,7 +114,7 @@ def create_from_config(config):
     return calendar
 
 
-def create_preview_from_request(request):
+def create_preview_from_request(request) -> FotoCalendar:
 
     if request.method == 'POST':
         config = get_default_config_for_request(request, 1)
@@ -159,6 +158,6 @@ def create_preview_from_request(request):
         w = 1000
 
     h = w / float(config.months[0].image_aspect_ratio)
-    config.months[0].image = image.crop((x, y, x + w, y + h))
+    config.months[0].set_image(image.crop((x, y, x + w, y + h)))
 
     return create_from_config(config)

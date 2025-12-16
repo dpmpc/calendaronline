@@ -21,7 +21,7 @@
     <div class="row mb-3">
         <label for="startDate" class="col-sm-2 col-form-label">Erster Monat</label>
         <div class="col-sm-10">
-          <input id="startDate" class="form-control" type="date" name="start" value="{{ first_month }}"/>
+          <input id="startDate" class="form-control" type="date" name="start" value="{{ first_month | date:'Y-m-d' }}"/>
           <span id="startDateSelected"></span>
         </div>
     </div>

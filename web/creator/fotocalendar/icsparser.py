@@ -2,7 +2,6 @@ from icalevents.icalevents import events
 from creator.fotocalendar.bo.config import Event
 
 
-
 def get_events_from_ics(ics_url, start, end):
     print("Setting ics_url: ", ics_url)
     eventlist = {}
@@ -12,6 +11,6 @@ def get_events_from_ics(ics_url, start, end):
             datekey = evt.start.strftime("%Y%m")
             if datekey not in eventlist:
                 eventlist[datekey] = []
-            eventlist[datekey].append(Event(evt.start.strftime("%Y-%m-%d"), evt.summary, False))
+            eventlist[datekey].append(Event(evt.start.strftime, evt.summary, False))
 
     return eventlist
