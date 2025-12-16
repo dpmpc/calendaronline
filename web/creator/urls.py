@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('start', views.index, name='index'),
     path('preview', views.preview),
+    path('load', views.load),
     path('month', views.month),
     path('options', views.options),
     path('create', views.create),

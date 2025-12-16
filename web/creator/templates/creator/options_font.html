@@ -1,0 +1,19 @@
+ <div class="row mb-3">
+    <label class="col-sm-2 col-form-check-label">{{ label }}</label>
+    <div class="col-sm-10">
+        <div class="btn-toolbar mb-3" role="toolbar">
+            <div class="btn-group me-2" role="group">
+                <input type="checkbox" class="btn-check" id="{{fieldprefix}}bold{{ fieldpostfix }}" name="{{fieldprefix}}bold{{ fieldpostfix }}" value="1"{% if font.bold %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="{{fieldprefix}}bold{{ fieldpostfix }}"><span class="fa fa-bold"></span></label>
+                
+                <input type="checkbox" class="btn-check" id="{{fieldprefix}}italic{{ fieldpostfix }}" name="{{fieldprefix}}italic{{ fieldpostfix }}" value="1"{% if not month.supports_italic %} disabled{% elif font.italic %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="{{fieldprefix}}italic{{ fieldpostfix }}"><span class="fa fa-italic"></span></label>
+
+                <input type="checkbox" class="btn-check" id="{{fieldprefix}}underline{{ fieldpostfix }}" name="{{fieldprefix}}underline{{ fieldpostfix }}" value="1"{% if font.underline %} checked{% endif %}>
+                <label class="btn btn-outline-primary" for="{{fieldprefix}}underline{{ fieldpostfix }}"><span class="fa fa-underline"></span></label>
+            </div>
+            
+            <input class="form-control form-control-color" type="color" name="{{fieldprefix}}color{{ fieldpostfix }}" value="{{ font.color }}">
+        </div>  
+    </div>
+  </div>
