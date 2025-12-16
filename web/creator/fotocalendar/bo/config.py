@@ -1,119 +1,146 @@
-from fpdf.drawing import color_from_hex_string
 from datetime import datetime
-import json
+import orjson
 import base64
+from dataclasses import dataclass, field, InitVar, asdict, KW_ONLY
+from typing import List, Any
+import io
+import lzma
+from PIL import Image
 
 
-def color_to_hex(color):
-    return "#" + "".join(hex(int(val))[2:].rjust(2, "0") for val in color.colors255)
+@dataclass
+class FontConfig:
+    bold: bool = False
+    italic: bool = False
+    underline: bool = False
+    color: str = '#000000'
+    size: int = 8
+    family: str = ""
+
+    @property
+    def font_style(self):
+        style = ''
+        if self.bold:
+            style += 'B'
+        if self.italic:
+            style += 'I'
+        if self.underline:
+            style += 'U'
+        return style
+
+    def update_from_request(self, request, prefix="", postfix=""):
+        self.bold = request.POST.get(prefix + 'bold' + postfix, self.bold)
+        self.italic = request.POST.get(prefix + 'italic' + postfix, self.italic)
+        self.underline = request.POST.get(prefix + 'underline' + postfix, self.underline)
+        if request.POST.get(prefix + 'color' + postfix, "") != "":
+            self.color = request.POST.get(prefix + 'color' + postfix)
+        self.size = request.POST.get(prefix + 'size' + postfix, self.size)
+        self.family = request.POST.get(prefix + 'family' + postfix, self.family)
 
 
-class CalendarConfig:
-    def __init__(self, format: str, title=None, months=None, first_month=None):
-        self.format = format
-        self.title = title
-        self.first_month = first_month if first_month else datetime.now()
-        self.months = months if months else []
+@dataclass
+class FontsConfig:
+    font_family: InitVar[str]
+    _: KW_ONLY
+    weekday: FontConfig = field(init=False)
+    saturday: FontConfig = field(init=False)
+    sunday: FontConfig = field(init=False)
+    event: FontConfig = field(init=False)
+    month: FontConfig = field(init=False)
+    week: FontConfig = field(init=False)
+    dayname: FontConfig = field(init=False)
 
-    def to_context(self):
-        return {
-            'format': self.format,
-            'title': self.title,
-            'first_month': self.first_month.strftime("%Y-%m-01"),
-            'months': [item.to_context() for item in self.months]
-        }
+    def __post_init__(self, font_family: str):
+        self.weekday = FontConfig(size=15, family=font_family)
+        self.saturday = FontConfig(size=15, family=font_family, bold=True)
+        self.sunday = FontConfig(size=15, family=font_family, bold=True)
+        self.event = FontConfig(size=8, family=font_family)
+        self.month = FontConfig(size=20, family=font_family)
+        self.week = FontConfig(size=8, family=font_family)
+        self.dayname = FontConfig(size=8, family=font_family)
 
-    @classmethod  # decorator
-    def create_from_request(cls, request, calendar): 
-        config = cls(request.POST.get('format'))
-        lenght = int(request.POST.get('lenght'))
-        for i in range(lenght):
-            id = '_' + str(i)
-            month = calendar.get_default_config()
-            month.update_from_request(request, id)
-            config.months.append(month)
-
-        return config
-
-    def __str__(self):
-        return json.dumps(self.to_context(), indent=4)
+    def update_from_request(self, request, prefix="", postfix=""):
+        self.weekday.update_from_request(request, prefix + "weekday_", postfix)
+        self.saturday.update_from_request(request, prefix + "saturday_", postfix)
+        self.sunday.update_from_request(request, prefix + "sunday_", postfix)
+        self.event.update_from_request(request, prefix + "event_", postfix)
+        self.month.update_from_request(request, prefix + "month_", postfix)
+        self.dayname.update_from_request(request, prefix + "dayname_", postfix)
 
 
+@dataclass
+class Event:
+    date: datetime
+    text: str
+    is_holiday: bool = True
+
+
+@dataclass
+class DayConfig:
+    day: int
+    day_of_week: int
+    week: int
+    events: List[Event] = field(default_factory=list)
+    is_holiday: bool = False
+
+    @property
+    def is_saturday(self):
+        return self.day_of_week == 6
+
+    @property
+    def is_sunday(self):
+        return self.day_of_week == 7
+
+
+@dataclass
 class MonthConfig:
-    def __init__(self, image_aspect_ratio=1, date=None, font_family=""):
-        self.id = 0
-        self.date = datetime.now() if date is None else date
-        self.name = ""
+    image_aspect_ratio: str = '1.0'
+    date: datetime = field(default_factory=datetime.now)
+    font_family: InitVar[str] = ""
+    _: KW_ONLY
+    id: int = 0
+    name: str = ''
+    month_align: str = 'L'
+    month_show_year: bool = True
+    show_weeks: bool = True
 
-        self.month_align = 'L'
-        self.month_show_year = True
+    events: dict = field(default_factory=dict)
+    event_separator: str = ' • '
+    eventlist_align: str = 'C'
 
-        # self.first_month = first_month.strftime("%Y-%m-01")
-        self.show_weeks = True
-        self.image_aspect_ratio = image_aspect_ratio
+    table_border: bool = False
+    table_background_color: str = '#ffffff'
+    table_background_transparency: float = 0.7
+    table_background_round_corners: bool = True
+    table_background_corner_radius: int = 2
 
-        self.events = {}
-        self.event_separator = ' • '
-        self.eventlist_align = 'C'
+    background_type: str = 'N'
+    background_color: str = '#ffffff'
+    background_color_b: str = '#aaaaaa'
 
-        self.table_border = False
-        self.table_background_color = "#ffffff"
-        self.table_background_transparency = 0.7
-        self.table_background_round_corners = True
-        self.table_background_corner_radius = 2
+    image: bytes = None
+    image_border: bool = False
+    image_border_color: str = '#000000'
+    image_border_width: int = 3
+    image_x: Any = None
+    image_y: Any = None
+    image_width: Any = None
+    image_height: Any = None
 
-        self.background_type = "N"
-        self.background_color = "#ffffff"
-        self.background_color_b = "#aaaaaa"
+    fonts: FontsConfig = field(init=False)
 
-        self.image = None
-        self.image_border = False
-        self.image_border_color = '#000000'
-        self.image_border_width = 3
-        self.image_x = None
-        self.image_y = None
-        self.image_width = None
-        self.image_height = None
-
+    def __post_init__(self, font_family: str):
         self.fonts = FontsConfig(font_family)
 
-    @property
-    def background_color(self):
-        return self.__background_color
+    def set_image(self, var):
+        if isinstance(var, Image.Image):
+            img_byte_arr = io.BytesIO()
+            var.save(img_byte_arr, format='jpeg')
+            self.image = img_byte_arr.getvalue()
+        else:
+            self.image = var.read()
 
-    @background_color.setter
-    def background_color(self, var):
-        if var is not None:
-            self.__background_color = color_from_hex_string(var)
-
-    @property
-    def background_color_b(self):
-        return self.__background_color_b
-
-    @background_color_b.setter
-    def background_color_b(self, var):
-        if var is not None:
-            self.__background_color_b = color_from_hex_string(var)
-
-    @property
-    def table_background_color(self):
-        return self.__table_background_color
-
-    @table_background_color.setter
-    def table_background_color(self, var):
-        if var is not None:
-            self.__table_background_color = color_from_hex_string(var)
-
-    @property
-    def image_border_color(self):
-        return self.__image_border_color
-
-    @image_border_color.setter
-    def image_border_color(self, var):
-        if var is not None:
-            self.__image_border_color = color_from_hex_string(var)
-
-    def add_event(self, event=None, date=None, text=None, is_holiday=False):
+    def add_event(self, event=None, date: datetime = None, text: str = None, is_holiday: bool = False):
         if date and text:
             event = Event(date, text, is_holiday)
         key = event.date.day
@@ -121,54 +148,11 @@ class MonthConfig:
             self.events[key] = []
         self.events[key].append(event)
 
-    def events_for_date(self, date):
+    def events_for_date(self, date) -> Event:
         key = date.day if isinstance(date, datetime) else int(date)
         return self.events[key] if key in self.events else []
 
-    def to_context(self, include_images=False):
-        events = []
-        for key in self.events:
-            events = events + self.events[key]
-        if self.image and include_images:
-            image = base64.b64encode(self.image.read()).decode('utf-8')
-        else:
-            image = None
-        return {
-            'id': self.id,
-            'date': self.date.strftime("%Y-%m-01"),
-            'name': self.name,
-            'center_month': True if self.month_align == 'C' else False,
-            'month_show_year': self.month_show_year,
-            'table_border': self.table_border,
-            'show_weeks': self.show_weeks,
-            'image_aspect_ratio': self.image_aspect_ratio,
-
-            'event_separator': self.event_separator,
-            'eventlist_align': self.eventlist_align,
-
-            'table_background_color': color_to_hex(self.table_background_color),
-            'table_background_transparency': int(self.table_background_transparency * 255),
-            'table_background_round_corners': self.table_background_round_corners,
-            'table_background_corner_radius': self.table_background_corner_radius,
-
-            'background_type': self.background_type,
-            'background_color': color_to_hex(self.__background_color),
-            'background_color_b': color_to_hex(self.__background_color_b),
-
-            'image_border': self.image_border,
-            'image_border_color': color_to_hex(self.image_border_color),
-            'image_border_width': self.image_border_width,
-            'image_x': self.image_x,
-            'image_y': self.image_y,
-            'image_width': self.image_width,
-            'image_height': self.image_height,
-            'image': image,
-
-            'fonts': self.fonts.to_context(),
-            'events': [event.to_context() for event in events]
-        }
-
-    def update_from_request(self, request, postfix=""):
+    def update_from_request(self, request, postfix: str = ""):
         if request.POST.get('id' + postfix, '') != '':
             self.id = int(request.POST.get('id' + postfix))
         if request.POST.get('date' + postfix, '') != '':
@@ -186,14 +170,14 @@ class MonthConfig:
         if request.POST.get('table_background_color' + postfix, '') != '':
             self.table_background_color = request.POST.get('table_background_color' + postfix)
         if request.POST.get('table_background_transparency' + postfix, '') != '':
-            self.table_background_transparency = float(request.POST.get('table_background_transparency' + postfix)) / 255
+            self.table_background_transparency = float(request.POST.get('table_background_transparency' + postfix)) / 100.0
         self.image_border = request.POST.get('image_border' + postfix, self.image_border)
         if request.POST.get('image_border_color' + postfix, '') != '':
             self.image_border_color = request.POST.get('image_border_color' + postfix)
         self.image_border_width = request.POST.get('image_border_width' + postfix, self.image_border_width)
         self.fonts.update_from_request(request, "font_", postfix)
         if request.FILES.get('image' + postfix):
-            self.image = request.FILES.get('image' + postfix)
+            self.set_image(request.FILES.get('image' + postfix))
         self.image_x = request.POST.get('image_x' + postfix)
         self.image_y = request.POST.get('image_y' + postfix)
         self.image_width = request.POST.get('image_width' + postfix)
@@ -206,139 +190,52 @@ class MonthConfig:
             date = datetime.strptime(date_list[i], '%Y-%m-%d')
             self.add_event(date=date, text=text_list[i], is_holiday=False)
 
-    def __str__(self):
-        return json.dumps(self.to_context(), indent=4)
 
-
+@dataclass
 class DefaultConfig(MonthConfig):
-    def __init__(self, image_aspect_ratio, date=None, font_family=""):
-        super().__init__(image_aspect_ratio, date, font_family)
-        self.supports_events = True
-        self.supports_weeks = True
-        self.supports_fonts = True
-        self.supports_italic = True
-
-    def to_context(self):
-        result = super().to_context()
-        result['supports_events'] = self.supports_events
-        result['supports_weeks'] = self.supports_weeks
-        result['supports_fonts'] = self.supports_fonts
-        result['supports_italic'] = self.supports_italic
-        return result
-
-    def __str__(self):
-        return json.dumps(self.to_context(), indent=4)
+    _: KW_ONLY
+    supports_events: bool = True
+    supports_weeks: bool = True
+    supports_fonts: bool = True
+    supports_italic: bool = True
 
 
-class FontsConfig:
-    def __init__(self, font_family=""):
-        self.weekday = FontConfig(size=15, family=font_family)
-        self.saturday = FontConfig(size=15, family=font_family, bold=True)
-        self.sunday = FontConfig(size=15, family=font_family, bold=True)
-        self.event = FontConfig(size=8, family=font_family)
-        self.month = FontConfig(size=20, family=font_family)
-        self.week = FontConfig(size=8, family=font_family)
-        self.dayname = FontConfig(size=8, family=font_family)
+@dataclass
+class CalendarConfig:
+    format: str
+    title: str = None
+    months: List[MonthConfig] = field(default_factory=list)
+    first_month: datetime = field(default_factory=datetime.now)
 
-    def to_context(self):
-        return {
-            'weekday': self.weekday.to_context(),
-            'saturday': self.saturday.to_context(),
-            'sunday': self.sunday.to_context(),
-            'event': self.event.to_context(),
-            'month': self.month.to_context(),
-            'week': self.week.to_context(),
-            'dayname': self.dayname.to_context()
-        }
+    def asdict(self):
+        return asdict(self)
 
-    def update_from_request(self, request, prefix="", postfix=""):
-        self.weekday.update_from_request(request, prefix + "weekday_", postfix)
-        self.saturday.update_from_request(request, prefix + "saturday_", postfix)
-        self.sunday.update_from_request(request, prefix + "sunday_", postfix)
-        self.event.update_from_request(request, prefix + "event_", postfix)
-        self.month.update_from_request(request, prefix + "month_", postfix)
-        self.dayname.update_from_request(request, prefix + "dayname_", postfix)
+    @classmethod  # decorator
+    def create_from_request(cls, request, calendar):
+        config = cls(request.POST.get('format'))
+        lenght = int(request.POST.get('lenght'))
+        for i in range(lenght):
+            id = '_' + str(i)
+            month = calendar.get_default_config()
+            month.update_from_request(request, id)
+            config.months.append(month)
 
-    def __str__(self):
-        return json.dumps(self.to_context(), indent=4)
+        return config
 
+    def dump(self):
+        json = self.to_json()
+        content = lzma.compress(json)
+        return content
 
-class FontConfig:
-    def __init__(self, bold=False, italic=False, underline=False, color='#000000', size=8, family=""):
-        self.bold = bold
-        self.italic = italic
-        self.underline = underline
-        self.color = color
-        self.size = size
-        self.family = family
+    @classmethod
+    def loads(cls, json):
+        data = orjson.loads(json)
+        return cls(**data)
 
-    @property
-    def color(self):
-        return self.__color
-
-    @color.setter
-    def color(self, var):
-        if var is not None:
-            self.__color = color_from_hex_string(var)
-
-    def to_context(self):
-        return {
-            'bold': self.bold,
-            'italic': self.italic,
-            'underline': self.underline,
-            'color': color_to_hex(self.color),
-            'size': self.size,
-            'family': self.family
-        }
-
-    def update_from_request(self, request, prefix="", postfix=""):
-        self.bold = request.POST.get(prefix + 'bold' + postfix, self.bold)
-        self.italic = request.POST.get(prefix + 'italic' + postfix, self.italic)
-        self.underline = request.POST.get(prefix + 'underline' + postfix, self.underline)
-        if request.POST.get(prefix + 'color' + postfix, "") != "":
-            self.color = request.POST.get(prefix + 'color' + postfix)
-        self.size = request.POST.get(prefix + 'size' + postfix, self.size)
-        self.family = request.POST.get(prefix + 'family' + postfix, self.family)
-
-    def __str__(self):
-        return json.dumps(self.to_context(), indent=4)
+    def to_json(self, include_images=False):
+        return orjson.dumps(self, default=default, option=orjson.OPT_INDENT_2 + orjson.OPT_OMIT_MICROSECONDS)
 
 
-class DayConfig:
-    def __init__(self, day, day_of_week, week, events=[], is_holiday=False):
-        self.day = day
-        self.day_of_week = day_of_week
-        self.week = week
-        self.events = events
-        self.is_saturday = day_of_week == 6
-        self.is_sunday = day_of_week == 7
-        self.is_holiday = is_holiday
-
-    def to_context(self):
-        return {
-            'day': self.day,
-            'day_of_week': self.day_of_week,
-            'week': self.week,
-            'events': self.events,
-            'is_sunday': self.is_sunday,
-            'is_saturday': self.is_saturday,
-            'is_holiday': self.is_holiday,
-        }
-
-    def __str__(self):
-        return json.dumps(self.to_context(), indent=4)
-
-
-class Event:
-
-    def __init__(self, date: datetime, text, is_holiday=True):
-        self.date = date
-        self.text = text
-        self.is_holiday = is_holiday
-
-    def to_context(self):
-        return {
-            "date": str(self.date),
-            "text": self.text,
-            "is_holiday": self.is_holiday
-        }
+def default(obj) -> str:
+    if isinstance(obj, bytes):
+        return base64.b64encode(obj).decode('utf-8')

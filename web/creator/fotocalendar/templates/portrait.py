@@ -73,7 +73,7 @@ class PortraitFotoCalendar(FotoCalendar):
 
         if len(events) > 0:
             pdf.ln()
-            self._set_font(config.font.event)
+            self._set_font(config.fonts.event)
             pdf.cell(txt=config.event_separator.join(events), w=pdf.epw, align=config.eventlist_align, new_x="LEFT", new_y="NEXT")
 
     def __toWeekMatrix(self, month_matrix):

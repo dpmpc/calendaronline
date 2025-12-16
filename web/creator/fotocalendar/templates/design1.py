@@ -27,9 +27,9 @@ class Design1FotoCalendar(FotoCalendar):
         grid_left = pdf.epw - col_width
 
         pdf.set_font(style='B', size=15)
-        self._set_text_color(self.__dark)
-        self._set_draw_color(self.__dark)
-        self._set_fill_color(self.__bg_bright)
+        pdf.set_text_color(self.__dark)
+        pdf.set_draw_color(self.__dark)
+        pdf.set_fill_color(self.__bg_bright)
 
         pdf.set_xy(grid_left, self.tmargin)
         pdf.cell(col_width - 20, 10, txt=self.get_month_name(date), align=config.month_align, new_x="RIGHT", fill=True)
@@ -37,14 +37,14 @@ class Design1FotoCalendar(FotoCalendar):
 
         for day in matrix:
             if matrix[day].is_sunday or matrix[day].is_holiday:
-                self._set_text_color(self.__fg_bright)
-                self._set_fill_color(self.__medium1)
+                pdf.set_text_color(self.__fg_bright)
+                pdf.set_fill_color(self.__medium1)
             elif matrix[day].is_saturday:
-                self._set_text_color(self.__dark)
-                self._set_fill_color(self.__medium2)
+                pdf.set_text_color(self.__dark)
+                pdf.set_fill_color(self.__medium2)
             else:
-                self._set_text_color(self.__dark)
-                self._set_fill_color(self.__bg_bright)
+                pdf.set_text_color(self.__dark)
+                pdf.set_fill_color(self.__bg_bright)
             pdf.set_x(grid_left)
             pdf.set_font(size=10)
             pdf.cell(7, line_height, txt=matrix[day].day, border='T' if config.table_border else 0, align="R", new_y="TOP", fill=True)
@@ -55,5 +55,5 @@ class Design1FotoCalendar(FotoCalendar):
             pdf.cell(col_width - 7, line_height, txt=text, border='T' if config.table_border else 0, align="L", new_y="NEXT", fill=True)
 
         pdf.set_x(grid_left)
-        self._set_fill_color(self.__bg_bright)
+        pdf.set_fill_color(self.__bg_bright)
         pdf.cell(col_width, 2, txt="", border=config.table_border, fill=True)

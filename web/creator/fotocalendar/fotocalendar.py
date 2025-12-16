@@ -221,48 +221,20 @@ class FotoCalendar:
         return self._dayNamesAbbrev[dayOfWeek - 1]
 
     def _set_font(self, config: FontConfig):
-        style = self._to_font_style(config)
-        self.fpdf.set_font(style=style, size=config.size, family=config.family)
+        self.fpdf.set_font(style=config.font_style, size=config.size, family=config.family)
         self.fpdf.set_text_color(config.color)
 
     def _set_font_for_day(self, day: DayConfig, config: MonthConfig):
-        if day.is_saturday:
-            self._set_font(config.fonts.saturday)
+        if day.is_holiday:
+            self._set_font(config.fonts.events)
         elif day.is_sunday:
             self._set_font(config.fonts.sunday)
-        elif day.is_holiday:
-            self._set_font(config.fonts.events)
+        elif day.is_saturday:
+            self._set_font(config.fonts.saturday)
         else:
             self._set_font(config.fonts.weekday)
 
-    def _to_font_style(self, config: FontConfig):
-        style = ''
-        if config.bold:
-            style += 'B'
-        if config.italic:
-            style += 'I'
-        if config.underline:
-            style += 'U'
-        return style
-
-    def _hex_color_to_tuple(self, color):
-        if color.startswith('#'):
-            color = color.lstrip('#')
-        return tuple(int(color[i:i + 2], 16) for i in (0, 2, 4))
-
-    def _set_fill_color(self, color):
-        pdf = self.fpdf
-        pdf.set_fill_color(color[0], color[1], color[2])
-
-    def _set_text_color(self, color):
-        pdf = self.fpdf
-        pdf.set_text_color(color[0], color[1], color[2])
-
-    def _set_draw_color(self, color):
-        pdf = self.fpdf
-        pdf.set_draw_color(color[0], color[1], color[2])
-
-    def get_image_aspect_ratio(self):
+    def get_image_aspect_ratio(self) -> str:
         return "{:.2f}".format(self.image_with / self.image_height)
 
     def output(self):
