@@ -1,36 +1,28 @@
 from creator.fotocalendar.templates.landscape import LandscapeFotoCalendar
+from creator.fotocalendar.bo.config import DefaultConfig
 
 
 class LandscapeModernFotoCalendar(LandscapeFotoCalendar):
-
-    _event_serparator = ' • '
-
     def __init__(self):
-        # super().__init__(False)
-        # self.image_height = 149
         super().__init__(True)
         self.image_height = 167
-        self._table_border = False
         self._add_font("MonsieurLaDoulaise")
 
-    def _addBackground(self):
+    def get_default_config(self, date=None) -> DefaultConfig:
+        config = super().get_default_config(date)
+        config.month_align = 'R'
+        config.month_show_year = False
+        config.fonts.month.size = 80
+        config.fonts.month.color = '#DCDCDC'
+        config.fonts.month.family = 'MonsieurLaDoulaise'
+        return config
+
+    def _add_table_background(self, config, x, y, w, h):
         pass
 
-    def _addMonthName(self, date):
-        monthName = self.get_month_name(date)
+    def _add_month_name(self, config):
+        self.fpdf.set_y(173)
+        super()._add_month_name(config)
 
-        pdf = self.fpdf
-        pdf.set_font(family="MonsieurLaDoulaise", size=80)
-        pdf.set_text_color(220, 220, 220)
-        textWidth = pdf.get_string_width(monthName, True) + 2
-        if monthName[-1] == 'l':
-            textWidth += 12
-        elif monthName[-1] == 't':
-            textWidth += 8
-        elif monthName[-2] == 'l':
-            textWidth += 7
-        pdf.text(pdf.epw - textWidth, 197, monthName)
-        pdf.set_text_color(0, 0, 0)
-
-    def _addDays(self, matrix, x, y, width):
-        super()._addDays(matrix, 10, y, width - 20)
+    def _add_days(self, matrix, x, y, width, config):
+        super()._add_days(matrix, 10, y, width - 20, config)

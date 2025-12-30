@@ -5,3 +5,4 @@ python-dateutil
 gunicorn==23.0.0
 icalevents==0.3.1
 uharfbuzz==0.53.2
+orjson >= 3.10,<4

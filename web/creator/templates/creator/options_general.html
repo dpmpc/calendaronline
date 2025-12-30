@@ -3,12 +3,12 @@
     <div class="col-sm-10">
       <div class="mb-3">
         <select class="form-select" id="background-type{{ fieldpostfix }}" name="background_type{{ fieldpostfix }}">
-          <option value="N"{% if background_type  == "N" %} selected{% endif %}selected>Keine Hintergrundfarbe</option>
-          <option value="S"{% if background_type  == "S" %} selected{% endif %}>Einfarbig</option>
-          <option value="H"{% if background_type  == 'H' %} selected{% endif %}>Farbverlauf horizontal</option>
-          <option value="V"{% if background_type  == 'V' %} selected{% endif %}>Farbverlauf vertikal</option>
-          <option value="D"{% if background_type  == 'D' %} selected{% endif %}>Farbverlauf diagonal</option>
-          <option value="R"{% if background_type  == 'R' %} selected{% endif %}>Farbverlauf kreisförmig</option>
+          <option value="N"{% if month.background_type  == "N" %} selected{% endif %}>Keine Hintergrundfarbe</option>
+          <option value="S"{% if month.background_type  == "S" %} selected{% endif %}>Einfarbig</option>
+          <option value="H"{% if month.background_type  == 'H' %} selected{% endif %}>Farbverlauf horizontal</option>
+          <option value="V"{% if month.background_type  == 'V' %} selected{% endif %}>Farbverlauf vertikal</option>
+          <option value="D"{% if month.background_type  == 'D' %} selected{% endif %}>Farbverlauf diagonal</option>
+          <option value="R"{% if month.background_type  == 'R' %} selected{% endif %}>Farbverlauf kreisförmig</option>
         </select>
       </div>
     </div>
@@ -19,10 +19,10 @@
     <div class="col-sm-10">
       <div class="btn-toolbar mb-3" role="toolbar">
         <div class="mb-3">
-          <input class="form-control form-control-color" type="color" id="background-color{{ fieldpostfix }}" name="background_color{{ fieldpostfix }}" value="{{ background_color }}">
+          <input class="form-control form-control-color" type="color" id="background-color{{ fieldpostfix }}" name="background_color{{ fieldpostfix }}" value="{{ month.background_color }}">
         </div>
         <div class="mb-3">
-          <input class="form-control form-control-color" type="color" id="background-color-b{{ fieldpostfix }}" name="background_color_b{{ fieldpostfix }}" value="{{ background_color_b }}">
+          <input class="form-control form-control-color" type="color" id="background-color-b{{ fieldpostfix }}" name="background_color_b{{ fieldpostfix }}" value="{{ month.background_color_b }}">
         </div>
       </div>
     </div>
@@ -32,7 +32,7 @@
     <label class="col-sm-2 col-form-check-label" for="center-month{{ fieldpostfix }}">Montatsname zentriert</label>
     <div class="col-sm-10">
       <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="center-month{{ fieldpostfix }}" name="center_month{{ fieldpostfix }}" value="1"{% if center_month %} checked{% endif %}>
+        <input class="form-check-input" type="checkbox" role="switch" id="center-month{{ fieldpostfix }}" name="center_month{{ fieldpostfix }}" value="1"{% if month.month_align == 'C' %} checked{% endif %}>
       </div>
     </div>
   </div>
@@ -43,100 +43,25 @@
     <label class="col-sm-2 col-form-check-label" for="table-border{{ fieldpostfix }}">Rahmen um Tage</label>
     <div class="col-sm-10">
       <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="table-border{{ fieldpostfix }}" name="table_border{{ fieldpostfix }}" value="1"{% if table_border %} checked{% endif %}>
+        <input class="form-check-input" type="checkbox" role="switch" id="table-border{{ fieldpostfix }}" name="table_border{{ fieldpostfix }}" value="1"{% if month.table_border %} checked{% endif %}>
       </div>
     </div>
   </div>
 
 
-  {% if supports_fonts %} 
-  <div class="row mb-3">
-    <label class="col-sm-2 col-form-check-label">Schrift Wochentage</label>
-    <div class="col-sm-10">
-        <div class="btn-toolbar mb-3" role="toolbar">
-            <div class="btn-group me-2" role="group">
-                <input type="checkbox" class="btn-check" id="font-weekday-bold{{ fieldpostfix }}" name="font_weekday_bold{{ fieldpostfix }}" value="1"{% if font_weekday_bold %} checked{% endif %}>
-                <label class="btn btn-outline-primary" for="font-weekday-bold{{ fieldpostfix }}"><span class="fa fa-bold"></span></label>
-                
-                <input type="checkbox" class="btn-check" id="font-weekday-italic{{ fieldpostfix }}" name="font_weekday_italic{{ fieldpostfix }}" value="1"{% if not supports_italic %} disabled{% elif font_weekday_italic %} checked{% endif %}>
-                <label class="btn btn-outline-primary" for="font-weekday-italic{{ fieldpostfix }}"><span class="fa fa-italic"></span></label>
-
-                <input type="checkbox" class="btn-check" id="font-weekday-underline{{ fieldpostfix }}" name="font_weekday_underline{{ fieldpostfix }}" value="1"{% if font_weekday_underline %} checked{% endif %}>
-                <label class="btn btn-outline-primary" for="font-weekday-underline{{ fieldpostfix }}"><span class="fa fa-underline"></span></label>
-            </div>
-            
-            <input class="form-control form-control-color" type="color" name="font_weekday_color{{ fieldpostfix }}" value="{{ font_weekday_color }}">
-        </div>  
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <label class="col-sm-2 col-form-check-label">Schrift Samstage</label>
-    <div class="col-sm-10">
-        <div class="btn-toolbar mb-3" role="toolbar">
-            <div class="btn-group me-2" role="group">
-                <input type="checkbox" class="btn-check" id="font-saturday-bold{{ fieldpostfix }}" name="font_saturday_bold{{ fieldpostfix }}" value="B"{% if font_saturday_bold %} checked{% endif %}>
-                <label class="btn btn-outline-primary" for="font-saturday-bold{{ fieldpostfix }}"><span class="fa fa-bold"></span></label>
-                
-                <input type="checkbox" class="btn-check" id="font-saturday-italic{{ fieldpostfix }}" name="font_saturday_italic{{ fieldpostfix }}" value="I"{% if not supports_italic %} disabled{% elif font_saturday_italic %} checked{% endif %}>
-                <label class="btn btn-outline-primary" for="font-saturday-italic{{ fieldpostfix }}"><span class="fa fa-italic"></span></label>
-
-                <input type="checkbox" class="btn-check" id="font-saturday-underline{{ fieldpostfix }}" name="font_saturday_underline{{ fieldpostfix }}" value="U"{% if font_saturday_underline %} checked{% endif %}>
-                <label class="btn btn-outline-primary" for="font-saturday-underline{{ fieldpostfix }}"><span class="fa fa-underline"></span></label>
-            </div>
-            
-            <input class="form-control form-control-color" type="color" name="font_saturday_color{{ fieldpostfix }}" value="{{ font_saturday_color }}">
-        </div>
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <label class="col-sm-2 col-form-check-label">Schrift Sonntage</label>
-    <div class="col-sm-10">
-    <div class="btn-toolbar mb-3" role="toolbar">
-        <div class="btn-group me-2" role="group">
-            <input type="checkbox" class="btn-check" id="font-sunday-bold{{ fieldpostfix }}" name="font_sunday_bold{{ fieldpostfix }}" value="1"{% if font_sunday_bold %} checked{% endif %}>
-            <label class="btn btn-outline-primary" for="font-sunday-bold{{ fieldpostfix }}"><span class="fa fa-bold"></span></label>
-            
-            <input type="checkbox" class="btn-check" id="font-sunday-italic{{ fieldpostfix }}" name="font_sunday_italic{{ fieldpostfix }}" value="1"{% if not supports_italic %} disabled{% elif font_sunday_italic %} checked{% endif %}>
-            <label class="btn btn-outline-primary" for="font-sunday-italic{{ fieldpostfix }}"><span class="fa fa-italic"></span></label>
-
-            <input type="checkbox" class="btn-check" id="font-sunday-underline{{ fieldpostfix }}" name="font_sunday_underline{{ fieldpostfix }}" value="1"{% if font_sunday_underline %} checked{% endif %}>
-            <label class="btn btn-outline-primary" for="font-sunday-underline{{ fieldpostfix }}"><span class="fa fa-underline"></span></label>
-        </div>
-        
-        <input class="form-control form-control-color" type="color" name="font_sunday_color{{ fieldpostfix }}" value="{{ font_sunday_color }}">
-    </div>  
-</div>
-  </div>
-
-  <div class="row mb-3">
-    <label class="col-sm-2 col-form-check-label">Schrift Termine</label>
-    <div class="col-sm-10">
-        <div class="btn-toolbar mb-3" role="toolbar">
-            <div class="btn-group me-2" role="group">
-                <input type="checkbox" class="btn-check" id="font-event-bold{{ fieldpostfix }}" name="font_event_bold{{ fieldpostfix }}" value="1"{% if font_event_bold %} checked{% endif %}>
-                <label class="btn btn-outline-primary" for="font-event-bold{{ fieldpostfix }}"><span class="fa fa-bold"></span></label>
-                
-                <input type="checkbox" class="btn-check" id="font_event-italic{{ fieldpostfix }}" name="font_event_italic{{ fieldpostfix }}" value="1"{% if not supports_italic %} disabled{% elif font_event_italic %} checked{% endif %}>
-                <label class="btn btn-outline-primary" for="font-event-italic{{ fieldpostfix }}"><span class="fa fa-italic"></span></label>
-
-                <input type="checkbox" class="btn-check" id="font-event-underline{{ fieldpostfix }}" name="font_event_underline{{ fieldpostfix }}" value="1"{% if font_event_underline %} checked{% endif %}>
-                <label class="btn btn-outline-primary" for="font-event-underline{{ fieldpostfix }}"><span class="fa fa-underline"></span></label>
-            </div>
-            
-            <input class="form-control form-control-color" type="color" name="font_event_color{{ fieldpostfix }}" value="{{ font_event_color }}">
-        </div>  
-    </div>
-  </div>
+  {% if month.supports_fonts %} 
+  {% include "creator/options_font.html" with fieldprefix="font_weekday_" fieldpostfix=fieldpostfix font=month.fonts.weekday label="Schrift Wochentage" %}
+  {% include "creator/options_font.html" with fieldprefix="font_saturday_" fieldpostfix=fieldpostfix font=month.fonts.saturday label="Schrift Samstage" %}
+  {% include "creator/options_font.html" with fieldprefix="font_sunday_" fieldpostfix=fieldpostfix font=month.fonts.sunday label="Schrift Sonntage" %}
+  {% include "creator/options_font.html" with fieldprefix="font_event_" fieldpostfix=fieldpostfix font=month.fonts.event label="Schrift Termine" %}
   {% endif %} 
 
-  {% if supports_weeks %} 
+  {% if month.supports_weeks %} 
   <div class="row mb-3">
     <label class="col-sm-2 col-form-check-label" for="show-weeks{{ fieldpostfix }}">Kalenderwoche anzeigen</label>
     <div class="col-sm-10">
       <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="show-weeks{{ fieldpostfix }}" name="show_weeks{{ fieldpostfix }}" value="1"{% if show_weeks %} checked{% endif %}>
+        <input class="form-check-input" type="checkbox" role="switch" id="show-weeks{{ fieldpostfix }}" name="show_weeks{{ fieldpostfix }}" value="1"{% if month.show_weeks %} checked{% endif %}>
       </div>
     </div>
   </div>
@@ -146,7 +71,7 @@
     <label class="col-sm-2 col-form-label" for="table-background-color{{ fieldpostfix }}">Hintergrundfarbe</label>
     <div class="col-sm-10">
       <div class="mb-3">
-        <input class="form-control form-control-color" type="color" id="table-background-color{{ fieldpostfix }}" name="table_background_color{{ fieldpostfix }}" value="{{ table_background_color }}">
+        <input class="form-control form-control-color" type="color" id="table-background-color{{ fieldpostfix }}" name="table_background_color{{ fieldpostfix }}" value="{{ month.table_background_color }}">
       </div>
     </div>
   </div>
@@ -154,7 +79,7 @@
   <div class="row mb-3">
     <label class="col-sm-2 col-form-check-label" for="table-background-tansparency{{ fieldpostfix }}">Transparenz Hintergrund</label>
     <div class="col-sm-10">
-      <input type="range" class="form-range" min="0" max="100" value="{{ table_background_transparency }}" id="table-background-tansparency{{ fieldpostfix }}" name="table_background_transparency{{ fieldpostfix }}">
+      <input type="range" class="form-range" min="0" max="100" value="{{ month.table_background_opacity }}" id="table-background-opacity{{ fieldpostfix }}" name="table_background_opacity{{ fieldpostfix }}">
     </div>
   </div>
 
@@ -164,7 +89,7 @@
     <label class="col-sm-2 col-form-check-label" for="image_border{{ fieldpostfix }}">Rahmen um Bild</label>
     <div class="col-sm-10">
       <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="image_border{{ fieldpostfix }}" name="image_border{{ fieldpostfix }}" value="1"{% if image_border %} checked{% endif %}>
+        <input class="form-check-input" type="checkbox" role="switch" id="image_border{{ fieldpostfix }}" name="image_border{{ fieldpostfix }}" value="1"{% if month.image_border %} checked{% endif %}>
       </div>
     </div>
   </div>
@@ -173,7 +98,7 @@
     <label class="col-sm-2 col-form-label" for="image-border-color{{ fieldpostfix }}">Rahmenfarbe</label>
     <div class="col-sm-10">
       <div class="mb-3">
-        <input class="form-control form-control-color" type="color" id="image-border-color{{ fieldpostfix }}" name="image_border_color{{ fieldpostfix }}" value="{{ image_border_color }}">
+        <input class="form-control form-control-color" type="color" id="image-border-color{{ fieldpostfix }}" name="image_border_color{{ fieldpostfix }}" value="{{ month.image_border_color }}">
       </div>
     </div>
   </div>
@@ -181,6 +106,6 @@
   <div class="row mb-3">
     <label class="col-sm-2 col-form-check-label" for="image-border-width{{ fieldpostfix }}">Rahmenbreite</label>
     <div class="col-sm-10">
-      <input type="range" class="form-range" min="0" max="100" value="{{ image_border_width }}" id="image-border-width{{ fieldpostfix }}" name="image_border_width{{ fieldpostfix }}">
+      <input type="range" class="form-range" min="0" max="100" value="{{ month.image_border_width }}" id="image-border-width{{ fieldpostfix }}" name="image_border_width{{ fieldpostfix }}">
     </div>
   </div>

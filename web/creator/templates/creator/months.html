@@ -17,7 +17,10 @@
 <form enctype="multipart/form-data" name="months">
   {% csrf_token %} 
   <input type="hidden" name="format" value="{{ format }}" />
+  <input type="hidden" name="ids" value="{% for month in months %}{{month.id}},{% endfor %}" />
   <input type="hidden" name="lenght" value="{{ months|length }}" />
+  <input type="hidden" name="save_project" value="0" />
+
   <ul class="nav nav-tabs" id="monthTabs" role="tablist">
     {% for month in months %}
       <li class="nav-item" role="presentation">
@@ -28,7 +31,9 @@
   <div class="tab-content" id="monthTabsContent">
     {% for month in months %}
       <div class="tab-pane fade{% if forloop.first %} show active{% endif %}" id="month_pane_{{ month.id }}" role="tabpanel" aria-labelledby="month_tab_{{ month.id }}" tabindex="0">
-        <input type="hidden" name="date_{{ month.id }}" value="{{ month.date }}" />
+        <input type="hidden" name="id_{{ month.id }}" value="{{ month.id }}" />
+        <input type="hidden" name="name_{{ month.id }}" value="{{ month.name }}" />
+        <input type="hidden" name="date_{{ month.id }}" value="{{ month.date | date:'Y-m-d' }}" />
         
         <div class="container-fluid pt-3">
           <div class="row mb-3">
@@ -41,11 +46,12 @@
             <div class="col docs-buttons">
               <!-- <h3>Toolbar:</h3> -->
               <div class="btn-group">
-                <button type="button" class="btn btn-success" title="Neues Bild öffnen" onclick="selectImage({{ month.id }})">
+                <button type="button" class="btn btn-success" title="Neues Bild öffnen" onclick="selectImage('{{ month.id }}', '{{month.image_aspect_ratio}}')">
                   <span class="fa fa-file-image"></span> Bild öffnen
                 </button>
               </div>
       
+              <!--
               <div class="btn-group">
                 <button type="button" class="btn btn-primary" title="Zoom vergrößern" disabled>
                   <span class="fa fa-search-plus"></span>
@@ -74,10 +80,17 @@
               </div>
 
               <div class="btn-group">
+                <button type="button" id="button-save-{{ month.id }}" class="btn btn-primary" title="Projekt Speichern" data-bs-toggle="modal" data-bs-target="#upload-images-modal" onclick="uploadImages(true)">
+                  <span class="fa fa-floppy-disk"></span> Speichern
+                </button>
+              </div>
+
+              -->
+
+              <div class="btn-group">
                 <button type="button" id="button-preview-{{ month.id }}" class="btn btn-primary" title="Vorschau" data-bs-toggle="modal" data-bs-target="#upload-images-modal" onclick="uploadImages([ {{ month.id }} ])" disabled>
                   <span class="fa fa-eye"></span> Vorschau
                 </button>
-               
                 <button type="button" class="btn {% if forloop.last %}btn-success{% else %}btn-primary{% endif %}" data-bs-toggle="modal" data-bs-target="#upload-images-modal" title="Kalender erzeugen" onclick="uploadImages()">
                   <span class="fa fa-file-pdf"></span> Kalender Erzeugen
                 </button>
@@ -93,16 +106,16 @@
       
           <h5 class="mb-3">Optionen für den Monat</h5>
 
-          {% include "creator/options_general.html" with fieldpostfix=month.id|prefix:"_"  %}
+          {% include "creator/options_general.html" with fieldpostfix=month.id|prefix:"_" month=month %}
 
-          {% if supports_events %} 
+          {% if month.supports_events %} 
           <h5 class="mb-3">Termine</h5>
           <div class="list-group" id="events-group-{{ month.id }}">
           </div>
 
           <div class="row  pt-3">
             <div class="col docs-buttons">
-              <button type="button" class="btn btn-primary" onclick="addEvent({{ month.id }}, '{{ month.date }}', '')" >
+              <button type="button" class="btn btn-primary" onclick="addEvent({{ month.id }}, '{{ month.date | date:'Y-m-d' }}', '')" >
                 <span class="fa fa-calendar-plus"></span> Termin hinzufügen
               </button>
             </div>
@@ -147,11 +160,11 @@ function showTab(name) {
   }
 }
 
-function selectImage(id) {
+function selectImage(id, aspectRatio) {
   input = document.createElement("input");
   input.type = 'file';
   input.accept="image/*";
-  input.onchange = function() { updatePreview(input, id) }
+  input.onchange = function() { updatePreview(input, id, aspectRatio) }
   input.click();
 }
 
@@ -178,13 +191,13 @@ function addEvent(monthId, date, text, isHoliday) {
   var inputDate = document.createElement('input');
   inputDate.classList.add("form-control")
   inputDate.setAttribute('type', 'date')
-  inputDate.setAttribute('name', 'event-date')
+  inputDate.setAttribute('name', 'event-date_' + monthId)
   inputDate.value = date
 
   var inputText = document.createElement('input')
   inputText.classList.add("form-control")
   inputText.setAttribute('type', 'text')
-  inputText.setAttribute('name', 'event-text')
+  inputText.setAttribute('name', 'event-text_' + monthId)
   inputText.value = text
 
   /*
@@ -223,12 +236,11 @@ function addEvent(monthId, date, text, isHoliday) {
 
 }
 
-function uploadImages(months) {
-  console.log("Starting uploadImages", months);
-  if (!months) {
-    var months = [ {% for month in months %}{{ month.id}}{% if not forloop.last %},{% endif %}{% endfor %} ];
-  }
+function uploadImages(saveProject) {
+  console.log("Starting uploadImages", saveProject);
+  var months = [ {% for month in months %}{{ month.id}}{% if not forloop.last %},{% endif %}{% endfor %} ];
   var formData = new FormData(document.forms['months']);
+  formData.set('save_project', saveProject ? '1' : '0')
   var croppedCanvasOptions = {
     minWidth: 256,
     minHeight: 256,
@@ -241,8 +253,13 @@ function uploadImages(months) {
   
   xhr.onload = function() {
     if (xhr.status == 200) {
-      closeModal("upload-images-modal")
-      showBlob(xhr.response, "kalender.pdf")
+      if (saveProject) {
+        showBlob(xhr.response, "kalender.calendaronline")
+      }
+      else {
+        showBlob(xhr.response, "kalender.pdf")
+      }
+      closeModal("upload-images-modal")   
     } else {
       closeModal("upload-images-modal")
       console.error("Hochladen der Bilder ist mit Status " + xhr.status + " fehlgeschlagen:", xhr.response);
@@ -265,27 +282,50 @@ function uploadImages(months) {
 
   console.log("About to create " + expectedBlobs + " blobs...")
 
-  for (month of months) {
-    if (cropper[month]) {
-      console.log("Creating blob for month " + month)
-      const imageName = 'image_' + month;
-      cropper[month].getCroppedCanvas(croppedCanvasOptions).toBlob((blob) => {
-        formData.append(imageName, blob, imageName + '.jpeg');
-        if (expectedBlobs-- <= 1) {
-          console.log("Submitting xhr");
-          xhr.send(formData);
-        }
-      }, 'image/jpeg');
+  if (expectedBlobs > 0) {
+    for (month of months) {
+      if (cropper[month]) {
+        console.log("Creating blob for month " + month)
+        var boxData = cropper[month].getData()
+        console.log("Crop Box Data for month " + month, boxData)
+
+        formData.set("image_x_" + month, boxData['x'])
+        formData.set("image_y_" + month, boxData['y'])
+        formData.set("image_width_" + month, boxData['width'])
+        formData.set("image_height_" + month, boxData['height'])
+        const imageName = 'image_' + month;
+        
+        cropper[month].getCroppedCanvas(croppedCanvasOptions).toBlob((blob) => {
+          formData.append(imageName, blob, imageName + '.jpeg');
+
+          if (expectedBlobs-- <= 1) {
+            console.log("Submitting xhr");
+            xhr.send(formData);
+          }
+        }, 'image/jpeg');
+      }
     }
+  }
+  else {
+    xhr.send(formData);
   }
 }
 
-function closeModal(modalId) {
+function closeModal(modalId, onClosed) {
   var modalEl = document.getElementById(modalId);
+  const myModalAlternative = new bootstrap.Modal('#myModal', options)
+  console.log("Hiding modal with Id " + modalId + " and element ", modalEl)
+
   if (modalEl != null) {
+    modalEl.addEventListener('hidden.bs.modal', event => {
+      console.log("Modal with Id " + modalId + " is hidden", onClosed)
+    })
     var modal = bootstrap.Modal.getInstance(modalEl);
-    modal.hide();
+    modal.toggle();
   }
+  else [
+    console.log("No modalEl!")
+  ]
 }
 
 function showBlob(blob, filename) {
@@ -295,35 +335,37 @@ function showBlob(blob, filename) {
   a.dispatchEvent(new MouseEvent('click'));
 }
 
-function updatePreview(input, id) {
+function updatePreview(input, id, aspectRatio) {
+  let file = input.files[0];
+  let key = "{{ format }}-" + file.name + "-" + file.size
+  let reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = function () {
+    setCropperImage(id, aspectRatio, key, reader.result)
+  }
+}
+
+function setCropperImage(id, aspectRatio, key, imageData) {
   let img = document.getElementById("image-preview-" + id);
 
   if (cropper[id]) {
     cropper[id].destroy();
   }
 
-  let file = input.files[0];
-  key = "{{ format }}-" + file.name + "-" + file.size
-
-  cropper[id] = enableCropper(img, id, key);
-
-  let reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = function () {
-    cropper[id].imageReplaced = true;
-    cropper[id].replace(reader.result);
-  }
+  cropper[id] = enableCropper(img, id, key, aspectRatio);
+  cropper[id].imageReplaced = true;
+  cropper[id].replace(imageData);
 }
 
-function enableCropper(img, id, storedCropperKey) {
+function enableCropper(img, id, storedCropperKey, aspectRatio) {
   var storedCropperData = false
-  if (localStorage.getItem(storedCropperKey)) {
+  if (storedCropperKey && localStorage.getItem(storedCropperKey)) {
     storedCropperData = JSON.parse(localStorage.getItem(storedCropperKey))
   }
 
   return new Cropper(img, {
     dragMode: 'move',
-    aspectRatio: '{{ aspectRatio }}',
+    aspectRatio: aspectRatio,
     autoCropArea: 1.0,
     viewMode: 2,
     restore: false,
@@ -340,12 +382,13 @@ function enableCropper(img, id, storedCropperKey) {
   })
 }
 
-{% if supports_events %}
+{% if months.0.supports_events %}
 $( document ).ready(function() {
   {% for month in months %}
-    {% for event in month.appointments %}
+    {% for event in month.events %}
     addEvent({{month.id}}, '{{ event.date }}', '{{ event.text }}', true);
     {% endfor %}
+    {% if month.image %}setCropperImage('{{ month.id }}', '{{month.image_aspect_ratio}}', false, 'data:image/jpeg;base64,{{ month.image }}'){% endif %}
   {% endfor %}
 });
 {% endif %} 
