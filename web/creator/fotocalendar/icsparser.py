@@ -3,7 +3,6 @@ from creator.fotocalendar.bo.config import Event
 
 
 def get_events_from_ics(ics_url, start, end):
-    print("Setting ics_url: ", ics_url)
     eventlist = {}
     if ics_url != "":
         evts = events(url=ics_url, start=start, end=end)

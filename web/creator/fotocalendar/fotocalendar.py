@@ -94,11 +94,11 @@ class FotoCalendar:
         self._add_text(config, self._generate_month_matrix(config))
 
     def get_default_config(self, date=None) -> DefaultConfig:
-        return DefaultConfig(self.get_image_aspect_ratio(), date, self._font)
+        return DefaultConfig(image_aspect_ratio=self.get_image_aspect_ratio(), date=date, font_family=self._font)
 
     def _add_table_background(self, config, x, y, w, h):
         pdf = self.fpdf
-        with pdf.local_context(fill_opacity=config.table_background_transparency, stroke_opacity=0, fill_color=config.table_background_color):
+        with pdf.local_context(fill_opacity=float(config.table_background_opacity) / 100.0, stroke_opacity=0, fill_color=config.table_background_color):
             pdf.rect(x, y, w, h, round_corners=config.table_background_round_corners, corner_radius=config.table_background_corner_radius, style="F")
 
     def _add_page(self, config): 
@@ -221,6 +221,11 @@ class FotoCalendar:
         return self._dayNamesAbbrev[dayOfWeek - 1]
 
     def _set_font(self, config: FontConfig):
+        if config.stroke_color is None:
+            self.fpdf.text_mode = 0
+        else:
+            self.fpdf.text_mode = 2
+            self.fpdf.draw_color = config.stroke_color
         self.fpdf.set_font(style=config.font_style, size=config.size, family=config.family)
         self.fpdf.set_text_color(config.color)
 

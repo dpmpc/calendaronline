@@ -23,10 +23,8 @@ def month(request):
 
 def load(request):
     content = request.FILES.get('file')
-    # config = lzma.decompress(content.read())
     config = CalendarConfig.loads(content.read())
-    print("Loaded config", str(config))
-
+    
     template = loader.get_template('creator/months.html')
     return HttpResponse(template.render(config.asdict(), request))
 
@@ -38,7 +36,6 @@ def create(request):
             content = config.dump()
             return HttpResponse(content, content_type="application/octet-stream")
         else:
-            print("Creating Calendar PDF")
             calendar = create_from_config(config)
             return HttpResponse(calendar.output(), content_type="application/pdf")
     else:

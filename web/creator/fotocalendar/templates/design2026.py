@@ -19,7 +19,6 @@ class Design2026FotoCalendar(FotoCalendar):
         config.month_align = 'C'
 
         config.table_background_color = '#C8C8C8'
-        config.table_background_tansparency = 1
         config.fonts.month.size = 75
         config.fonts.month.family = "Pacifico"
         config.fonts.month.color = '#C8C8C8'
@@ -30,8 +29,9 @@ class Design2026FotoCalendar(FotoCalendar):
 
     def _add_text(self, config, matrix):
         pdf = self.fpdf
+        config.fonts.month.color = config.table_background_color
 
-        y = self.image_height - 8
+        y = self.image_height - 8.7
         pdf.set_y(y)
         self._add_month_name(config)
 
@@ -65,7 +65,7 @@ class Design2026FotoCalendar(FotoCalendar):
             pdf.ln()
 
     def _add_month_name(self, config):
-        y = self.fpdf.get_y()
+        y = self.fpdf.get_y() - 1.2
         x = self.fpdf.w - 10
         super()._add_month_name(config)
 
@@ -79,7 +79,7 @@ class Design2026FotoCalendar(FotoCalendar):
         font_size = config.fonts.dayname.size if font_size is None else font_size
 
         pdf.set_xy(x - radius / 2, y - radius / 2)
-        with pdf.local_context(fill_opacity=config.table_background_tansparency, fill_color=config.table_background_color, font_size_pt=font_size, font_style='B'):
+        with pdf.local_context(fill_opacity=float(config.table_background_opacity) / 100.0, fill_color=config.table_background_color, font_size_pt=font_size, font_style='B'):
             pdf.circle(x=x, y=y, radius=radius, style="F")
             pdf.cell(w=radius, h=radius, text=text, align='C', border=0, new_x="LMARGIN", new_y="NEXT")
 

@@ -16,6 +16,7 @@ class FontConfig:
     color: str = '#000000'
     size: int = 8
     family: str = ""
+    stroke_color = None
 
     @property
     def font_style(self):
@@ -92,12 +93,11 @@ class DayConfig:
         return self.day_of_week == 7
 
 
-@dataclass
+@dataclass(kw_only=True)
 class MonthConfig:
     image_aspect_ratio: str = '1.0'
     date: datetime = field(default_factory=datetime.now)
     font_family: InitVar[str] = ""
-    _: KW_ONLY
     id: int = 0
     name: str = ''
     month_align: str = 'L'
@@ -110,7 +110,7 @@ class MonthConfig:
 
     table_border: bool = False
     table_background_color: str = '#ffffff'
-    table_background_transparency: float = 0.7
+    table_background_opacity: int = 70
     table_background_round_corners: bool = True
     table_background_corner_radius: int = 2
 
@@ -127,10 +127,14 @@ class MonthConfig:
     image_width: Any = None
     image_height: Any = None
 
-    fonts: FontsConfig = field(init=False)
+    fonts: FontsConfig = None
 
     def __post_init__(self, font_family: str):
-        self.fonts = FontsConfig(font_family)
+        if self.fonts is None:
+            self.fonts = FontsConfig(font_family)
+        if isinstance(self.date, str):
+            components = self.date.split('T')
+            self.date = datetime.strptime(components[0], '%Y-%m-%d')
 
     def set_image(self, var):
         if isinstance(var, Image.Image):
@@ -169,8 +173,8 @@ class MonthConfig:
         self.table_border = request.POST.get('table_border' + postfix, self.table_border)
         if request.POST.get('table_background_color' + postfix, '') != '':
             self.table_background_color = request.POST.get('table_background_color' + postfix)
-        if request.POST.get('table_background_transparency' + postfix, '') != '':
-            self.table_background_transparency = float(request.POST.get('table_background_transparency' + postfix)) / 100.0
+        if request.POST.get('table_background_opacity' + postfix, '') != '':
+            self.table_background_opacity = int(request.POST.get('table_background_opacity' + postfix))
         self.image_border = request.POST.get('image_border' + postfix, self.image_border)
         if request.POST.get('image_border_color' + postfix, '') != '':
             self.image_border_color = request.POST.get('image_border_color' + postfix)
@@ -191,9 +195,8 @@ class MonthConfig:
             self.add_event(date=date, text=text_list[i], is_holiday=False)
 
 
-@dataclass
+@dataclass(kw_only=True)
 class DefaultConfig(MonthConfig):
-    _: KW_ONLY
     supports_events: bool = True
     supports_weeks: bool = True
     supports_fonts: bool = True
@@ -206,6 +209,10 @@ class CalendarConfig:
     title: str = None
     months: List[MonthConfig] = field(default_factory=list)
     first_month: datetime = field(default_factory=datetime.now)
+
+    def __post_init__(self):
+        #self.months = list(self.months)
+        self.months = [DefaultConfig(**o) for o in self.months]
 
     def asdict(self):
         return asdict(self)
@@ -228,9 +235,10 @@ class CalendarConfig:
         return content
 
     @classmethod
-    def loads(cls, json):
-        data = orjson.loads(json)
-        return cls(**data)
+    def loads(cls, data):
+        data_json = lzma.decompress(data)
+        data_dict = orjson.loads(data_json)
+        return cls(**data_dict)
 
     def to_json(self, include_images=False):
         return orjson.dumps(self, default=default, option=orjson.OPT_INDENT_2 + orjson.OPT_OMIT_MICROSECONDS)
