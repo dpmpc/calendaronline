@@ -1,5 +1,6 @@
 from fpdf import FPDF
 from fpdf.pattern import LinearGradient, RadialGradient
+from fpdf.drawing_primitives import color_from_hex_string
 from calendar import monthrange
 from creator.fotocalendar.bo.config import DefaultConfig, MonthConfig, FontConfig, DayConfig
 
@@ -104,7 +105,8 @@ class FotoCalendar:
     def _add_page(self, config): 
         pdf = self.fpdf
         if config.background_type == 'S' and config.background_color is not None:
-            pdf.set_page_background(config.background_color)
+            color = color_from_hex_string(config.background_color)
+            pdf.set_page_background(color)
         else:
             pdf.set_page_background(None)
 
