@@ -26,10 +26,16 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requir
 # FINAL #
 #########
 
+LABEL org.opencontainers.image.source=https://github.com/dpmpc/calendaronline
+LABEL org.opencontainers.image.description="A simple tool to create beautiful photo calendars as PDF for self printing."
+LABEL org.opencontainers.image.licenses=GPL-3.0
+
 FROM python:3.14-alpine
 
 ENV HOME=/home/calendaronline
-ENV APP_HOME=$HOME/web
+ENV APP_HOME=$HOME/web/
+ENV GUNICORN_PORT=8001
+
 
 # create directory for the app user
 RUN mkdir -p $APP_HOME && \
@@ -52,6 +58,5 @@ RUN chown -R calendaronline:calendaronline $APP_HOME && \
 # change to the app user
 USER calendaronline
 
-# CMD  gunicorn calendaronline.wsgi:application --bind 0.0.0.0:8000
-CMD ./startup.prod.sh
-
+ENTRYPOINT ["./startup.prod.sh"]
+CMD ["calendaronline.asgi:application"]
