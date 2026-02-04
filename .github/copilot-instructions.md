@@ -168,7 +168,7 @@ docker build -t calendaronline-nginx .
 
 ### Virtual Environment
 - **ALWAYS exclude `.venv/` from all operations** (linting, git commits, grep searches)
-- The `.gitignore` file should include `.venv/` and `**/__pycache__/**`
+- The `.gitignore` file includes `.venv/` and `**/__pycache__/**`
 
 ### Django Settings
 - `settings.py` uses environment variables for configuration
