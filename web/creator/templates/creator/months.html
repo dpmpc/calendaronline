@@ -325,20 +325,12 @@ function closeModal(modalId, onClosed) {
   if (modalEl != null) {
     var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
     
-    // Wait for the modal to be fully shown before hiding it
-    var hideModal = function() {
+    // Use a small timeout to ensure the modal show animation completes
+    // and any pending show operations finish
+    setTimeout(function() {
+      console.log("Calling modal.hide() after timeout");
       modal.hide();
-      modalEl.removeEventListener('shown.bs.modal', hideModal);
-    };
-    
-    // Check if modal is already shown
-    if (modalEl.classList.contains('show')) {
-      // Modal is already shown, hide it immediately
-      modal.hide();
-    } else {
-      // Modal is still showing, wait for it to finish
-      modalEl.addEventListener('shown.bs.modal', hideModal);
-    }
+    }, 100);
     
     modalEl.addEventListener('hidden.bs.modal', event => {
       console.log("Modal with Id " + modalId + " is hidden", onClosed)
