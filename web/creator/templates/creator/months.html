@@ -1,6 +1,7 @@
 {% extends "master.html" %}
 {% load static %}
 {% load prefix %}
+{# Modal auto-close fix applied #}
 
 {% block title %}
   Neuen Kalender erzeugen
@@ -322,11 +323,26 @@ function closeModal(modalId, onClosed) {
   console.log("Hiding modal with Id " + modalId + " and element ", modalEl)
 
   if (modalEl != null) {
+    var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    
+    // Wait for the modal to be fully shown before hiding it
+    var hideModal = function() {
+      modal.hide();
+      modalEl.removeEventListener('shown.bs.modal', hideModal);
+    };
+    
+    // Check if modal is already shown
+    if (modalEl.classList.contains('show')) {
+      // Modal is already shown, hide it immediately
+      modal.hide();
+    } else {
+      // Modal is still showing, wait for it to finish
+      modalEl.addEventListener('shown.bs.modal', hideModal);
+    }
+    
     modalEl.addEventListener('hidden.bs.modal', event => {
       console.log("Modal with Id " + modalId + " is hidden", onClosed)
-    })
-    var modal = bootstrap.Modal.getInstance(modalEl);
-    modal.hide();
+    }, { once: true })
   }
   else {
     console.log("No modalEl!")
