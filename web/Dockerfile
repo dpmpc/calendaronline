@@ -59,4 +59,4 @@ RUN chown -R calendaronline:calendaronline $APP_HOME && \
 USER calendaronline
 
 ENTRYPOINT ["./startup.prod.sh"]
-CMD ["calendaronline.asgi:application"]
+CMD ["calendaronline.wsgi:application"]
