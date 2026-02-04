@@ -261,10 +261,16 @@ function uploadImages(saveProject) {
       }
       closeModal("upload-images-modal")   
     } else {
-      closeModal("upload-images-modal")
       console.error("Hochladen der Bilder ist mit Status " + xhr.status + " fehlgeschlagen:", xhr.response);
-      alert("Hochladen der Bilder ist fehlgeschlagen! Bitte versuchen Sie es erneut.");
+      var modalBody = document.querySelector('#upload-images-modal .modal-body');
+      modalBody.innerHTML = '<div class="alert alert-danger" role="alert">Hochladen der Bilder ist fehlgeschlagen! Bitte versuchen Sie es erneut.</div>';
     }
+  };
+
+  xhr.onerror = function() {
+    console.error("Netzwerkfehler beim Hochladen der Bilder");
+    var modalBody = document.querySelector('#upload-images-modal .modal-body');
+    modalBody.innerHTML = '<div class="alert alert-danger" role="alert">Netzwerkfehler beim Hochladen der Bilder. Bitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut.</div>';
   };
 
   xhr.upload.onprogress = function(event) {
@@ -313,7 +319,6 @@ function uploadImages(saveProject) {
 
 function closeModal(modalId, onClosed) {
   var modalEl = document.getElementById(modalId);
-  const myModalAlternative = new bootstrap.Modal('#myModal', options)
   console.log("Hiding modal with Id " + modalId + " and element ", modalEl)
 
   if (modalEl != null) {
@@ -321,11 +326,11 @@ function closeModal(modalId, onClosed) {
       console.log("Modal with Id " + modalId + " is hidden", onClosed)
     })
     var modal = bootstrap.Modal.getInstance(modalEl);
-    modal.toggle();
+    modal.hide();
   }
-  else [
+  else {
     console.log("No modalEl!")
-  ]
+  }
 }
 
 function showBlob(blob, filename) {
