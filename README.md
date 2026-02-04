@@ -25,15 +25,18 @@ services:
 
 ## Used libraries
 - [Python 3](https://www.python.org/)
-- [django 6.0](https://docs.djangoproject.com/en/6.0/)
+
 - [Boostrap 5.3](https://getbootstrap.com/docs/5.3)
-- [jQuery 3.7.1](https://api.jquery.com/category/version/3.7/)
-- [PyFPDF/fpdf2 2.8](https://pyfpdf.github.io/fpdf2/index.html)
-- [Pillow (PIL Fork) 12](https://pillow.readthedocs.io/en/stable/installation.html)
 - [Cropper.js 1.6.2](https://fengyuanchen.github.io/cropperjs/)
-- [gunicorn 2.23](https://gunicorn.org/)
-- [NGINX 1.29](https://www.nginx.com/)
+- [django 6.0](https://docs.djangoproject.com/en/6.0/)
+- [gunicorn 2.25](https://gunicorn.org/)
+- [icalevents 0.3](https://github.com/jazzband/icalevents)
+- [jQuery 4.0](https://api.jquery.com/category/version/3.7/)
+- [nginx 1.29](https://nginx.org/)
 - [orjson 3.11](https://github.com/ijl/orjson)
+- [Pillow (PIL Fork) 12](https://pillow.readthedocs.io/en/stable/installation.html)#
+- [PyFPDF/fpdf2 2.8](https://pyfpdf.github.io/fpdf2/index.html)
+
 
 ### Used fonts
 - [Font Awesome 6.5](https://fontawesome.com/)
