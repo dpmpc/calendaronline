@@ -15,21 +15,22 @@
 
 ### Prerequisites
 - Python 3.12+ (system uses Python 3.12.3)
+- uv (Python package manager) - install with `pip install uv`
 - Docker 28.0.4+ (for container builds)
 
 ### Setup Steps (ALWAYS follow this exact order)
 
 1. **Navigate to the web directory**: `cd web/`
-2. **Create virtual environment**: `python3 -m venv venv` (takes ~10 seconds)
-3. **Activate virtual environment**: `source venv/bin/activate`
-4. **Install dependencies**: `pip install -r requirements.txt` (takes ~60 seconds)
+2. **Create virtual environment**: `uv venv` (creates `.venv`, takes ~5 seconds)
+3. **Activate virtual environment**: `source .venv/bin/activate`
+4. **Install dependencies**: `uv pip install -r requirements.txt` (takes ~30 seconds)
 5. **Set DEBUG mode**: `export DEBUG=1` (required for development)
 
 ### Running the Development Server
 
 ```bash
 cd web
-source venv/bin/activate
+source .venv/bin/activate
 export DEBUG=1
 python manage.py runserver
 ```
@@ -40,17 +41,17 @@ The server runs on http://localhost:8000 by default. IMPORTANT: The server requi
 
 ### Linting with flake8
 
-**ALWAYS exclude venv and node_modules when running flake8.**
+**ALWAYS exclude .venv and node_modules when running flake8.**
 
 ```bash
 # Install flake8 (if not installed)
-pip install flake8
+uv pip install flake8
 
 # Critical errors check (syntax errors, undefined names) - MUST pass
-flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=venv,node_modules
+flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.venv,node_modules
 
 # Style and complexity check (allows warnings)
-flake8 . --count --exit-zero --max-complexity=10 --ignore=E501 --max-line-length=127 --statistics --exclude=venv,node_modules
+flake8 . --count --exit-zero --max-complexity=10 --ignore=E501 --max-line-length=127 --statistics --exclude=.venv,node_modules
 ```
 
 **Known linting results**: Project code has 0 critical errors. Minor warnings exist (5 total): 1 complexity warning, 1 comment formatting, 2 trailing whitespace, 1 blank line whitespace - these are acceptable.
@@ -59,7 +60,7 @@ flake8 . --count --exit-zero --max-complexity=10 --ignore=E501 --max-line-length
 
 ```bash
 cd web
-source venv/bin/activate
+source .venv/bin/activate
 export DEBUG=1
 
 # Check Django configuration (ALWAYS run before making changes)
@@ -90,51 +91,36 @@ docker build -t calendaronline-nginx .
 
 ```
 /
-├── .github/
-│   ├── workflows/
-│   │   ├── lint.yml        # CI: Runs flake8 on every push
-│   │   └── release.yml     # CI: Builds/publishes Docker images on tags
-│   └── dependabot.yml      # Auto-updates for pip packages
-├── nginx/
-│   ├── Dockerfile          # Nginx reverse proxy container
-│   ├── nginx.conf          # Main nginx config
-│   └── calendaronline.nginx.conf  # App-specific nginx config
-├── web/                    # Main Django application
-│   ├── calendaronline/     # Django project settings
-│   │   ├── settings.py     # Django configuration (DEBUG, ALLOWED_HOSTS, etc.)
-│   │   ├── urls.py         # Root URL configuration
-│   │   └── wsgi.py         # WSGI application entry point
-│   ├── creator/            # Main Django app (calendar creation)
-│   │   ├── views.py        # HTTP request handlers
-│   │   ├── urls.py         # App URL patterns
-│   │   ├── fotocalendar/   # Core calendar generation logic
-│   │   │   ├── creator.py  # Factory functions for calendar formats
-│   │   │   ├── fotocalendar.py  # Base FotoCalendar class (PDF generation)
-│   │   │   ├── icsparser.py     # ICS file parser for events
-│   │   │   ├── bo/
-│   │   │   │   └── config.py    # CalendarConfig (serialization/deserialization)
-│   │   │   └── templates/       # Calendar format implementations
-│   │   │       ├── landscape.py, portrait.py, design1.py, vintage.py, etc.
-│   │   ├── static/         # Frontend assets (Bootstrap, jQuery, Cropper.js, FontAwesome)
-│   │   └── templates/      # Django HTML templates
-│   ├── files/
-│   │   ├── font/           # Custom fonts (Pacifico, NotoSansDisplay, etc.)
-│   │   └── images/         # Example images
-│   ├── manage.py           # Django management script
-│   ├── requirements.txt    # Python dependencies
-│   ├── Dockerfile          # Multi-stage Docker build
-│   └── startup.prod.sh     # Production entrypoint script (gunicorn wrapper)
-├── update_preview_images.sh  # Script to generate calendar preview images
-└── README.md
+├── .github/              # GitHub Actions workflows and configuration
+│   ├── workflows/        # CI/CD pipelines (lint, release)
+│   └── dependabot.yml    # Dependency updates configuration
+├── nginx/                # Nginx reverse proxy container
+│   ├── Dockerfile        # Container build definition
+│   └── *conf             # Nginx configuration files
+├── web/                  # Main Django application
+│   ├── calendaronline/   # Django project settings module
+│   ├── creator/          # Main Django app for calendar creation
+│   │   ├── fotocalendar/ # Core calendar generation logic
+│   │   │   ├── bo/       # Business objects (configuration models)
+│   │   │   └── templates/ # Calendar format implementations
+│   │   ├── static/       # Frontend assets (Bootstrap, jQuery, Cropper.js)
+│   │   ├── templates/    # Django HTML templates
+│   │   └── templatetags/ # Custom template filters
+│   ├── files/            # Static resources (fonts, images)
+│   ├── manage.py         # Django CLI entry point
+│   ├── requirements.txt  # Python dependencies
+│   ├── Dockerfile        # Multi-stage Docker build
+│   └── startup.prod.sh   # Production entrypoint (gunicorn wrapper)
+└── update_preview_images.sh  # Preview generation utility
 ```
 
 ### Key Architectural Components
 
-1. **Views** (`web/creator/views.py`): HTTP handlers for index, options, month selection, calendar creation
-2. **Calendar Factory** (`web/creator/fotocalendar/creator.py`): Creates format-specific calendar instances (L, P, PF, LF, 1, V, 26, LM)
-3. **PDF Generation** (`web/creator/fotocalendar/fotocalendar.py`): Base class using fpdf2 and Pillow for PDF rendering
-4. **Configuration** (`web/creator/fotocalendar/bo/config.py`): Serializes/deserializes calendar settings (JSON format)
-5. **Calendar Templates** (`web/creator/fotocalendar/templates/`): Format-specific implementations (Landscape, Portrait, Design1, Vintage, Design2026, LandscapeModern)
+1. **Views Module** (`creator/`): HTTP handlers for index, options, month selection, calendar creation
+2. **Calendar Factory Module** (`creator/fotocalendar/creator.py`): Creates format-specific calendar instances (L, P, PF, LF, 1, V, 26, LM)
+3. **PDF Generation Module** (`creator/fotocalendar/fotocalendar.py`): Base class using fpdf2 and Pillow for PDF rendering
+4. **Configuration Module** (`creator/fotocalendar/bo/`): Serializes/deserializes calendar settings (JSON format)
+5. **Calendar Templates Module** (`creator/fotocalendar/templates/`): Format-specific implementations (Landscape, Portrait, Design1, Vintage, Design2026, LandscapeModern)
 
 ### URL Patterns
 
@@ -181,8 +167,8 @@ docker build -t calendaronline-nginx .
 ## Important Development Notes
 
 ### Virtual Environment
-- **ALWAYS exclude `venv/` from all operations** (linting, git commits, grep searches)
-- The `.gitignore` file includes `venv/` and `**/__pycache__/**`
+- **ALWAYS exclude `.venv/` from all operations** (linting, git commits, grep searches)
+- The `.gitignore` file should include `.venv/` and `**/__pycache__/**`
 
 ### Django Settings
 - `settings.py` uses environment variables for configuration
@@ -199,7 +185,7 @@ docker build -t calendaronline-nginx .
 ### Common Pitfalls and Solutions
 
 1. **ImportError**: If you see "Couldn't import Django", activate the virtual environment first
-2. **flake8 showing many errors**: Add `--exclude=venv,node_modules` to exclude dependencies
+2. **flake8 showing many errors**: Add `--exclude=.venv,node_modules` to exclude dependencies
 3. **Server won't start**: Ensure `DEBUG=1` is set and you're in the `web/` directory
 4. **Static files missing in Docker**: For nginx container, static files must be moved from web/creator/static to nginx/static before build
 
@@ -207,16 +193,16 @@ docker build -t calendaronline-nginx .
 
 ```bash
 # Setup (once)
-cd web && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+cd web && uv venv && source .venv/bin/activate && uv pip install -r requirements.txt
 
 # Development (every session)
-cd web && source venv/bin/activate && export DEBUG=1 && python manage.py runserver
+cd web && source .venv/bin/activate && export DEBUG=1 && python manage.py runserver
 
 # Lint before commit
-flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=venv,node_modules
+flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.venv,node_modules
 
 # Django checks
-cd web && source venv/bin/activate && export DEBUG=1 && python manage.py check
+cd web && source .venv/bin/activate && export DEBUG=1 && python manage.py check
 ```
 
 ## Trust These Instructions
