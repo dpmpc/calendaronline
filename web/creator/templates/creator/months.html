@@ -81,7 +81,7 @@
               </div>
 
               <div class="btn-group">
-                <button type="button" id="button-save-{{ month.id }}" class="btn btn-primary" title="Projekt Speichern" data-bs-toggle="modal" data-bs-target="#upload-images-modal" onclick="uploadImages(true)">
+                <button type="button" id="button-save-{{ month.id }}" class="btn btn-primary" title="Projekt Speichern" onclick="uploadImages(true)">
                   <span class="fa fa-floppy-disk"></span> Speichern
                 </button>
               </div>
@@ -89,7 +89,7 @@
               -->
 
               <div class="btn-group">
-                <button type="button" id="button-preview-{{ month.id }}" class="btn btn-primary" title="Vorschau" data-bs-toggle="modal" data-bs-target="#upload-images-modal" onclick="uploadImages([ {{ month.id }} ])" disabled>
+                <button type="button" id="button-preview-{{ month.id }}" class="btn btn-primary" title="Vorschau" onclick="uploadImages([ {{ month.id }} ])" disabled>
                   <span class="fa fa-eye"></span> Vorschau
                 </button>
                 <button type="button" class="btn {% if forloop.last %}btn-success{% else %}btn-primary{% endif %}" title="Kalender erzeugen" onclick="uploadImages()">
@@ -237,13 +237,25 @@ function addEvent(monthId, date, text, isHoliday) {
 
 }
 
+// Global variable to store the upload modal instance
+var uploadModalInstance = null;
+var uploadModalReady = false;
+
 function uploadImages(saveProject) {
   console.log("Starting uploadImages", saveProject);
   
-  // Open the modal programmatically
+  // Open the modal programmatically and store the instance
   var modalEl = document.getElementById('upload-images-modal');
-  var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-  modal.show();
+  uploadModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+  
+  // Wait for modal to be fully shown before marking as ready
+  uploadModalReady = false;
+  modalEl.addEventListener('shown.bs.modal', function() {
+    console.log("Modal is now fully shown and ready");
+    uploadModalReady = true;
+  }, { once: true });
+  
+  uploadModalInstance.show();
   
   var months = [ {% for month in months %}{{ month.id}}{% if not forloop.last %},{% endif %}{% endfor %} ];
   var formData = new FormData(document.forms['months']);
@@ -325,24 +337,39 @@ function uploadImages(saveProject) {
 }
 
 function closeModal(modalId, onClosed) {
-  var modalEl = document.getElementById(modalId);
-  console.log("Hiding modal with Id " + modalId + " and element ", modalEl)
-
-  if (modalEl != null) {
-    var modal = bootstrap.Modal.getInstance(modalEl);
-    if (modal) {
-      console.log("Calling modal.hide()");
-      modal.hide();
+  console.log("Closing modal with Id " + modalId);
+  
+  // Function to actually hide the modal
+  var hideModal = function() {
+    if (uploadModalInstance) {
+      console.log("Calling modal.hide() on stored instance");
+      uploadModalInstance.hide();
       
-      modalEl.addEventListener('hidden.bs.modal', event => {
-        console.log("Modal with Id " + modalId + " is hidden", onClosed)
-      }, { once: true })
+      // Add event listener for when modal is fully hidden
+      var modalEl = document.getElementById(modalId);
+      if (modalEl) {
+        modalEl.addEventListener('hidden.bs.modal', event => {
+          console.log("Modal with Id " + modalId + " is now hidden");
+          if (onClosed) onClosed();
+        }, { once: true });
+      }
     } else {
-      console.log("No modal instance found!")
+      console.log("No stored modal instance available");
     }
-  }
-  else {
-    console.log("No modalEl!")
+  };
+  
+  // Wait for modal to be ready before hiding
+  if (!uploadModalReady && uploadModalInstance) {
+    console.log("Modal not ready yet, waiting for shown.bs.modal event");
+    var modalEl = document.getElementById(modalId);
+    modalEl.addEventListener('shown.bs.modal', function() {
+      console.log("Modal is now shown, proceeding to hide");
+      uploadModalReady = true;
+      hideModal();
+    }, { once: true });
+  } else {
+    // Modal is ready or already shown, hide immediately
+    hideModal();
   }
 }
 
