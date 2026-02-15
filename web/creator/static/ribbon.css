@@ -429,6 +429,32 @@
     border-top: none;
 }
 
+/* Full-width Cropper Container */
+.cropper-container-fullwidth {
+    width: 100%;
+    height: calc(100vh - 280px); /* Remaining height after navbar, ribbon, and month selector */
+    min-height: 400px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cropper-container-fullwidth .cropper-image {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+}
+
+/* When cropper is active, make container transparent */
+.cropper-container-fullwidth .cropper-container {
+    width: 100% !important;
+    height: 100% !important;
+}
+
 .month-dropdown-wrapper {
     min-width: 200px;
 }
