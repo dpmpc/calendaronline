@@ -14,6 +14,250 @@
   </script>
 {% endblock %}
 
+{% block ribbon %}
+<!-- Global Ribbon UI - Positioned directly under navbar -->
+<div class="ribbon-wrapper">
+  <div class="container-fluid">
+    <div class="ribbon-container" id="globalRibbon">
+      <ul class="nav ribbon-tabs" id="ribbonTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="ribbon-image-tab" data-bs-toggle="tab" data-bs-target="#ribbon-image" type="button" role="tab">
+            <span class="fa fa-image me-1"></span> Bild
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="ribbon-background-tab" data-bs-toggle="tab" data-bs-target="#ribbon-background" type="button" role="tab">
+            <span class="fa fa-palette me-1"></span> Hintergrund
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="ribbon-days-tab" data-bs-toggle="tab" data-bs-target="#ribbon-days" type="button" role="tab">
+            <span class="fa fa-calendar-days me-1"></span> Tagesliste
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="ribbon-fonts-tab" data-bs-toggle="tab" data-bs-target="#ribbon-fonts" type="button" role="tab">
+            <span class="fa fa-font me-1"></span> Schriften
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="ribbon-events-tab" data-bs-toggle="tab" data-bs-target="#ribbon-events" type="button" role="tab">
+            <span class="fa fa-calendar-plus me-1"></span> Termine
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content ribbon-content">
+        <!-- Image Tab -->
+        <div class="tab-pane fade show active" id="ribbon-image" role="tabpanel">
+          <div class="ribbon-row">
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <button type="button" class="ribbon-btn ribbon-btn-lg" title="Neues Bild öffnen" onclick="selectImageForCurrentMonth()">
+                  <span class="fa fa-folder-open"></span>
+                  <span class="ribbon-btn-label">Bild öffnen</span>
+                </button>
+              </div>
+              <span class="ribbon-group-label">Datei</span>
+            </div>
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="ribbon-image-border" onchange="updateCurrentMonthField('image_border', this.checked ? '1' : '')">
+                  <span class="ribbon-switch-label">Rahmen</span>
+                </div>
+                <div class="ribbon-control">
+                  <span class="ribbon-control-label">Farbe</span>
+                  <input class="form-control form-control-color" type="color" id="ribbon-image-border-color" value="#000000" onchange="updateCurrentMonthField('image_border_color', this.value)">
+                </div>
+                <div class="ribbon-control">
+                  <span class="ribbon-control-label">Breite</span>
+                  <input type="range" class="form-range ribbon-slider" min="0" max="100" value="3" id="ribbon-image-border-width" onchange="updateCurrentMonthField('image_border_width', this.value)">
+                </div>
+              </div>
+              <span class="ribbon-group-label">Bildrahmen</span>
+            </div>
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <button type="button" class="ribbon-btn" title="Vorschau anzeigen" onclick="showPreviewModal()">
+                  <span class="fa fa-eye"></span>
+                  <span class="ribbon-btn-label">Vorschau</span>
+                </button>
+                <button type="button" class="ribbon-btn ribbon-btn-lg" title="PDF Kalender erzeugen" onclick="uploadImages()">
+                  <span class="fa fa-file-pdf"></span>
+                  <span class="ribbon-btn-label">PDF Erzeugen</span>
+                </button>
+              </div>
+              <span class="ribbon-group-label">Ausgabe</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Background Tab -->
+        <div class="tab-pane fade" id="ribbon-background" role="tabpanel">
+          <div class="ribbon-row">
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-control">
+                  <span class="ribbon-control-label">Art</span>
+                  <select class="form-select" id="ribbon-background-type" style="width: 150px;" onchange="updateCurrentMonthField('background_type', this.value)">
+                    <option value="N">Keine</option>
+                    <option value="S">Einfarbig</option>
+                    <option value="H">Horizontal</option>
+                    <option value="V">Vertikal</option>
+                    <option value="D">Diagonal</option>
+                    <option value="R">Kreisförmig</option>
+                  </select>
+                </div>
+              </div>
+              <span class="ribbon-group-label">Typ</span>
+            </div>
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-control">
+                  <span class="ribbon-control-label">Farbe 1</span>
+                  <input class="form-control form-control-color" type="color" id="ribbon-background-color" value="#ffffff" onchange="updateCurrentMonthField('background_color', this.value)">
+                </div>
+                <div class="ribbon-control">
+                  <span class="ribbon-control-label">Farbe 2</span>
+                  <input class="form-control form-control-color" type="color" id="ribbon-background-color-b" value="#aaaaaa" onchange="updateCurrentMonthField('background_color_b', this.value)">
+                </div>
+              </div>
+              <span class="ribbon-group-label">Farben</span>
+            </div>
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="ribbon-center-month" onchange="updateCurrentMonthField('center_month', this.checked ? '1' : '')">
+                  <span class="ribbon-switch-label">Monat zentriert</span>
+                </div>
+              </div>
+              <span class="ribbon-group-label">Ausrichtung</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Days List Tab -->
+        <div class="tab-pane fade" id="ribbon-days" role="tabpanel">
+          <div class="ribbon-row">
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="ribbon-table-border" onchange="updateCurrentMonthField('table_border', this.checked ? '1' : '')">
+                  <span class="ribbon-switch-label">Rahmen</span>
+                </div>
+                <div class="ribbon-switch">
+                  <input class="form-check-input" type="checkbox" role="switch" id="ribbon-show-weeks" onchange="updateCurrentMonthField('show_weeks', this.checked ? '1' : '')">
+                  <span class="ribbon-switch-label">KW anzeigen</span>
+                </div>
+              </div>
+              <span class="ribbon-group-label">Optionen</span>
+            </div>
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-control">
+                  <span class="ribbon-control-label">Hintergrund</span>
+                  <input class="form-control form-control-color" type="color" id="ribbon-table-background-color" value="#ffffff" onchange="updateCurrentMonthField('table_background_color', this.value)">
+                </div>
+                <div class="ribbon-control">
+                  <span class="ribbon-control-label">Transparenz</span>
+                  <input type="range" class="form-range ribbon-slider" min="0" max="100" value="70" id="ribbon-table-background-opacity" onchange="updateCurrentMonthField('table_background_opacity', this.value)">
+                </div>
+              </div>
+              <span class="ribbon-group-label">Hintergrund</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Fonts Tab -->
+        <div class="tab-pane fade" id="ribbon-fonts" role="tabpanel">
+          <div class="ribbon-row">
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-inline">
+                  <div class="ribbon-font-buttons btn-group" role="group">
+                    <input type="checkbox" class="btn-check" id="ribbon-font-weekday-bold" onchange="updateCurrentMonthField('font_weekday_bold', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-weekday-bold"><span class="fa fa-bold"></span></label>
+                    <input type="checkbox" class="btn-check" id="ribbon-font-weekday-italic" onchange="updateCurrentMonthField('font_weekday_italic', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-weekday-italic"><span class="fa fa-italic"></span></label>
+                    <input type="checkbox" class="btn-check" id="ribbon-font-weekday-underline" onchange="updateCurrentMonthField('font_weekday_underline', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-weekday-underline"><span class="fa fa-underline"></span></label>
+                  </div>
+                  <input class="form-control form-control-color" type="color" id="ribbon-font-weekday-color" value="#000000" style="width:28px;height:28px;" onchange="updateCurrentMonthField('font_weekday_color', this.value)">
+                </div>
+              </div>
+              <span class="ribbon-group-label">Wochentage</span>
+            </div>
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-inline">
+                  <div class="ribbon-font-buttons btn-group" role="group">
+                    <input type="checkbox" class="btn-check" id="ribbon-font-saturday-bold" onchange="updateCurrentMonthField('font_saturday_bold', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-saturday-bold"><span class="fa fa-bold"></span></label>
+                    <input type="checkbox" class="btn-check" id="ribbon-font-saturday-italic" onchange="updateCurrentMonthField('font_saturday_italic', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-saturday-italic"><span class="fa fa-italic"></span></label>
+                    <input type="checkbox" class="btn-check" id="ribbon-font-saturday-underline" onchange="updateCurrentMonthField('font_saturday_underline', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-saturday-underline"><span class="fa fa-underline"></span></label>
+                  </div>
+                  <input class="form-control form-control-color" type="color" id="ribbon-font-saturday-color" value="#000000" style="width:28px;height:28px;" onchange="updateCurrentMonthField('font_saturday_color', this.value)">
+                </div>
+              </div>
+              <span class="ribbon-group-label">Samstage</span>
+            </div>
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-inline">
+                  <div class="ribbon-font-buttons btn-group" role="group">
+                    <input type="checkbox" class="btn-check" id="ribbon-font-sunday-bold" onchange="updateCurrentMonthField('font_sunday_bold', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-sunday-bold"><span class="fa fa-bold"></span></label>
+                    <input type="checkbox" class="btn-check" id="ribbon-font-sunday-italic" onchange="updateCurrentMonthField('font_sunday_italic', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-sunday-italic"><span class="fa fa-italic"></span></label>
+                    <input type="checkbox" class="btn-check" id="ribbon-font-sunday-underline" onchange="updateCurrentMonthField('font_sunday_underline', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-sunday-underline"><span class="fa fa-underline"></span></label>
+                  </div>
+                  <input class="form-control form-control-color" type="color" id="ribbon-font-sunday-color" value="#000000" style="width:28px;height:28px;" onchange="updateCurrentMonthField('font_sunday_color', this.value)">
+                </div>
+              </div>
+              <span class="ribbon-group-label">Sonntage</span>
+            </div>
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <div class="ribbon-inline">
+                  <div class="ribbon-font-buttons btn-group" role="group">
+                    <input type="checkbox" class="btn-check" id="ribbon-font-event-bold" onchange="updateCurrentMonthField('font_event_bold', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-event-bold"><span class="fa fa-bold"></span></label>
+                    <input type="checkbox" class="btn-check" id="ribbon-font-event-italic" onchange="updateCurrentMonthField('font_event_italic', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-event-italic"><span class="fa fa-italic"></span></label>
+                    <input type="checkbox" class="btn-check" id="ribbon-font-event-underline" onchange="updateCurrentMonthField('font_event_underline', this.checked ? '1' : '')">
+                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-event-underline"><span class="fa fa-underline"></span></label>
+                  </div>
+                  <input class="form-control form-control-color" type="color" id="ribbon-font-event-color" value="#000000" style="width:28px;height:28px;" onchange="updateCurrentMonthField('font_event_color', this.value)">
+                </div>
+              </div>
+              <span class="ribbon-group-label">Termine</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Events Tab -->
+        <div class="tab-pane fade" id="ribbon-events" role="tabpanel">
+          <div class="ribbon-row">
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
+                <button type="button" class="ribbon-btn ribbon-btn-lg" onclick="addEventForCurrentMonth()">
+                  <span class="fa fa-calendar-plus"></span>
+                  <span class="ribbon-btn-label">Hinzufügen</span>
+                </button>
+              </div>
+              <span class="ribbon-group-label">Neuer Termin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
 {% block content %}
 <form enctype="multipart/form-data" name="months">
   {% csrf_token %} 
@@ -22,332 +266,127 @@
   <input type="hidden" name="lenght" value="{{ months|length }}" />
   <input type="hidden" name="save_project" value="0" />
 
-  <ul class="nav nav-tabs" id="monthTabs" role="tablist">
+  <!-- Optimized Month Selector: Dropdown with Prev/Next buttons -->
+  <div class="month-selector-bar mb-3">
+    <div class="d-flex align-items-center justify-content-center gap-2">
+      <button type="button" class="btn btn-outline-secondary" id="prevMonthBtn" onclick="navigateMonth(-1)" title="Vorheriger Monat">
+        <span class="fa fa-chevron-left"></span>
+      </button>
+      
+      <div class="month-dropdown-wrapper">
+        <select class="form-select form-select-lg month-dropdown" id="monthSelector" onchange="selectMonth(this.value)">
+          {% for month in months %}
+            <option value="{{ month.id }}"{% if forloop.first %} selected{% endif %}>{{ month.name }} {{ month.date|date:"Y" }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      
+      <button type="button" class="btn btn-outline-secondary" id="nextMonthBtn" onclick="navigateMonth(1)" title="Nächster Monat">
+        <span class="fa fa-chevron-right"></span>
+      </button>
+      
+      <span class="badge bg-secondary ms-2" id="monthCounter">1 / {{ months|length }}</span>
+    </div>
+  </div>
+
+  <!-- Month Content Panels -->
+  <div id="monthPanelsContent">
     {% for month in months %}
-      <li class="nav-item" role="presentation">
-        <button class="nav-link{% if forloop.first %} active{% endif %}" id="month_tab_{{ month.id }}" data-bs-toggle="tab" data-bs-target="#month_pane_{{ month.id }}" type="button" role="tab" aria-controls="month_pane_{{ month.id }}" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">{{ month.name }}</button>
-      </li>  
-    {% endfor %}
-  </ul>
-  <div class="tab-content" id="monthTabsContent">
-    {% for month in months %}
-      <div class="tab-pane fade{% if forloop.first %} show active{% endif %}" id="month_pane_{{ month.id }}" role="tabpanel" aria-labelledby="month_tab_{{ month.id }}" tabindex="0">
+      <div class="month-panel{% if not forloop.first %} d-none{% endif %}" id="month_panel_{{ month.id }}" data-month-id="{{ month.id }}">
         <input type="hidden" name="id_{{ month.id }}" value="{{ month.id }}" />
         <input type="hidden" name="name_{{ month.id }}" value="{{ month.name }}" />
         <input type="hidden" name="date_{{ month.id }}" value="{{ month.date | date:'Y-m-d' }}" />
         
-        <div class="container-fluid pt-3">
-          <!-- Ribbon UI for Design Options -->
-          <div class="ribbon-container mb-3">
-            <ul class="nav ribbon-tabs" id="ribbonTabs{{ month.id }}" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="ribbon-image-tab-{{ month.id }}" data-bs-toggle="tab" data-bs-target="#ribbon-image-{{ month.id }}" type="button" role="tab">
-                  <span class="fa fa-image me-1"></span> Bild
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="ribbon-background-tab-{{ month.id }}" data-bs-toggle="tab" data-bs-target="#ribbon-background-{{ month.id }}" type="button" role="tab">
-                  <span class="fa fa-palette me-1"></span> Hintergrund
-                </button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="ribbon-days-tab-{{ month.id }}" data-bs-toggle="tab" data-bs-target="#ribbon-days-{{ month.id }}" type="button" role="tab">
-                  <span class="fa fa-calendar-days me-1"></span> Tagesliste
-                </button>
-              </li>
-              {% if month.supports_fonts %}
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="ribbon-fonts-tab-{{ month.id }}" data-bs-toggle="tab" data-bs-target="#ribbon-fonts-{{ month.id }}" type="button" role="tab">
-                  <span class="fa fa-font me-1"></span> Schriften
-                </button>
-              </li>
-              {% endif %}
-              {% if month.supports_events %}
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="ribbon-events-tab-{{ month.id }}" data-bs-toggle="tab" data-bs-target="#ribbon-events-{{ month.id }}" type="button" role="tab">
-                  <span class="fa fa-calendar-plus me-1"></span> Termine
-                </button>
-              </li>
-              {% endif %}
-            </ul>
-            <div class="tab-content ribbon-content">
-              <!-- Image Tab -->
-              <div class="tab-pane fade show active" id="ribbon-image-{{ month.id }}" role="tabpanel">
-                <div class="ribbon-row">
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <button type="button" class="ribbon-btn ribbon-btn-lg" title="Neues Bild öffnen" onclick="selectImage('{{ month.id }}', '{{month.image_aspect_ratio}}')">
-                        <span class="fa fa-folder-open"></span>
-                        <span class="ribbon-btn-label">Bild öffnen</span>
-                      </button>
-                    </div>
-                    <span class="ribbon-group-label">Datei</span>
-                  </div>
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="image_border_{{ month.id }}" name="image_border_{{ month.id }}" value="1"{% if month.image_border %} checked{% endif %} onchange="updateLivePreview({{ month.id }})">
-                        <span class="ribbon-switch-label">Rahmen</span>
-                      </div>
-                      <div class="ribbon-control">
-                        <span class="ribbon-control-label">Farbe</span>
-                        <input class="form-control form-control-color" type="color" id="image-border-color_{{ month.id }}" name="image_border_color_{{ month.id }}" value="{{ month.image_border_color }}" onchange="updateLivePreview({{ month.id }})">
-                      </div>
-                      <div class="ribbon-control">
-                        <span class="ribbon-control-label">Breite</span>
-                        <input type="range" class="form-range ribbon-slider" min="0" max="100" value="{{ month.image_border_width }}" id="image-border-width_{{ month.id }}" name="image_border_width_{{ month.id }}" onchange="updateLivePreview({{ month.id }})">
-                      </div>
-                    </div>
-                    <span class="ribbon-group-label">Bildrahmen</span>
-                  </div>
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <button type="button" class="ribbon-btn" title="Vorschau aktualisieren" onclick="updateLivePreview({{ month.id }})">
-                        <span class="fa fa-rotate"></span>
-                        <span class="ribbon-btn-label">Aktualisieren</span>
-                      </button>
-                    </div>
-                    <span class="ribbon-group-label">Vorschau</span>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Background Tab -->
-              <div class="tab-pane fade" id="ribbon-background-{{ month.id }}" role="tabpanel">
-                <div class="ribbon-row">
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-control">
-                        <span class="ribbon-control-label">Art</span>
-                        <select class="form-select" id="background-type_{{ month.id }}" name="background_type_{{ month.id }}" style="width: 150px;" onchange="updateLivePreview({{ month.id }})">
-                          <option value="N"{% if month.background_type == "N" %} selected{% endif %}>Keine</option>
-                          <option value="S"{% if month.background_type == "S" %} selected{% endif %}>Einfarbig</option>
-                          <option value="H"{% if month.background_type == 'H' %} selected{% endif %}>Horizontal</option>
-                          <option value="V"{% if month.background_type == 'V' %} selected{% endif %}>Vertikal</option>
-                          <option value="D"{% if month.background_type == 'D' %} selected{% endif %}>Diagonal</option>
-                          <option value="R"{% if month.background_type == 'R' %} selected{% endif %}>Kreisförmig</option>
-                        </select>
-                      </div>
-                    </div>
-                    <span class="ribbon-group-label">Typ</span>
-                  </div>
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-control">
-                        <span class="ribbon-control-label">Farbe 1</span>
-                        <input class="form-control form-control-color" type="color" id="background-color_{{ month.id }}" name="background_color_{{ month.id }}" value="{{ month.background_color }}" onchange="updateLivePreview({{ month.id }})">
-                      </div>
-                      <div class="ribbon-control">
-                        <span class="ribbon-control-label">Farbe 2</span>
-                        <input class="form-control form-control-color" type="color" id="background-color-b_{{ month.id }}" name="background_color_b_{{ month.id }}" value="{{ month.background_color_b }}" onchange="updateLivePreview({{ month.id }})">
-                      </div>
-                    </div>
-                    <span class="ribbon-group-label">Farben</span>
-                  </div>
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="center-month_{{ month.id }}" name="center_month_{{ month.id }}" value="1"{% if month.month_align == 'C' %} checked{% endif %} onchange="updateLivePreview({{ month.id }})">
-                        <span class="ribbon-switch-label">Monat zentriert</span>
-                      </div>
-                    </div>
-                    <span class="ribbon-group-label">Ausrichtung</span>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Days List Tab -->
-              <div class="tab-pane fade" id="ribbon-days-{{ month.id }}" role="tabpanel">
-                <div class="ribbon-row">
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="table-border_{{ month.id }}" name="table_border_{{ month.id }}" value="1"{% if month.table_border %} checked{% endif %} onchange="updateLivePreview({{ month.id }})">
-                        <span class="ribbon-switch-label">Rahmen</span>
-                      </div>
-                      {% if month.supports_weeks %}
-                      <div class="ribbon-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="show-weeks_{{ month.id }}" name="show_weeks_{{ month.id }}" value="1"{% if month.show_weeks %} checked{% endif %} onchange="updateLivePreview({{ month.id }})">
-                        <span class="ribbon-switch-label">KW anzeigen</span>
-                      </div>
-                      {% endif %}
-                    </div>
-                    <span class="ribbon-group-label">Optionen</span>
-                  </div>
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-control">
-                        <span class="ribbon-control-label">Hintergrund</span>
-                        <input class="form-control form-control-color" type="color" id="table-background-color_{{ month.id }}" name="table_background_color_{{ month.id }}" value="{{ month.table_background_color }}" onchange="updateLivePreview({{ month.id }})">
-                      </div>
-                      <div class="ribbon-control">
-                        <span class="ribbon-control-label">Transparenz</span>
-                        <input type="range" class="form-range ribbon-slider" min="0" max="100" value="{{ month.table_background_opacity }}" id="table-background-opacity_{{ month.id }}" name="table_background_opacity_{{ month.id }}" onchange="updateLivePreview({{ month.id }})">
-                      </div>
-                    </div>
-                    <span class="ribbon-group-label">Hintergrund</span>
-                  </div>
-                </div>
-              </div>
-              
-              {% if month.supports_fonts %}
-              <!-- Fonts Tab -->
-              <div class="tab-pane fade" id="ribbon-fonts-{{ month.id }}" role="tabpanel">
-                <div class="ribbon-row">
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-inline">
-                        <div class="ribbon-font-buttons btn-group" role="group">
-                          <input type="checkbox" class="btn-check" id="font_weekday_bold_{{ month.id }}" name="font_weekday_bold_{{ month.id }}" value="1"{% if month.fonts.weekday.bold %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_weekday_bold_{{ month.id }}"><span class="fa fa-bold"></span></label>
-                          <input type="checkbox" class="btn-check" id="font_weekday_italic_{{ month.id }}" name="font_weekday_italic_{{ month.id }}" value="1"{% if not month.supports_italic %} disabled{% elif month.fonts.weekday.italic %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_weekday_italic_{{ month.id }}"><span class="fa fa-italic"></span></label>
-                          <input type="checkbox" class="btn-check" id="font_weekday_underline_{{ month.id }}" name="font_weekday_underline_{{ month.id }}" value="1"{% if month.fonts.weekday.underline %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_weekday_underline_{{ month.id }}"><span class="fa fa-underline"></span></label>
-                        </div>
-                        <input class="form-control form-control-color" type="color" name="font_weekday_color_{{ month.id }}" value="{{ month.fonts.weekday.color }}" style="width:28px;height:28px;">
-                      </div>
-                    </div>
-                    <span class="ribbon-group-label">Wochentage</span>
-                  </div>
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-inline">
-                        <div class="ribbon-font-buttons btn-group" role="group">
-                          <input type="checkbox" class="btn-check" id="font_saturday_bold_{{ month.id }}" name="font_saturday_bold_{{ month.id }}" value="1"{% if month.fonts.saturday.bold %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_saturday_bold_{{ month.id }}"><span class="fa fa-bold"></span></label>
-                          <input type="checkbox" class="btn-check" id="font_saturday_italic_{{ month.id }}" name="font_saturday_italic_{{ month.id }}" value="1"{% if not month.supports_italic %} disabled{% elif month.fonts.saturday.italic %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_saturday_italic_{{ month.id }}"><span class="fa fa-italic"></span></label>
-                          <input type="checkbox" class="btn-check" id="font_saturday_underline_{{ month.id }}" name="font_saturday_underline_{{ month.id }}" value="1"{% if month.fonts.saturday.underline %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_saturday_underline_{{ month.id }}"><span class="fa fa-underline"></span></label>
-                        </div>
-                        <input class="form-control form-control-color" type="color" name="font_saturday_color_{{ month.id }}" value="{{ month.fonts.saturday.color }}" style="width:28px;height:28px;">
-                      </div>
-                    </div>
-                    <span class="ribbon-group-label">Samstage</span>
-                  </div>
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-inline">
-                        <div class="ribbon-font-buttons btn-group" role="group">
-                          <input type="checkbox" class="btn-check" id="font_sunday_bold_{{ month.id }}" name="font_sunday_bold_{{ month.id }}" value="1"{% if month.fonts.sunday.bold %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_sunday_bold_{{ month.id }}"><span class="fa fa-bold"></span></label>
-                          <input type="checkbox" class="btn-check" id="font_sunday_italic_{{ month.id }}" name="font_sunday_italic_{{ month.id }}" value="1"{% if not month.supports_italic %} disabled{% elif month.fonts.sunday.italic %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_sunday_italic_{{ month.id }}"><span class="fa fa-italic"></span></label>
-                          <input type="checkbox" class="btn-check" id="font_sunday_underline_{{ month.id }}" name="font_sunday_underline_{{ month.id }}" value="1"{% if month.fonts.sunday.underline %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_sunday_underline_{{ month.id }}"><span class="fa fa-underline"></span></label>
-                        </div>
-                        <input class="form-control form-control-color" type="color" name="font_sunday_color_{{ month.id }}" value="{{ month.fonts.sunday.color }}" style="width:28px;height:28px;">
-                      </div>
-                    </div>
-                    <span class="ribbon-group-label">Sonntage</span>
-                  </div>
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <div class="ribbon-inline">
-                        <div class="ribbon-font-buttons btn-group" role="group">
-                          <input type="checkbox" class="btn-check" id="font_event_bold_{{ month.id }}" name="font_event_bold_{{ month.id }}" value="1"{% if month.fonts.event.bold %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_event_bold_{{ month.id }}"><span class="fa fa-bold"></span></label>
-                          <input type="checkbox" class="btn-check" id="font_event_italic_{{ month.id }}" name="font_event_italic_{{ month.id }}" value="1"{% if not month.supports_italic %} disabled{% elif month.fonts.event.italic %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_event_italic_{{ month.id }}"><span class="fa fa-italic"></span></label>
-                          <input type="checkbox" class="btn-check" id="font_event_underline_{{ month.id }}" name="font_event_underline_{{ month.id }}" value="1"{% if month.fonts.event.underline %} checked{% endif %}>
-                          <label class="btn btn-outline-primary btn-sm" for="font_event_underline_{{ month.id }}"><span class="fa fa-underline"></span></label>
-                        </div>
-                        <input class="form-control form-control-color" type="color" name="font_event_color_{{ month.id }}" value="{{ month.fonts.event.color }}" style="width:28px;height:28px;">
-                      </div>
-                    </div>
-                    <span class="ribbon-group-label">Termine</span>
-                  </div>
-                </div>
-              </div>
-              {% endif %}
-              
-              {% if month.supports_events %}
-              <!-- Events Tab -->
-              <div class="tab-pane fade" id="ribbon-events-{{ month.id }}" role="tabpanel">
-                <div class="ribbon-row">
-                  <div class="ribbon-group">
-                    <div class="ribbon-group-content">
-                      <button type="button" class="ribbon-btn ribbon-btn-lg" onclick="addEvent({{ month.id }}, '{{ month.date | date:'Y-m-d' }}', '')">
-                        <span class="fa fa-calendar-plus"></span>
-                        <span class="ribbon-btn-label">Hinzufügen</span>
-                      </button>
-                    </div>
-                    <span class="ribbon-group-label">Neuer Termin</span>
-                  </div>
-                </div>
-                <div class="mt-3">
-                  <div class="list-group" id="events-group-{{ month.id }}">
-                  </div>
-                </div>
-              </div>
-              {% endif %}
+        <!-- Hidden fields for ribbon-controlled values -->
+        <input type="hidden" name="image_border_{{ month.id }}" id="field_image_border_{{ month.id }}" value="{% if month.image_border %}1{% endif %}" />
+        <input type="hidden" name="image_border_color_{{ month.id }}" id="field_image_border_color_{{ month.id }}" value="{{ month.image_border_color }}" />
+        <input type="hidden" name="image_border_width_{{ month.id }}" id="field_image_border_width_{{ month.id }}" value="{{ month.image_border_width }}" />
+        <input type="hidden" name="background_type_{{ month.id }}" id="field_background_type_{{ month.id }}" value="{{ month.background_type }}" />
+        <input type="hidden" name="background_color_{{ month.id }}" id="field_background_color_{{ month.id }}" value="{{ month.background_color }}" />
+        <input type="hidden" name="background_color_b_{{ month.id }}" id="field_background_color_b_{{ month.id }}" value="{{ month.background_color_b }}" />
+        <input type="hidden" name="center_month_{{ month.id }}" id="field_center_month_{{ month.id }}" value="{% if month.month_align == 'C' %}1{% endif %}" />
+        <input type="hidden" name="table_border_{{ month.id }}" id="field_table_border_{{ month.id }}" value="{% if month.table_border %}1{% endif %}" />
+        <input type="hidden" name="show_weeks_{{ month.id }}" id="field_show_weeks_{{ month.id }}" value="{% if month.show_weeks %}1{% endif %}" />
+        <input type="hidden" name="table_background_color_{{ month.id }}" id="field_table_background_color_{{ month.id }}" value="{{ month.table_background_color }}" />
+        <input type="hidden" name="table_background_opacity_{{ month.id }}" id="field_table_background_opacity_{{ month.id }}" value="{{ month.table_background_opacity }}" />
+        {% if month.supports_fonts %}
+        <input type="hidden" name="font_weekday_bold_{{ month.id }}" id="field_font_weekday_bold_{{ month.id }}" value="{% if month.fonts.weekday.bold %}1{% endif %}" />
+        <input type="hidden" name="font_weekday_italic_{{ month.id }}" id="field_font_weekday_italic_{{ month.id }}" value="{% if month.fonts.weekday.italic %}1{% endif %}" />
+        <input type="hidden" name="font_weekday_underline_{{ month.id }}" id="field_font_weekday_underline_{{ month.id }}" value="{% if month.fonts.weekday.underline %}1{% endif %}" />
+        <input type="hidden" name="font_weekday_color_{{ month.id }}" id="field_font_weekday_color_{{ month.id }}" value="{{ month.fonts.weekday.color }}" />
+        <input type="hidden" name="font_saturday_bold_{{ month.id }}" id="field_font_saturday_bold_{{ month.id }}" value="{% if month.fonts.saturday.bold %}1{% endif %}" />
+        <input type="hidden" name="font_saturday_italic_{{ month.id }}" id="field_font_saturday_italic_{{ month.id }}" value="{% if month.fonts.saturday.italic %}1{% endif %}" />
+        <input type="hidden" name="font_saturday_underline_{{ month.id }}" id="field_font_saturday_underline_{{ month.id }}" value="{% if month.fonts.saturday.underline %}1{% endif %}" />
+        <input type="hidden" name="font_saturday_color_{{ month.id }}" id="field_font_saturday_color_{{ month.id }}" value="{{ month.fonts.saturday.color }}" />
+        <input type="hidden" name="font_sunday_bold_{{ month.id }}" id="field_font_sunday_bold_{{ month.id }}" value="{% if month.fonts.sunday.bold %}1{% endif %}" />
+        <input type="hidden" name="font_sunday_italic_{{ month.id }}" id="field_font_sunday_italic_{{ month.id }}" value="{% if month.fonts.sunday.italic %}1{% endif %}" />
+        <input type="hidden" name="font_sunday_underline_{{ month.id }}" id="field_font_sunday_underline_{{ month.id }}" value="{% if month.fonts.sunday.underline %}1{% endif %}" />
+        <input type="hidden" name="font_sunday_color_{{ month.id }}" id="field_font_sunday_color_{{ month.id }}" value="{{ month.fonts.sunday.color }}" />
+        <input type="hidden" name="font_event_bold_{{ month.id }}" id="field_font_event_bold_{{ month.id }}" value="{% if month.fonts.event.bold %}1{% endif %}" />
+        <input type="hidden" name="font_event_italic_{{ month.id }}" id="field_font_event_italic_{{ month.id }}" value="{% if month.fonts.event.italic %}1{% endif %}" />
+        <input type="hidden" name="font_event_underline_{{ month.id }}" id="field_font_event_underline_{{ month.id }}" value="{% if month.fonts.event.underline %}1{% endif %}" />
+        <input type="hidden" name="font_event_color_{{ month.id }}" id="field_font_event_color_{{ month.id }}" value="{{ month.fonts.event.color }}" />
+        {% endif %}
+        
+        <!-- Image Editor Card -->
+        <div class="card">
+          <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <span><span class="fa fa-image me-2"></span>Foto für {{ month.name }} {{ month.date|date:"Y" }}</span>
+            <div class="btn-group btn-group-sm">
+              <button type="button" class="btn btn-outline-light" title="Vorschau anzeigen" onclick="showPreviewModal()">
+                <span class="fa fa-eye"></span>
+              </button>
             </div>
           </div>
-
-          <!-- Main Content Area with Live Preview -->
-          <div class="row">
-            <!-- Image Editor Column -->
-            <div class="col-lg-7 col-xl-8 mb-3">
-              <div class="card">
-                <div class="card-header bg-success text-white">
-                  <span class="fa fa-image me-2"></span>Foto für {{ month.name }}
-                </div>
-                <div class="card-body text-center p-3">
-                  <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" class="img-fluid" style="max-height:500px">
-                </div>
-                <div class="card-footer">
-                  <div class="d-flex justify-content-between flex-wrap gap-2">
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-success" title="Neues Bild öffnen" onclick="selectImage('{{ month.id }}', '{{month.image_aspect_ratio}}')">
-                        <span class="fa fa-folder-open"></span> Bild öffnen
-                      </button>
-                    </div>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-outline-primary" title="Vorschau aktualisieren" onclick="updateLivePreview({{ month.id }})">
-                        <span class="fa fa-rotate"></span> Vorschau
-                      </button>
-                      <button type="button" class="btn {% if forloop.last %}btn-primary{% else %}btn-outline-secondary{% endif %}" title="Kalender erzeugen" onclick="uploadImages()">
-                        <span class="fa fa-file-pdf"></span> PDF Erzeugen
-                      </button>
-                    </div>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-outline-secondary" title="Nächster Monat" onclick="showTab('month_tab_{{ month.id|add:1}}')"{% if forloop.last %} disabled{% endif %}>
-                        <span class="fa fa-arrow-right"></span> Weiter
-                      </button>
-                    </div>
-                  </div>
-                </div>
+          <div class="card-body text-center p-3">
+            <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" class="img-fluid" style="max-height:500px" data-aspect-ratio="{{ month.image_aspect_ratio }}">
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-between flex-wrap gap-2">
+              <div class="btn-group">
+                <button type="button" class="btn btn-success" title="Neues Bild öffnen" onclick="selectImage('{{ month.id }}', '{{month.image_aspect_ratio}}')">
+                  <span class="fa fa-folder-open"></span> Bild öffnen
+                </button>
               </div>
-            </div>
-            
-            <!-- Live Preview Column -->
-            <div class="col-lg-5 col-xl-4 mb-3">
-              <div class="preview-panel">
-                <div class="preview-panel-header">
-                  <span><span class="fa fa-eye me-2"></span>Live-Vorschau</span>
-                  <button type="button" class="btn btn-sm btn-outline-light" onclick="updateLivePreview({{ month.id }})" title="Vorschau aktualisieren">
-                    <span class="fa fa-rotate"></span>
-                  </button>
-                </div>
-                <div class="preview-panel-body" id="preview-container-{{ month.id }}">
-                  <div class="preview-placeholder">
-                    <span class="fa fa-file-pdf"></span>
-                    <p>Klicken Sie auf "Vorschau" um eine<br>Live-Vorschau zu generieren</p>
-                  </div>
-                </div>
+              <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary" title="Vorschau anzeigen" onclick="showPreviewModal()">
+                  <span class="fa fa-eye"></span> Vorschau
+                </button>
+                <button type="button" class="btn {% if forloop.last %}btn-primary{% else %}btn-outline-secondary{% endif %}" title="Kalender erzeugen" onclick="uploadImages()">
+                  <span class="fa fa-file-pdf"></span> PDF Erzeugen
+                </button>
+              </div>
+              <div class="btn-group">
+                <button type="button" class="btn btn-outline-secondary" title="Nächster Monat" onclick="navigateMonth(1)"{% if forloop.last %} disabled{% endif %}>
+                  <span class="fa fa-arrow-right"></span> Weiter
+                </button>
               </div>
             </div>
           </div>
-          
         </div>
+        
+        {% if month.supports_events %}
+        <!-- Events Section -->
+        <div class="card mt-3">
+          <div class="card-header">
+            <span class="fa fa-calendar-plus me-2"></span>Termine für {{ month.name }}
+          </div>
+          <div class="card-body">
+            <div class="list-group" id="events-group-{{ month.id }}">
+            </div>
+            <button type="button" class="btn btn-outline-primary mt-2" onclick="addEvent({{ month.id }}, '{{ month.date | date:'Y-m-d' }}', '')">
+              <span class="fa fa-plus"></span> Termin hinzufügen
+            </button>
+          </div>
+        </div>
+        {% endif %}
       </div>
-      
     {% endfor %}
   </div>
  
 </form>
-<!-- Modal -->
+
+<!-- Upload Progress Modal -->
 <div class="modal fade" id="upload-images-modal" tabindex="-1" aria-labelledby="upload-images-modal-label" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -364,14 +403,244 @@
   </div>
 </div>
 
-<script>
+<!-- Live Preview Modal -->
+<div class="modal fade" id="preview-modal" tabindex="-1" aria-labelledby="preview-modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="preview-modal-label">
+          <span class="fa fa-eye me-2"></span>Kalendervorschau
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Schließen"></button>
+      </div>
+      <div class="modal-body p-0" id="preview-modal-body" style="min-height: 500px; background: #495057;">
+        <div class="preview-placeholder">
+          <span class="fa fa-file-pdf"></span>
+          <p>Vorschau wird geladen...</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" onclick="generatePreviewForModal()">
+          <span class="fa fa-rotate"></span> Aktualisieren
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+        <button type="button" class="btn btn-primary" onclick="uploadImages()">
+          <span class="fa fa-file-pdf"></span> PDF Erzeugen
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<script>
 const cropper = [];
 let globalAppointmentId = 0;
 let months = [ {% for month in months %}{{ month.id}}{% if not forloop.last %},{% endif %}{% endfor %} ];
+let currentMonthIndex = 0;
 
-{% if months.0.supports_events %}
-$( document ).ready(function() {
+// Month navigation functions
+function getCurrentMonthId() {
+  return months[currentMonthIndex];
+}
+
+function selectMonth(monthId) {
+  monthId = parseInt(monthId);
+  var newIndex = months.indexOf(monthId);
+  if (newIndex >= 0) {
+    currentMonthIndex = newIndex;
+    showMonthPanel(monthId);
+    updateMonthNavigation();
+    syncRibbonFromMonth(monthId);
+  }
+}
+
+function navigateMonth(direction) {
+  var newIndex = currentMonthIndex + direction;
+  if (newIndex >= 0 && newIndex < months.length) {
+    currentMonthIndex = newIndex;
+    var monthId = months[currentMonthIndex];
+    showMonthPanel(monthId);
+    document.getElementById('monthSelector').value = monthId;
+    updateMonthNavigation();
+    syncRibbonFromMonth(monthId);
+  }
+}
+
+function showMonthPanel(monthId) {
+  // Hide all month panels
+  document.querySelectorAll('.month-panel').forEach(function(panel) {
+    panel.classList.add('d-none');
+  });
+  // Show selected month panel
+  var panel = document.getElementById('month_panel_' + monthId);
+  if (panel) {
+    panel.classList.remove('d-none');
+  }
+}
+
+function updateMonthNavigation() {
+  document.getElementById('prevMonthBtn').disabled = (currentMonthIndex === 0);
+  document.getElementById('nextMonthBtn').disabled = (currentMonthIndex === months.length - 1);
+  document.getElementById('monthCounter').textContent = (currentMonthIndex + 1) + ' / ' + months.length;
+}
+
+// Sync ribbon controls from month's hidden fields
+function syncRibbonFromMonth(monthId) {
+  // Image border
+  var imageBorder = document.getElementById('field_image_border_' + monthId);
+  if (imageBorder) document.getElementById('ribbon-image-border').checked = (imageBorder.value === '1');
+  
+  var imageBorderColor = document.getElementById('field_image_border_color_' + monthId);
+  if (imageBorderColor) document.getElementById('ribbon-image-border-color').value = imageBorderColor.value || '#000000';
+  
+  var imageBorderWidth = document.getElementById('field_image_border_width_' + monthId);
+  if (imageBorderWidth) document.getElementById('ribbon-image-border-width').value = imageBorderWidth.value || '3';
+  
+  // Background
+  var bgType = document.getElementById('field_background_type_' + monthId);
+  if (bgType) document.getElementById('ribbon-background-type').value = bgType.value || 'N';
+  
+  var bgColor = document.getElementById('field_background_color_' + monthId);
+  if (bgColor) document.getElementById('ribbon-background-color').value = bgColor.value || '#ffffff';
+  
+  var bgColorB = document.getElementById('field_background_color_b_' + monthId);
+  if (bgColorB) document.getElementById('ribbon-background-color-b').value = bgColorB.value || '#aaaaaa';
+  
+  var centerMonth = document.getElementById('field_center_month_' + monthId);
+  if (centerMonth) document.getElementById('ribbon-center-month').checked = (centerMonth.value === '1');
+  
+  // Days table
+  var tableBorder = document.getElementById('field_table_border_' + monthId);
+  if (tableBorder) document.getElementById('ribbon-table-border').checked = (tableBorder.value === '1');
+  
+  var showWeeks = document.getElementById('field_show_weeks_' + monthId);
+  if (showWeeks) document.getElementById('ribbon-show-weeks').checked = (showWeeks.value === '1');
+  
+  var tableBgColor = document.getElementById('field_table_background_color_' + monthId);
+  if (tableBgColor) document.getElementById('ribbon-table-background-color').value = tableBgColor.value || '#ffffff';
+  
+  var tableBgOpacity = document.getElementById('field_table_background_opacity_' + monthId);
+  if (tableBgOpacity) document.getElementById('ribbon-table-background-opacity').value = tableBgOpacity.value || '70';
+  
+  // Fonts
+  syncFontFromMonth(monthId, 'weekday');
+  syncFontFromMonth(monthId, 'saturday');
+  syncFontFromMonth(monthId, 'sunday');
+  syncFontFromMonth(monthId, 'event');
+}
+
+function syncFontFromMonth(monthId, fontType) {
+  var boldField = document.getElementById('field_font_' + fontType + '_bold_' + monthId);
+  var italicField = document.getElementById('field_font_' + fontType + '_italic_' + monthId);
+  var underlineField = document.getElementById('field_font_' + fontType + '_underline_' + monthId);
+  var colorField = document.getElementById('field_font_' + fontType + '_color_' + monthId);
+  
+  if (boldField) document.getElementById('ribbon-font-' + fontType + '-bold').checked = (boldField.value === '1');
+  if (italicField) document.getElementById('ribbon-font-' + fontType + '-italic').checked = (italicField.value === '1');
+  if (underlineField) document.getElementById('ribbon-font-' + fontType + '-underline').checked = (underlineField.value === '1');
+  if (colorField) document.getElementById('ribbon-font-' + fontType + '-color').value = colorField.value || '#000000';
+}
+
+// Update hidden field for current month from ribbon control
+function updateCurrentMonthField(fieldName, value) {
+  var monthId = getCurrentMonthId();
+  var field = document.getElementById('field_' + fieldName + '_' + monthId);
+  if (field) {
+    field.value = value;
+  }
+}
+
+// Helper functions for ribbon buttons
+function selectImageForCurrentMonth() {
+  var monthId = getCurrentMonthId();
+  var img = document.getElementById('image-preview-' + monthId);
+  var aspectRatio = img ? img.getAttribute('data-aspect-ratio') : '1.5';
+  selectImage(monthId, aspectRatio);
+}
+
+function addEventForCurrentMonth() {
+  var monthId = getCurrentMonthId();
+  var panel = document.getElementById('month_panel_' + monthId);
+  var dateField = panel ? panel.querySelector('input[name="date_' + monthId + '"]') : null;
+  var date = dateField ? dateField.value : new Date().toISOString().split('T')[0];
+  addEvent(monthId, date, '');
+}
+
+// Preview Modal functions
+var previewModalInstance = null;
+
+function showPreviewModal() {
+  var modalEl = document.getElementById('preview-modal');
+  previewModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+  previewModalInstance.show();
+  
+  // Generate preview when modal is shown
+  modalEl.addEventListener('shown.bs.modal', function() {
+    generatePreviewForModal();
+  }, { once: true });
+}
+
+function generatePreviewForModal() {
+  var monthId = getCurrentMonthId();
+  var container = document.getElementById('preview-modal-body');
+  
+  // Show loading state
+  container.innerHTML = '<div class="preview-loading"><div class="spinner-border text-light" role="status"><span class="visually-hidden">Laden...</span></div><p>Vorschau wird erstellt...</p></div>';
+  
+  // Collect form data for the specific month
+  var formData = new FormData(document.forms['months']);
+  formData.set('lenght', '1');
+  formData.set('ids', monthId + ',');
+  
+  var croppedCanvasOptions = {
+    minWidth: 256,
+    minHeight: 256,
+    maxWidth: 2048,
+    maxHeight: 2048,
+  };
+  
+  if (cropper[monthId]) {
+    var boxData = cropper[monthId].getData();
+    formData.set("image_x_" + monthId, boxData['x']);
+    formData.set("image_y_" + monthId, boxData['y']);
+    formData.set("image_width_" + monthId, boxData['width']);
+    formData.set("image_height_" + monthId, boxData['height']);
+    
+    cropper[monthId].getCroppedCanvas(croppedCanvasOptions).toBlob(function(blob) {
+      formData.append('image_' + monthId, blob, 'image_' + monthId + '.jpeg');
+      sendModalPreviewRequest(formData, container);
+    }, 'image/jpeg', 0.8);
+  } else {
+    sendModalPreviewRequest(formData, container);
+  }
+}
+
+function sendModalPreviewRequest(formData, container) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "create", true);
+  xhr.responseType = 'blob';
+  
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var pdfUrl = window.URL.createObjectURL(xhr.response);
+      container.innerHTML = '<object data="' + pdfUrl + '" type="application/pdf" width="100%" height="600px" style="background: white;"><p>PDF Vorschau kann nicht angezeigt werden. <a href="' + pdfUrl + '" target="_blank">PDF herunterladen</a></p></object>';
+    } else {
+      container.innerHTML = '<div class="preview-placeholder"><span class="fa fa-exclamation-triangle"></span><p>Vorschau konnte nicht erstellt werden.<br>Bitte versuchen Sie es erneut.</p></div>';
+    }
+  };
+  
+  xhr.onerror = function() {
+    container.innerHTML = '<div class="preview-placeholder"><span class="fa fa-exclamation-triangle"></span><p>Netzwerkfehler.<br>Bitte überprüfen Sie Ihre Verbindung.</p></div>';
+  };
+  
+  xhr.send(formData);
+}
+
+// Initialize on document ready
+$(document).ready(function() {
+  updateMonthNavigation();
+  syncRibbonFromMonth(getCurrentMonthId());
+  
   {% for month in months %}
     {% for event in month.events %}
     addEvent({{month.id}}, '{{ event.date }}', '{{ event.text }}', true);
@@ -379,7 +648,6 @@ $( document ).ready(function() {
     {% if month.image %}setCropperImage('{{ month.id }}', '{{month.image_aspect_ratio}}', false, 'data:image/jpeg;base64,{{ month.image }}'){% endif %}
   {% endfor %}
 });
-{% endif %} 
 </script>
 <script src="{% static 'calendaronline.js' %}"></script>
 {% endblock %}
