@@ -353,33 +353,9 @@
         <input type="hidden" name="font_event_color_{{ month.id }}" id="field_font_event_color_{{ month.id }}" value="{{ month.fonts.event.color }}" />
         {% endif %}
         
-        <!-- Image Editor Card -->
-        <div class="card image-editor-card">
-          <div class="card-body text-center p-3">
-            <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" class="img-fluid" style="max-height:500px" data-aspect-ratio="{{ month.image_aspect_ratio }}">
-          </div>
-          <div class="card-footer">
-            <div class="d-flex justify-content-between flex-wrap gap-2">
-              <div class="btn-group">
-                <button type="button" class="btn btn-success" title="Neues Bild öffnen" onclick="selectImage('{{ month.id }}', '{{month.image_aspect_ratio}}')">
-                  <span class="fa fa-folder-open"></span> Bild öffnen
-                </button>
-              </div>
-              <div class="btn-group">
-                <button type="button" class="btn btn-outline-primary" title="Vorschau anzeigen" onclick="showPreviewModal()">
-                  <span class="fa fa-eye"></span> Vorschau
-                </button>
-                <button type="button" class="btn {% if forloop.last %}btn-primary{% else %}btn-outline-secondary{% endif %}" title="Kalender erzeugen" onclick="uploadImages()">
-                  <span class="fa fa-file-pdf"></span> PDF Erzeugen
-                </button>
-              </div>
-              <div class="btn-group">
-                <button type="button" class="btn btn-outline-secondary" title="Nächster Monat" onclick="navigateMonth(1)"{% if forloop.last %} disabled{% endif %}>
-                  <span class="fa fa-arrow-right"></span> Weiter
-                </button>
-              </div>
-            </div>
-          </div>
+        <!-- Full-width Image Cropper -->
+        <div class="cropper-container-fullwidth">
+          <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" class="cropper-image" data-aspect-ratio="{{ month.image_aspect_ratio }}">
         </div>
         
         {% if month.supports_events %}
