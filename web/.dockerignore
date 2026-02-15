@@ -5,3 +5,5 @@ Dockerfile
 *.pyc
 .*
 
+venv
+.venv
