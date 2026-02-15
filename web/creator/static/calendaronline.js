@@ -270,3 +270,89 @@ function enableCropper(img, id, storedCropperKey, aspectRatio) {
     }
   })
 }
+
+// Live Preview functionality
+var livePreviewDebounceTimer = null;
+
+function updateLivePreview(monthId) {
+  console.log("Updating live preview for month", monthId);
+  
+  // Clear any pending debounce timer
+  if (livePreviewDebounceTimer) {
+    clearTimeout(livePreviewDebounceTimer);
+  }
+  
+  // Debounce the preview update to avoid too many requests
+  livePreviewDebounceTimer = setTimeout(function() {
+    generateLivePreview(monthId);
+  }, 300);
+}
+
+function generateLivePreview(monthId) {
+  var container = document.getElementById('preview-container-' + monthId);
+  if (!container) {
+    console.error("Preview container not found for month", monthId);
+    return;
+  }
+  
+  // Show loading state
+  container.innerHTML = '<div class="preview-loading"><div class="spinner-border text-light" role="status"><span class="visually-hidden">Laden...</span></div><p>Vorschau wird erstellt...</p></div>';
+  
+  // Collect form data for the specific month
+  var formData = new FormData(document.forms['months']);
+  formData.set('lenght', '1');
+  formData.set('ids', monthId + ',');
+  
+  // Add cropped image if available
+  var croppedCanvasOptions = {
+    minWidth: 256,
+    minHeight: 256,
+    maxWidth: 2048,
+    maxHeight: 2048,
+  };
+  
+  if (cropper[monthId]) {
+    var boxData = cropper[monthId].getData();
+    formData.set("image_x_" + monthId, boxData['x']);
+    formData.set("image_y_" + monthId, boxData['y']);
+    formData.set("image_width_" + monthId, boxData['width']);
+    formData.set("image_height_" + monthId, boxData['height']);
+    
+    // Get cropped canvas and convert to blob
+    cropper[monthId].getCroppedCanvas(croppedCanvasOptions).toBlob(function(blob) {
+      formData.append('image_' + monthId, blob, 'image_' + monthId + '.jpeg');
+      sendPreviewRequest(formData, container, monthId);
+    }, 'image/jpeg', 0.8);
+  } else {
+    // No image selected, send request without image
+    sendPreviewRequest(formData, container, monthId);
+  }
+}
+
+function sendPreviewRequest(formData, container, monthId) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "create", true);
+  xhr.responseType = 'blob';
+  
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      // Create object URL for the PDF blob
+      var pdfUrl = window.URL.createObjectURL(xhr.response);
+      
+      // Create an embedded PDF viewer using an object/embed element
+      container.innerHTML = '<object data="' + pdfUrl + '" type="application/pdf" width="100%" height="500px" style="background: white;"><p>PDF Vorschau kann nicht angezeigt werden. <a href="' + pdfUrl + '" target="_blank">PDF herunterladen</a></p></object>';
+      
+      console.log("Live preview generated successfully for month", monthId);
+    } else {
+      console.error("Preview generation failed with status", xhr.status);
+      container.innerHTML = '<div class="preview-placeholder"><span class="fa fa-exclamation-triangle"></span><p>Vorschau konnte nicht erstellt werden.<br>Bitte versuchen Sie es erneut.</p></div>';
+    }
+  };
+  
+  xhr.onerror = function() {
+    console.error("Network error during preview generation");
+    container.innerHTML = '<div class="preview-placeholder"><span class="fa fa-exclamation-triangle"></span><p>Netzwerkfehler.<br>Bitte überprüfen Sie Ihre Verbindung.</p></div>';
+  };
+  
+  xhr.send(formData);
+}

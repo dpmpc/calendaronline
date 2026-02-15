@@ -1,0 +1,362 @@
+/* Microsoft Office-style Ribbon CSS for CalendarOnline */
+
+/* Ribbon Container */
+.ribbon-container {
+    background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ribbon Tabs Navigation */
+.ribbon-tabs {
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 6px 6px 0 0;
+    padding: 0 8px;
+}
+
+.ribbon-tabs .nav-link {
+    color: #495057;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 8px 16px;
+    margin: 4px 2px 0;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    background: transparent;
+    transition: all 0.15s ease-in-out;
+}
+
+.ribbon-tabs .nav-link:hover {
+    background: #e9ecef;
+    border-color: #dee2e6 #dee2e6 transparent;
+}
+
+.ribbon-tabs .nav-link.active {
+    background: #f8f9fa;
+    border-color: #dee2e6 #dee2e6 #f8f9fa;
+    color: #198754;
+    font-weight: 600;
+}
+
+/* Ribbon Content Panel */
+.ribbon-content {
+    padding: 12px 16px;
+    background: #f8f9fa;
+    min-height: 100px;
+    border-radius: 0 0 6px 6px;
+}
+
+/* Ribbon Groups */
+.ribbon-group {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 16px;
+    border-right: 1px solid #dee2e6;
+    min-width: 90px;
+    vertical-align: top;
+}
+
+.ribbon-group:last-child {
+    border-right: none;
+}
+
+.ribbon-group-label {
+    font-size: 0.7rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 6px;
+    text-align: center;
+}
+
+.ribbon-group-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+/* Ribbon Buttons */
+.ribbon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    font-size: 0.75rem;
+    color: #495057;
+    min-width: 52px;
+}
+
+.ribbon-btn:hover {
+    background: #fff;
+    border-color: #198754;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ribbon-btn.active,
+.ribbon-btn:active {
+    background: #e8f5e9;
+    border-color: #198754;
+}
+
+.ribbon-btn .fa {
+    font-size: 1.25rem;
+    margin-bottom: 4px;
+    color: #495057;
+}
+
+.ribbon-btn:hover .fa {
+    color: #198754;
+}
+
+.ribbon-btn-label {
+    font-size: 0.65rem;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Large Ribbon Button */
+.ribbon-btn-lg {
+    padding: 8px 12px;
+    min-width: 60px;
+}
+
+.ribbon-btn-lg .fa {
+    font-size: 1.75rem;
+    margin-bottom: 6px;
+}
+
+/* Ribbon Form Controls */
+.ribbon-control {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.ribbon-control-label {
+    font-size: 0.65rem;
+    color: #6c757d;
+    margin-bottom: 2px;
+}
+
+.ribbon-control .form-control,
+.ribbon-control .form-select {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    height: auto;
+}
+
+.ribbon-control .form-control-color {
+    width: 32px;
+    height: 28px;
+    padding: 2px;
+}
+
+/* Ribbon Inline Group */
+.ribbon-inline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Ribbon Checkbox/Switch */
+.ribbon-switch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 8px;
+}
+
+.ribbon-switch .form-check-input {
+    margin: 0;
+    width: 2rem;
+    height: 1rem;
+}
+
+.ribbon-switch-label {
+    font-size: 0.65rem;
+    color: #6c757d;
+    margin-top: 4px;
+    text-align: center;
+}
+
+/* Ribbon Separator */
+.ribbon-separator {
+    width: 1px;
+    height: 60px;
+    background: #dee2e6;
+    margin: 0 8px;
+}
+
+/* Horizontal Ribbon Row */
+.ribbon-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0;
+}
+
+/* Compact Ribbon Row for smaller screens */
+@media (max-width: 992px) {
+    .ribbon-group {
+        padding: 6px 12px;
+        min-width: 80px;
+    }
+    
+    .ribbon-btn {
+        min-width: 44px;
+        padding: 4px 6px;
+    }
+    
+    .ribbon-btn .fa {
+        font-size: 1rem;
+    }
+}
+
+/* Preview Panel Styles */
+.preview-panel {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.preview-panel-header {
+    background: linear-gradient(180deg, #198754 0%, #157347 100%);
+    color: white;
+    padding: 8px 16px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.preview-panel-body {
+    padding: 0;
+    background: #495057;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-panel-body iframe {
+    border: none;
+    width: 100%;
+    height: 500px;
+    background: white;
+}
+
+.preview-placeholder {
+    color: #adb5bd;
+    text-align: center;
+    padding: 40px;
+}
+
+.preview-placeholder .fa {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.preview-placeholder p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Loading State for Preview */
+.preview-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    padding: 40px;
+}
+
+.preview-loading .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 16px;
+}
+
+/* Split Layout for Month Page */
+.month-editor-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.month-editor-main {
+    flex: 1;
+    min-width: 300px;
+}
+
+.month-editor-preview {
+    width: 400px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 1200px) {
+    .month-editor-preview {
+        width: 100%;
+        order: -1;
+    }
+}
+
+/* Ribbon Color Picker Group */
+.ribbon-color-group {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.ribbon-color-group .form-control-color {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Ribbon Slider */
+.ribbon-slider {
+    width: 100px;
+}
+
+.ribbon-slider .form-range {
+    width: 100%;
+    height: 6px;
+}
+
+/* Font Styling Buttons in Ribbon */
+.ribbon-font-buttons {
+    display: flex;
+    gap: 2px;
+}
+
+.ribbon-font-buttons .btn-check + .btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+}
+
+/* Quick Action Buttons */
+.ribbon-quick-actions {
+    display: flex;
+    gap: 8px;
+    padding: 8px 0;
+    border-top: 1px solid #dee2e6;
+    margin-top: 8px;
+}
