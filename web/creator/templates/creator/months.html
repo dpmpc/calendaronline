@@ -61,6 +61,27 @@
             </div>
             <div class="ribbon-group">
               <div class="ribbon-group-content">
+                <button type="button" class="ribbon-btn" title="Nach links drehen" onclick="rotateCurrentImage(-90)">
+                  <span class="fa fa-rotate-left"></span>
+                  <span class="ribbon-btn-label">Links</span>
+                </button>
+                <button type="button" class="ribbon-btn" title="Nach rechts drehen" onclick="rotateCurrentImage(90)">
+                  <span class="fa fa-rotate-right"></span>
+                  <span class="ribbon-btn-label">Rechts</span>
+                </button>
+                <button type="button" class="ribbon-btn" title="Horizontal spiegeln" onclick="flipCurrentImage('horizontal')">
+                  <span class="fa fa-arrows-left-right"></span>
+                  <span class="ribbon-btn-label">H-Flip</span>
+                </button>
+                <button type="button" class="ribbon-btn" title="Vertikal spiegeln" onclick="flipCurrentImage('vertical')">
+                  <span class="fa fa-arrows-up-down"></span>
+                  <span class="ribbon-btn-label">V-Flip</span>
+                </button>
+              </div>
+              <span class="ribbon-group-label">Drehen & Spiegeln</span>
+            </div>
+            <div class="ribbon-group">
+              <div class="ribbon-group-content">
                 <div class="ribbon-switch">
                   <input class="form-check-input" type="checkbox" role="switch" id="ribbon-image-border" onchange="updateCurrentMonthField('image_border', this.checked ? '1' : '')">
                   <span class="ribbon-switch-label">Rahmen</span>
@@ -255,6 +276,33 @@
       </div>
     </div>
   </div>
+  <!-- Month Selector Bar - Directly under ribbon content -->
+  <div class="month-selector-bar-wrapper">
+    <div class="container-fluid">
+      <div class="month-selector-integrated">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-2">
+            <span class="fa fa-image text-success me-1"></span>
+            <span class="month-title" id="currentMonthTitle">Foto für {{ months.0.name }} {{ months.0.date|date:"Y" }}</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="prevMonthBtn" onclick="navigateMonth(-1)" title="Vorheriger Monat">
+              <span class="fa fa-chevron-left"></span>
+            </button>
+            <select class="form-select form-select-sm month-dropdown-compact" id="monthSelector" onchange="selectMonth(this.value)">
+              {% for month in months %}
+                <option value="{{ month.id }}"{% if forloop.first %} selected{% endif %}>{{ month.name }} {{ month.date|date:"Y" }}</option>
+              {% endfor %}
+            </select>
+            <button type="button" class="btn btn-sm btn-outline-secondary" id="nextMonthBtn" onclick="navigateMonth(1)" title="Nächster Monat">
+              <span class="fa fa-chevron-right"></span>
+            </button>
+            <span class="badge bg-success" id="monthCounter">1 / {{ months|length }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -265,29 +313,6 @@
   <input type="hidden" name="ids" value="{% for month in months %}{{month.id}},{% endfor %}" />
   <input type="hidden" name="lenght" value="{{ months|length }}" />
   <input type="hidden" name="save_project" value="0" />
-
-  <!-- Optimized Month Selector: Dropdown with Prev/Next buttons -->
-  <div class="month-selector-bar mb-3">
-    <div class="d-flex align-items-center justify-content-center gap-2">
-      <button type="button" class="btn btn-outline-secondary" id="prevMonthBtn" onclick="navigateMonth(-1)" title="Vorheriger Monat">
-        <span class="fa fa-chevron-left"></span>
-      </button>
-      
-      <div class="month-dropdown-wrapper">
-        <select class="form-select form-select-lg month-dropdown" id="monthSelector" onchange="selectMonth(this.value)">
-          {% for month in months %}
-            <option value="{{ month.id }}"{% if forloop.first %} selected{% endif %}>{{ month.name }} {{ month.date|date:"Y" }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      
-      <button type="button" class="btn btn-outline-secondary" id="nextMonthBtn" onclick="navigateMonth(1)" title="Nächster Monat">
-        <span class="fa fa-chevron-right"></span>
-      </button>
-      
-      <span class="badge bg-secondary ms-2" id="monthCounter">1 / {{ months|length }}</span>
-    </div>
-  </div>
 
   <!-- Month Content Panels -->
   <div id="monthPanelsContent">
@@ -329,15 +354,7 @@
         {% endif %}
         
         <!-- Image Editor Card -->
-        <div class="card">
-          <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-            <span><span class="fa fa-image me-2"></span>Foto für {{ month.name }} {{ month.date|date:"Y" }}</span>
-            <div class="btn-group btn-group-sm">
-              <button type="button" class="btn btn-outline-light" title="Vorschau anzeigen" onclick="showPreviewModal()">
-                <span class="fa fa-eye"></span>
-              </button>
-            </div>
-          </div>
+        <div class="card image-editor-card">
           <div class="card-body text-center p-3">
             <img id="image-preview-{{ month.id }}" src="{% static 'images/no_image_16x9.png' %}" alt="Vorschau" class="img-fluid" style="max-height:500px" data-aspect-ratio="{{ month.image_aspect_ratio }}">
           </div>
@@ -482,6 +499,13 @@ function updateMonthNavigation() {
   document.getElementById('prevMonthBtn').disabled = (currentMonthIndex === 0);
   document.getElementById('nextMonthBtn').disabled = (currentMonthIndex === months.length - 1);
   document.getElementById('monthCounter').textContent = (currentMonthIndex + 1) + ' / ' + months.length;
+  
+  // Update month title in the selector bar
+  var selector = document.getElementById('monthSelector');
+  var selectedOption = selector.options[selector.selectedIndex];
+  if (selectedOption) {
+    document.getElementById('currentMonthTitle').textContent = 'Foto für ' + selectedOption.text;
+  }
 }
 
 // Sync ribbon controls from month's hidden fields
@@ -556,6 +580,31 @@ function selectImageForCurrentMonth() {
   var img = document.getElementById('image-preview-' + monthId);
   var aspectRatio = img ? img.getAttribute('data-aspect-ratio') : '1.5';
   selectImage(monthId, aspectRatio);
+}
+
+// Rotate image for current month
+function rotateCurrentImage(degrees) {
+  var monthId = getCurrentMonthId();
+  if (cropper[monthId]) {
+    cropper[monthId].rotate(degrees);
+  }
+}
+
+// Flip image for current month
+var flipScaleX = {};
+var flipScaleY = {};
+
+function flipCurrentImage(direction) {
+  var monthId = getCurrentMonthId();
+  if (cropper[monthId]) {
+    if (direction === 'horizontal') {
+      flipScaleX[monthId] = flipScaleX[monthId] === -1 ? 1 : -1;
+      cropper[monthId].scaleX(flipScaleX[monthId]);
+    } else if (direction === 'vertical') {
+      flipScaleY[monthId] = flipScaleY[monthId] === -1 ? 1 : -1;
+      cropper[monthId].scaleY(flipScaleY[monthId]);
+    }
+  }
 }
 
 function addEventForCurrentMonth() {
