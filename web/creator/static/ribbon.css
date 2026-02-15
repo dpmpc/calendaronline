@@ -1,12 +1,20 @@
 /* Microsoft Office-style Ribbon CSS for CalendarOnline */
 
+/* Ribbon Wrapper - Full width, directly under navbar */
+.ribbon-wrapper {
+    background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 0;
+}
+
 /* Ribbon Container */
 .ribbon-container {
-    background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+    box-shadow: none;
 }
 
 /* Ribbon Tabs Navigation */
@@ -359,4 +367,58 @@
     padding: 8px 0;
     border-top: 1px solid #dee2e6;
     margin-top: 8px;
+}
+
+/* Month Selector Bar */
+.month-selector-bar {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+.month-dropdown-wrapper {
+    min-width: 200px;
+}
+
+.month-dropdown {
+    font-weight: 500;
+    text-align: center;
+    border-color: #198754;
+}
+
+.month-dropdown:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+/* Preview Modal */
+#preview-modal .modal-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#preview-modal .preview-placeholder {
+    text-align: center;
+    color: #adb5bd;
+    padding: 60px;
+}
+
+#preview-modal .preview-placeholder .fa {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+#preview-modal .preview-loading {
+    text-align: center;
+    color: #adb5bd;
+    padding: 60px;
+}
+
+#preview-modal .preview-loading .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 16px;
 }
