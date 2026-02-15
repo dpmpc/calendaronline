@@ -598,9 +598,13 @@ function flipCurrentImage(direction) {
   var monthId = getCurrentMonthId();
   if (cropper[monthId]) {
     if (direction === 'horizontal') {
+      // Initialize if not set
+      if (flipScaleX[monthId] === undefined) flipScaleX[monthId] = 1;
       flipScaleX[monthId] = flipScaleX[monthId] === -1 ? 1 : -1;
       cropper[monthId].scaleX(flipScaleX[monthId]);
     } else if (direction === 'vertical') {
+      // Initialize if not set
+      if (flipScaleY[monthId] === undefined) flipScaleY[monthId] = 1;
       flipScaleY[monthId] = flipScaleY[monthId] === -1 ? 1 : -1;
       cropper[monthId].scaleY(flipScaleY[monthId]);
     }
