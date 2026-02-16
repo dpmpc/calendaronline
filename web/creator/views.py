@@ -48,7 +48,7 @@ def preview(request):
     if request.GET.get('pdf', '0') == '1':
         return HttpResponse(calendar.output(), content_type="application/pdf")
     else:
-        img = convert_from_bytes(calendar.output(), dpi=150, first_page=1, last_page=1)[0]
+        img = convert_from_bytes(calendar.output(), dpi=72, first_page=1, last_page=1)[0]
         response = HttpResponse(content_type="image/png")
         img.save(response, "PNG")
         return response
