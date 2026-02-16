@@ -47,7 +47,6 @@ def create(request):
 def preview(request):
     calendar = create_preview_from_request(request)
     pdf_output = calendar.output()
-    
     if request.GET.get('pdf', '0') == '1':
         return HttpResponse(pdf_output, content_type="application/pdf")
     else:
@@ -61,7 +60,7 @@ def preview(request):
             img.save(response, "PNG")
             return response
         except (PDFInfoNotInstalledError, PopplerNotInstalledError, PDFPageCountError, PDFSyntaxError):
-            # Poppler is not installed or PDF is corrupted - fall back to PDF output
+            # PDF conversion failed - fall back to PDF output
             return HttpResponse(pdf_output, content_type="application/pdf")
 
 
