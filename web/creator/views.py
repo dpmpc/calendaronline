@@ -51,7 +51,7 @@ def preview(request):
         return HttpResponse(pdf_output, content_type="application/pdf")
     else:
         try:
-            pages = convert_from_bytes(pdf_output, dpi=150, first_page=1, last_page=1)
+            pages = convert_from_bytes(pdf_output, dpi=72, first_page=1, last_page=1)
             img = pages[0]
             response = HttpResponse(content_type="image/png")
             img.save(response, "PNG")
