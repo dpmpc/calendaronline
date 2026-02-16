@@ -3,6 +3,7 @@ from django.template import loader
 from creator.fotocalendar.bo.config import CalendarConfig
 from creator.fotocalendar.creator import get_default_config_for_format, get_default_config_for_request, get_config_for_request, create_from_config, create_preview_from_request
 from pdf2image import convert_from_bytes
+from pdf2image.exceptions import PDFInfoNotInstalledError, PDFPageCountError, PDFSyntaxError, PopplerNotInstalledError
 
 
 def index(request):
@@ -48,10 +49,20 @@ def preview(request):
     if request.GET.get('pdf', '0') == '1':
         return HttpResponse(calendar.output(), content_type="application/pdf")
     else:
-        img = convert_from_bytes(calendar.output(), dpi=72, first_page=1, last_page=1)[0]
-        response = HttpResponse(content_type="image/png")
-        img.save(response, "PNG")
-        return response
+        try:
+            img = convert_from_bytes(calendar.output(), dpi=150, first_page=1, last_page=1)[0]
+            response = HttpResponse(content_type="image/png")
+            img.save(response, "PNG")
+            return response
+        except (PDFInfoNotInstalledError, PopplerNotInstalledError):
+            # Poppler is not installed, fall back to PDF output
+            return HttpResponse(calendar.output(), content_type="application/pdf")
+        except (PDFPageCountError, PDFSyntaxError):
+            # PDF is corrupted or invalid, fall back to PDF output
+            return HttpResponse(calendar.output(), content_type="application/pdf")
+        except IndexError:
+            # PDF has no pages, fall back to PDF output
+            return HttpResponse(calendar.output(), content_type="application/pdf")
 
 
 def faq(request):
