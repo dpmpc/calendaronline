@@ -54,14 +54,8 @@ def preview(request):
             response = HttpResponse(content_type="image/png")
             img.save(response, "PNG")
             return response
-        except (PDFInfoNotInstalledError, PopplerNotInstalledError):
-            # Poppler is not installed, fall back to PDF output
-            return HttpResponse(calendar.output(), content_type="application/pdf")
-        except (PDFPageCountError, PDFSyntaxError):
-            # PDF is corrupted or invalid, fall back to PDF output
-            return HttpResponse(calendar.output(), content_type="application/pdf")
-        except IndexError:
-            # PDF has no pages, fall back to PDF output
+        except (PDFInfoNotInstalledError, PopplerNotInstalledError, PDFPageCountError, PDFSyntaxError, IndexError):
+            # Poppler is not installed, PDF is corrupted, or PDF has no pages - fall back to PDF output
             return HttpResponse(calendar.output(), content_type="application/pdf")
 
 
