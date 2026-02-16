@@ -1,0 +1,32 @@
+[project]
+# see https://packaging.python.org/en/latest/specifications/pyproject-toml/
+name = "calendaronline"
+dynamic = ["version"]
+authors = [{name = "Daniel Schlich", email = "info@k51.de"}]
+license = "GPL-3.0"
+# license-files = ["LICENSE.md"]
+description = "A simple tool to create beautiful photo calendars as PDF for self printing."
+# readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django==6.0.2",
+    "fpdf2==2.8.5",
+    "Pillow==12.1.0",
+    "python-dateutil",
+    "icalevents==0.3.1",
+    "uharfbuzz==0.53.3",
+    "orjson==3.11.7",
+    "gunicorn==25.0.3",
+    "pdf2image==1.17.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+    "calendaronline*",
+    "creator*",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
