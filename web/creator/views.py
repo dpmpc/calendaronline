@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from creator.fotocalendar.bo.config import CalendarConfig
 from creator.fotocalendar.creator import get_default_config_for_format, get_default_config_for_request, get_config_for_request, create_from_config, create_preview_from_request
+from pdf2image import convert_from_bytes
 
 
 def index(request):
@@ -44,7 +45,13 @@ def create(request):
 
 def preview(request):
     calendar = create_preview_from_request(request)
-    return HttpResponse(calendar.output(), content_type="application/pdf")
+    if request.GET.get('pdf', '0') == '1':
+        return HttpResponse(calendar.output(), content_type="application/pdf")
+    else:
+        img = convert_from_bytes(calendar.output(), dpi=150, first_page=1, last_page=1)[0]
+        response = HttpResponse(content_type="image/png")
+        img.save(response, "PNG")
+        return response
 
 
 def faq(request):

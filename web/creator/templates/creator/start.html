@@ -15,116 +15,38 @@
       </div>
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Hochkant</div>
-                <img src="{% static 'images/preview-P.png' %}" class="p-3" alt="Hochkant">
-                <div class="card-body">
-                    <p class="card-text"></p>
-                      <a class="btn btn-primary" href="options?format=P" role="button"><span class="fa fa-arrow-circle-right"></span> Erstellen</a>
-                      <a class="btn btn-outline-secondary" href="preview?format=P" role="button" target="preview"><span class="fa fa-eye"></span> Vorschau</a>
+        {% include "creator/card_template.html" with title="Hochkant" format="P" %}
+        {% include "creator/card_template.html" with title="Hochkant (volle Breite)" format="PW" %}
+        {% include "creator/card_template.html" with title="Hochkant (vollbild)" format="PF" %}
+        {% include "creator/card_template.html" with title="Querformat" format="L" %}
+        {% include "creator/card_template.html" with title="Querformat (vollbild)" format="LF" %}
+        {% include "creator/card_template.html" with title="Querformat (Modern)" format="LM" %}
+        {% include "creator/card_template.html" with title="Design 1" format="1" %}
+        {% include "creator/card_template.html" with title="Vintage" format="V" %}
+        {% include "creator/card_template.html" with title="Design 2026" format="26" %} 
+
+        <!-- Preview Modal -->
+        <div class="modal fade" id="preview-modal" tabindex="-1" aria-labelledby="preview-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="preview-modal-label">
+                <span class="fa fa-eye me-2"></span>Kalendervorschau
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Schließen"></button>
+            </div>
+            <div class="modal-body p-0" id="preview-modal-body" style="min-height: 500px; background: #495057;">
+                <div class="preview-placeholder">
+                <span class="fa fa-file-pdf"></span>
+                <p>Vorschau wird geladen...</p>
                 </div>
+            </div>
+            <div class="modal-footer">
+                <a id="preview-pdf-link" class="btn btn-outline-secondary" href="preview?format=26" role="button" target="preview"><span class="fa fa-file-pdf"></span> PDF Erzeugen</a>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Schließen</button>
+            </div>
             </div>
         </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Hochkant (volle Breite)</div>
-                <img src="{% static 'images/preview-PW.png' %}" class="p-3" alt="Hochkant (volle Breite)">
-                <div class="card-body">
-                    <p class="card-text"></p>
-                    <a class="btn btn-primary" href="options?format=PW" role="button"><span class="fa fa-arrow-circle-right"></span> Erstellen</a>
-                    <a class="btn btn-outline-secondary" href="preview?format=PW" role="button" target="preview"><span class="fa fa-eye"></span> Vorschau</a>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Hochkant (vollbild)</div>
-                <img src="{% static 'images/preview-PF.png' %}" class="p-3" alt="Hochkant (vollbild)">
-                <div class="card-body">
-                    <p class="card-text"></p>
-                    <a class="btn btn-primary" href="options?format=PF" role="button"><span class="fa fa-arrow-circle-right"></span> Erstellen</a>
-                    <a class="btn btn-outline-secondary" href="preview?format=PF" role="button" target="preview"><span class="fa fa-eye"></span> Vorschau</a>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Querformat</div>
-                <img src="{% static 'images/preview-L.png' %}" class="p-3" alt="Querformat">
-                <div class="card-body">
-                    <p class="card-text"></p>
-                    <a class="btn btn-primary" href="options?format=L" role="button"><span class="fa fa-arrow-circle-right"></span> Erstellen</a>
-                    <a class="btn btn-outline-secondary" href="preview?format=L" role="button" target="preview"><span class="fa fa-eye"></span> Vorschau</a>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Querformat (vollbild)</div>
-                <img src="{% static 'images/preview-LF.png' %}" class="p-3" alt="Querformat (vollbild)">
-                <div class="card-body">
-                    <p class="card-text"></p>
-                    <a class="btn btn-primary" href="options?format=LF" role="button"><span class="fa fa-arrow-circle-right"></span> Erstellen</a>
-                    <a class="btn btn-outline-secondary" href="preview?format=LF" role="button" target="preview"><span class="fa fa-eye"></span> Vorschau</a>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Querformat (Modern)</div>
-                <img src="{% static 'images/preview-LM.png' %}" class="p-3" alt="Querformat (Modern)">
-                <div class="card-body">
-                    <p class="card-text"></p>
-                    <a class="btn btn-primary" href="options?format=LM" role="button"><span class="fa fa-arrow-circle-right"></span> Erstellen</a>
-                    <a class="btn btn-outline-secondary" href="preview?format=LM" role="button" target="preview"><span class="fa fa-eye"></span> Vorschau</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Design 1</div>
-                <img src="{% static 'images/preview-1.png' %}" class="p-3" alt="Design 1">
-                <div class="card-body">
-                    <p class="card-text"></p>
-                    <a class="btn btn-primary" href="options?format=1" role="button"><span class="fa fa-arrow-circle-right"></span> Erstellen</a>
-                    <a class="btn btn-outline-secondary" href="preview?format=1" role="button" target="preview"><span class="fa fa-eye"></span> Vorschau</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Vintage</div>
-                <img src="{% static 'images/preview-V.png' %}" class="p-3" alt="Vintage">
-                <div class="card-body">
-                    <p class="card-text"></p>
-                    <a class="btn btn-primary" href="options?format=V" role="button"><span class="fa fa-arrow-circle-right"></span> Erstellen</a>
-                    <a class="btn btn-outline-secondary" href="preview?format=V" role="button" target="preview"><span class="fa fa-eye"></span> Vorschau</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-header">Design 2026</div>
-                <img src="{% static 'images/preview-26.png' %}" class="p-3" alt="Design 2026">
-                <div class="card-body">
-                    <p class="card-text"></p>
-                    <a class="btn btn-primary" href="options?format=26" role="button"><span class="fa fa-arrow-circle-right"></span> Erstellen</a>
-                    <a class="btn btn-outline-secondary" href="preview?format=26" role="button" target="preview"><span class="fa fa-eye"></span> Vorschau</a>
-                </div>
-            </div>
         </div>
 
         <!-- div class="col">
@@ -146,4 +68,96 @@
         </div -->
     </div>
 </div>
+
+
+<script>
+
+// Preview Modal functions
+var previewModalInstance = null;
+
+function showPreviewModal(format) {
+  var modalEl = document.getElementById('preview-modal');
+  var previewPdfLink = document.getElementById('preview-pdf-link');
+  previewPdfLink.href = "preview?format=" + format + "&pdf=1";
+
+  previewModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+  previewModalInstance.show();
+  
+  // Generate preview when modal is shown
+  modalEl.addEventListener('shown.bs.modal', function() {
+    generatePreviewForModal(format);
+  }, { once: true });
+}
+
+function generatePreviewForModal(format) {
+  var container = document.getElementById('preview-modal-body');
+  
+  // Show loading state
+  container.innerHTML = '<div class="preview-loading"><div class="spinner-border text-light" role="status"><span class="visually-hidden">Laden...</span></div><p>Vorschau wird erstellt...</p></div>';
+  sendModalPreviewRequest(format, container);
+}
+
+function sendModalPreviewRequest(format, container) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "preview?format=" + format, true);
+  xhr.responseType = 'blob';
+
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var imgUrl = window.URL.createObjectURL(xhr.response);
+      // Create image element
+      var img = document.createElement('img');
+      img.src = imgUrl;
+      img.style.display = 'block';
+      img.style.margin = 'auto';
+      img.style.background = 'white';
+      img.style.width = 'auto';
+      img.style.height = 'auto';
+
+      // Clear container and append image
+      container.innerHTML = '';
+      container.appendChild(img);
+
+      // Always constrain image to modal size
+      function constrainImage() {
+        var modalBody = container;
+        var availableWidth = modalBody.clientWidth;
+        var availableHeight = modalBody.clientHeight;
+        img.style.maxWidth = availableWidth + 'px';
+        img.style.maxHeight = availableHeight + 'px';
+        // If image is loaded, adjust aspect ratio
+        if (img.naturalWidth && img.naturalHeight) {
+          var imgAspect = img.naturalWidth / img.naturalHeight;
+          var modalAspect = availableWidth / availableHeight;
+          if (imgAspect > modalAspect) {
+            img.style.width = availableWidth + 'px';
+            img.style.height = 'auto';
+          } else {
+            img.style.height = availableHeight + 'px';
+            img.style.width = 'auto';
+          }
+        } else {
+          // Before image loads, set max dimensions
+          img.style.width = 'auto';
+          img.style.height = 'auto';
+          img.style.maxWidth = availableWidth + 'px';
+          img.style.maxHeight = availableHeight + 'px';
+        }
+      }
+      img.onload = constrainImage;
+      window.addEventListener('resize', constrainImage);
+      constrainImage();
+    } else {
+      container.innerHTML = '<div class="preview-placeholder"><span class="fa fa-exclamation-triangle"></span><p>Vorschau konnte nicht erstellt werden.<br>Bitte versuchen Sie es erneut.</p></div>';
+    }
+  };
+
+  xhr.onerror = function() {
+    container.innerHTML = '<div class="preview-placeholder"><span class="fa fa-exclamation-triangle"></span><p>Netzwerkfehler.<br>Bitte überprüfen Sie Ihre Verbindung.</p></div>';
+  };
+
+  xhr.send();
+}
+
+</script>
 {% endblock %}
