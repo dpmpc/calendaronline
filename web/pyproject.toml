@@ -11,7 +11,7 @@ requires-python = ">=3.12"
 dependencies = [
     "django==6.0.2",
     "fpdf2==2.8.5",
-    "Pillow==12.1.0",
+    "Pillow==12.1.1",
     "python-dateutil",
     "icalevents==0.3.1",
     "uharfbuzz==0.53.3",
