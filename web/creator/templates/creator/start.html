@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a id="preview-pdf-link" class="btn btn-outline-secondary" href="#" role="button" target="preview"><span class="fa fa-file-pdf"></span> PDF Erzeugen</a>
+                <a id="preview-pdf-link" class="btn btn-outline-secondary" href="#" role="button" target="preview"><span class="fa fa-file-pdf"></span> Vorschau als PDF</a>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Schließen</button>
             </div>
             </div>
@@ -126,7 +126,7 @@ var previewModalInstance = null;
 function showPreviewModal(format) {
   var modalEl = document.getElementById('preview-modal');
   var previewPdfLink = document.getElementById('preview-pdf-link');
-  previewPdfLink.href = "preview?format=" + format + "&pdf=1";
+  previewPdfLink.href = "preview?format=" + format;
 
   previewModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
   previewModalInstance.show();
@@ -147,7 +147,7 @@ function generatePreviewForModal(format) {
 
 function sendModalPreviewRequest(format, container) {
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "preview?format=" + format, true);
+  xhr.open("GET", "preview?format=" + format + "&png=1", true);
   xhr.responseType = 'blob';
 
   xhr.onload = function() {
