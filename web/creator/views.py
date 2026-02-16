@@ -26,7 +26,7 @@ def month(request):
 def load(request):
     content = request.FILES.get('file')
     config = CalendarConfig.loads(content.read())
-    
+
     template = loader.get_template('creator/months.html')
     return HttpResponse(template.render(config.asdict(), request))
 
