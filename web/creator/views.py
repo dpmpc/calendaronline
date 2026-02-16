@@ -2,6 +2,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from creator.fotocalendar.bo.config import CalendarConfig
 from creator.fotocalendar.creator import get_default_config_for_format, get_default_config_for_request, get_config_for_request, create_from_config, create_preview_from_request
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 def index(request):
@@ -41,8 +45,13 @@ def create(request):
                 return HttpResponse(calendar.output(), content_type="application/pdf")
         else:
             return HttpResponseRedirect('/creator')
-    except Exception as e:
-        return HttpResponse("Error creating calendar: " + str(e), content_type="text/plain")
+    except Exception:
+        logger.exception("Error creating calendar")
+        return HttpResponse(
+            "An internal error occurred while creating the calendar.",
+            content_type="text/plain",
+            status=500
+        )
 
 
 def preview(request):
@@ -55,8 +64,13 @@ def preview(request):
             return response
         else:
             return HttpResponse(calendar.output(), content_type="application/pdf")
-    except Exception as e:
-        return HttpResponse("Error creating preview: " + str(e), content_type="text/plain")
+    except Exception:
+        logger.exception("Error creating preview")
+        return HttpResponse(
+            "An internal error occurred while creating the preview.",
+            content_type="text/plain",
+            status=500
+        )
 
 
 def faq(request):
