@@ -108,6 +108,7 @@ function sendModalPreviewRequest(format, container) {
       // Create image element
       var img = document.createElement('img');
       img.src = imgUrl;
+      img.alt = 'Kalendervorschau für ' + format;
       img.style.display = 'block';
       img.style.margin = 'auto';
       img.style.background = 'white';
