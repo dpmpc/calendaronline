@@ -178,7 +178,8 @@ class MonthConfig:
         self.image_border = request.POST.get('image_border' + postfix, self.image_border)
         if request.POST.get('image_border_color' + postfix, '') != '':
             self.image_border_color = request.POST.get('image_border_color' + postfix)
-        self.image_border_width = request.POST.get('image_border_width' + postfix, self.image_border_width)
+        if request.POST.get('image_border_width' + postfix, '') != '':
+            self.image_border_width = int(request.POST.get('image_border_width' + postfix))
         self.fonts.update_from_request(request, "font_", postfix)
         if request.FILES.get('image' + postfix):
             self.set_image(request.FILES.get('image' + postfix))

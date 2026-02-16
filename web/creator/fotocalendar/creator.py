@@ -87,11 +87,14 @@ def get_config_for_request(request) -> CalendarConfig:
     defaut_config = config.months[0]
     config.months = []
     number_of_months = int(request.POST.get('lenght', 1))
+    ids = request.POST.get('ids')
+    ids_list = ids.split(',') if ids else range(number_of_months)
 
-    for month in range(number_of_months):
-        month_config = deepcopy(defaut_config)
-        month_config.update_from_request(request, '_' + str(month))
-        config.months.append(month_config)
+    for month in ids_list:
+        if month != '':
+            month_config = deepcopy(defaut_config)
+            month_config.update_from_request(request, '_' + str(month))
+            config.months.append(month_config)
 
     return config
 
@@ -123,41 +126,42 @@ def create_preview_from_request(request) -> FotoCalendar:
         format = request.GET.get('format', 'P')
         config = get_default_config_for_format(format)
 
-    image = Image.open('files/images/example.jpg')
-    if format == 'P':
-        x = 352
-        y = 34
-        w = 1000
-    if format == 'V':
-        x = 320
-        y = 350
-        w = 1000
-    elif format == '1':
-        x = 389
-        y = 24
-        w = 1200
-    elif format == 'LF':
-        x = 307
-        y = 335
-        w = 1400
-    elif format == 'PF':
-        x = 350
-        y = 115
-        w = 850
-    elif format == 'PW':
-        x = 312
-        y = 0
-        w = 1000
-    elif format == 'L' or format == 'LM':
-        x = 304
-        y = 290
-        w = 1400
-    elif format == '26':
-        x = 352
-        y = 180
-        w = 1000
+    if not config.months[0].image:
+        image = Image.open('files/images/example.jpg')
+        if format == 'P':
+            x = 352
+            y = 34
+            w = 1000
+        if format == 'V':
+            x = 320
+            y = 350
+            w = 1000
+        elif format == '1':
+            x = 389
+            y = 24
+            w = 1200
+        elif format == 'LF':
+            x = 307
+            y = 335
+            w = 1400
+        elif format == 'PF':
+            x = 350
+            y = 115
+            w = 850
+        elif format == 'PW':
+            x = 312
+            y = 0
+            w = 1000
+        elif format == 'L' or format == 'LM':
+            x = 304
+            y = 290
+            w = 1400
+        elif format == '26':
+            x = 352
+            y = 180
+            w = 1000
 
-    h = w / float(config.months[0].image_aspect_ratio)
-    config.months[0].set_image(image.crop((x, y, x + w, y + h)))
+        h = w / float(config.months[0].image_aspect_ratio)
+        config.months[0].set_image(image.crop((x, y, x + w, y + h)))
 
     return create_from_config(config)

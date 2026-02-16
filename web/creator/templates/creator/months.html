@@ -199,40 +199,21 @@ function updateMonthNavigation() {
 // Sync ribbon controls from month's hidden fields
 function syncRibbonFromMonth(monthId) {
   // Image border
-  var imageBorder = document.getElementById('field_image_border_' + monthId);
-  if (imageBorder) document.getElementById('ribbon-image-border').checked = (imageBorder.value === '1');
-  
-  var imageBorderColor = document.getElementById('field_image_border_color_' + monthId);
-  if (imageBorderColor) document.getElementById('ribbon-image-border-color').value = imageBorderColor.value || '#000000';
-  
-  var imageBorderWidth = document.getElementById('field_image_border_width_' + monthId);
-  if (imageBorderWidth) document.getElementById('ribbon-image-border-width').value = imageBorderWidth.value || '3';
-  
+  setButtonState('ribbon-image-border', 'field_image_border_' + monthId)
+  setButtonValue('ribbon-image-border-color', 'field_image_border_color_' + monthId, '#000000')
+  setButtonValue('ribbon-image-border-width', 'field_image_border_width_' + monthId, '3');
+
   // Background
-  var bgType = document.getElementById('field_background_type_' + monthId);
-  if (bgType) document.getElementById('ribbon-background-type').value = bgType.value || 'N';
-  
-  var bgColor = document.getElementById('field_background_color_' + monthId);
-  if (bgColor) document.getElementById('ribbon-background-color').value = bgColor.value || '#ffffff';
-  
-  var bgColorB = document.getElementById('field_background_color_b_' + monthId);
-  if (bgColorB) document.getElementById('ribbon-background-color-b').value = bgColorB.value || '#aaaaaa';
-  
-  var centerMonth = document.getElementById('field_center_month_' + monthId);
-  if (centerMonth) document.getElementById('ribbon-center-month').checked = (centerMonth.value === '1');
-  
+  setButtonValue('ribbon-background-type', 'field_background_type_' + monthId, 'N');
+  setButtonValue('ribbon-background-color', 'field_background_color_' + monthId, '#ffffff');
+  setButtonValue('ribbon-background-color-b', 'field_background_color_b_' + monthId, '#aaaaaa');
+  setButtonState('ribbon-center-month', 'field_center_month_' + monthId);
+ 
   // Days table
-  var tableBorder = document.getElementById('field_table_border_' + monthId);
-  if (tableBorder) document.getElementById('ribbon-table-border').checked = (tableBorder.value === '1');
-  
-  var showWeeks = document.getElementById('field_show_weeks_' + monthId);
-  if (showWeeks) document.getElementById('ribbon-show-weeks').checked = (showWeeks.value === '1');
-  
-  var tableBgColor = document.getElementById('field_table_background_color_' + monthId);
-  if (tableBgColor) document.getElementById('ribbon-table-background-color').value = tableBgColor.value || '#ffffff';
-  
-  var tableBgOpacity = document.getElementById('field_table_background_opacity_' + monthId);
-  if (tableBgOpacity) document.getElementById('ribbon-table-background-opacity').value = tableBgOpacity.value || '70';
+  setButtonState('ribbon-table-border', 'field_table_border_' + monthId);
+  setButtonState('ribbon-show-weeks', 'field_show_weeks_' + monthId);
+  setButtonValue('ribbon-table-background-color', 'field_table_background_color_' + monthId, '#ffffff');
+  setButtonValue('ribbon-table-background-opacity', 'field_table_background_opacity_' + monthId, '70'); 
   
   // Fonts
   syncFontFromMonth(monthId, 'weekday');
@@ -241,16 +222,37 @@ function syncRibbonFromMonth(monthId) {
   syncFontFromMonth(monthId, 'event');
 }
 
+function setButtonState(buttonId, valueFieldId) {
+  var currentValue = document.getElementById(valueFieldId);
+  var button = document.getElementById(buttonId);
+  if (button) {
+    if (currentValue && currentValue.value === '1') {
+      button.classList.add('active');
+    } else {
+      button.classList.remove('active');
+    }
+  }
+  else {
+    console.warn("Button with ID " + buttonId + " not found for syncing state.");
+  }
+}
+
+function setButtonValue(buttonId, valueFieldId, defaultValue) {
+  var currentValue = document.getElementById(valueFieldId);
+  var button = document.getElementById(buttonId);
+  if (button) {
+    button.value = currentValue && currentValue.value ? currentValue.value : defaultValue;  
+  }
+  else {
+    console.warn("Button with ID " + buttonId + " not found for syncing value.");
+  }
+}
+
 function syncFontFromMonth(monthId, fontType) {
-  var boldField = document.getElementById('field_font_' + fontType + '_bold_' + monthId);
-  var italicField = document.getElementById('field_font_' + fontType + '_italic_' + monthId);
-  var underlineField = document.getElementById('field_font_' + fontType + '_underline_' + monthId);
-  var colorField = document.getElementById('field_font_' + fontType + '_color_' + monthId);
-  
-  if (boldField) document.getElementById('ribbon-font-' + fontType + '-bold').checked = (boldField.value === '1');
-  if (italicField) document.getElementById('ribbon-font-' + fontType + '-italic').checked = (italicField.value === '1');
-  if (underlineField) document.getElementById('ribbon-font-' + fontType + '-underline').checked = (underlineField.value === '1');
-  if (colorField) document.getElementById('ribbon-font-' + fontType + '-color').value = colorField.value || '#000000';
+  setButtonState('ribbon-font-' + fontType + '-bold', 'field_font_' + fontType + '_bold_' + monthId);
+  setButtonState('ribbon-font-' + fontType + '-italic', 'field_font_' + fontType + '_italic_' + monthId);
+  setButtonState('ribbon-font-' + fontType + '-underline', 'field_font_' + fontType + '_underline_' + monthId);
+  setButtonValue('ribbon-font-' + fontType + '-color', 'field_font_' + fontType + '_color_' + monthId, '#000000');
 }
 
 // Update hidden field for current month from ribbon control

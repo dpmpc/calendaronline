@@ -2,6 +2,8 @@ from fpdf import FPDF
 from fpdf.pattern import LinearGradient, RadialGradient
 from fpdf.drawing_primitives import color_from_hex_string
 from calendar import monthrange
+
+from pdf2image import convert_from_bytes
 from creator.fotocalendar.bo.config import DefaultConfig, MonthConfig, FontConfig, DayConfig
 
 
@@ -161,7 +163,7 @@ class FotoCalendar:
                 y = self.tmargin + config.image_border_width
                 h = self.image_height - config.image_border_width * 2
                 w = self.image_with - config.image_border_width * 2
-                with pdf.local_context(set_line_width=config.image_border_width, draw_color=config.image_border_color):
+                with pdf.local_context(line_width=config.image_border_width, draw_color=config.image_border_color):
                     pdf.rect(x + config.image_border_width / 2, y + config.image_border_width / 2, w - config.image_border_width, h - config.image_border_width)
             pdf.image(config.image, h=h, w=w, x=x, y=y)
 
@@ -246,3 +248,6 @@ class FotoCalendar:
 
     def output(self):
         return bytes(self.fpdf.output())
+
+    def output_as_image(self, dpi=72):
+        return convert_from_bytes(self.output(), dpi=dpi, first_page=1, last_page=1)[0]
