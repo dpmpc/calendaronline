@@ -52,14 +52,11 @@ def preview(request):
     else:
         try:
             pages = convert_from_bytes(pdf_output, dpi=150, first_page=1, last_page=1)
-            if not pages:
-                # PDF has no pages, fall back to PDF output
-                return HttpResponse(pdf_output, content_type="application/pdf")
             img = pages[0]
             response = HttpResponse(content_type="image/png")
             img.save(response, "PNG")
             return response
-        except (PDFInfoNotInstalledError, PopplerNotInstalledError, PDFPageCountError, PDFSyntaxError):
+        except (PDFInfoNotInstalledError, PopplerNotInstalledError, PDFPageCountError, PDFSyntaxError, IndexError):
             # PDF conversion failed - fall back to PDF output
             return HttpResponse(pdf_output, content_type="application/pdf")
 
