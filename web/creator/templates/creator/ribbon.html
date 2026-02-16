@@ -35,7 +35,7 @@
           <div class="ribbon-row">
             <div class="ribbon-group">
               <div class="ribbon-group-content">
-                <button type="button" class="ribbon-btn ribbon-btn-lg" title="Neues Bild öffnen" onclick="selectImageForCurrentMonth()">
+                <button type="button" class="ribbon-btn" title="Neues Bild öffnen" onclick="selectImageForCurrentMonth()">
                   <span class="fa fa-folder-open"></span>
                   <span class="ribbon-btn-label">Bild öffnen</span>
                 </button>
@@ -65,10 +65,10 @@
             </div>
             <div class="ribbon-group">
               <div class="ribbon-group-content">
-                <div class="ribbon-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="ribbon-image-border" onchange="updateCurrentMonthField('image_border', this.checked ? '1' : '')">
-                  <span class="ribbon-switch-label">Rahmen</span>
-                </div>
+                <button type="button" id="ribbon-image-border" class="ribbon-btn" data-bs-toggle="button" title="Vertikal spiegeln" onclick="updateCurrentMonthField('image_border', this.classList.contains('active') ? '1' : '0')">
+                   <span class="fa fa-border-top-left"></span>
+                   <span class="ribbon-btn-label">Rahmen</span>
+                </button>
                 <div class="ribbon-control">
                   <span class="ribbon-control-label">Farbe</span>
                   <input class="form-control form-control-color" type="color" id="ribbon-image-border-color" value="#000000" onchange="updateCurrentMonthField('image_border_color', this.value)">
@@ -86,7 +86,7 @@
                   <span class="fa fa-eye"></span>
                   <span class="ribbon-btn-label">Vorschau</span>
                 </button>
-                <button type="button" class="ribbon-btn ribbon-btn-lg" title="PDF Kalender erzeugen" onclick="uploadImages()">
+                <button type="button" class="ribbon-btn" title="PDF Kalender erzeugen" onclick="uploadImages()">
                   <span class="fa fa-file-pdf"></span>
                   <span class="ribbon-btn-label">PDF Erzeugen</span>
                 </button>
@@ -130,10 +130,10 @@
             </div>
             <div class="ribbon-group">
               <div class="ribbon-group-content">
-                <div class="ribbon-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="ribbon-center-month" onchange="updateCurrentMonthField('center_month', this.checked ? '1' : '')">
-                  <span class="ribbon-switch-label">Monat zentriert</span>
-                </div>
+                <button type="button" id="ribbon-center-month" class="ribbon-btn" data-bs-toggle="button" title="Monat zentriert" onclick="updateCurrentMonthField('center_month', this.classList.contains('active') ? '1' : '0')">
+                   <span class="fa fa-align-center"></span>
+                   <span class="ribbon-btn-label">Monat zentriert</span>
+                </button>
               </div>
               <span class="ribbon-group-label">Ausrichtung</span>
             </div>
@@ -145,14 +145,14 @@
           <div class="ribbon-row">
             <div class="ribbon-group">
               <div class="ribbon-group-content">
-                <div class="ribbon-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="ribbon-table-border" onchange="updateCurrentMonthField('table_border', this.checked ? '1' : '')">
-                  <span class="ribbon-switch-label">Rahmen</span>
-                </div>
-                <div class="ribbon-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="ribbon-show-weeks" onchange="updateCurrentMonthField('show_weeks', this.checked ? '1' : '')">
-                  <span class="ribbon-switch-label">KW anzeigen</span>
-                </div>
+                <button type="button" id="ribbon-table-border" class="ribbon-btn" data-bs-toggle="button" title="Rahmen" onclick="updateCurrentMonthField('table_border', this.classList.contains('active') ? '1' : '0')">
+                   <span class="fa fa-border-all"></span>
+                   <span class="ribbon-btn-label">Rahmen</span>
+                </button>
+                <button type="button" id="ribbon-show-weeks" class="ribbon-btn" data-bs-toggle="button" title="KW anzeigen" onclick="updateCurrentMonthField('show_weeks', this.classList.contains('active') ? '1' : '0')">
+                   <span class="fa fa-list-ol"></span>
+                   <span class="ribbon-btn-label">KW anzeigen</span>
+                </button>
               </div>
               <span class="ribbon-group-label">Optionen</span>
             </div>
@@ -177,15 +177,19 @@
           <div class="ribbon-row">
             <div class="ribbon-group">
               <div class="ribbon-group-content">
+                <button type="button" id="ribbon-font-weekday-bold" class="ribbon-btn" data-bs-toggle="button" title="Fett" onclick="updateCurrentMonthField('font_weekday_bold', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-bold"></span>
+                  <span class="ribbon-btn-label">Fett</span>
+                </button>
+                <button type="button" id="ribbon-font-weekday-italic" class="ribbon-btn" data-bs-toggle="button" title="Kursiv" onclick="updateCurrentMonthField('font_weekday_italic', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-italic"></span>
+                  <span class="ribbon-btn-label">Kursiv</span>
+                </button>
+                <button type="button" id="ribbon-font-weekday-underline" class="ribbon-btn" data-bs-toggle="button" title="Unterstrichen" onclick="updateCurrentMonthField('font_weekday_underline', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-underline"></span>
+                  <span class="ribbon-btn-label">Unterstrichen</span>
+                </button>
                 <div class="ribbon-inline">
-                  <div class="ribbon-font-buttons btn-group" role="group">
-                    <input type="checkbox" class="btn-check" id="ribbon-font-weekday-bold" onchange="updateCurrentMonthField('font_weekday_bold', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-weekday-bold"><span class="fa fa-bold"></span></label>
-                    <input type="checkbox" class="btn-check" id="ribbon-font-weekday-italic" onchange="updateCurrentMonthField('font_weekday_italic', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-weekday-italic"><span class="fa fa-italic"></span></label>
-                    <input type="checkbox" class="btn-check" id="ribbon-font-weekday-underline" onchange="updateCurrentMonthField('font_weekday_underline', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-weekday-underline"><span class="fa fa-underline"></span></label>
-                  </div>
                   <input class="form-control form-control-color" type="color" id="ribbon-font-weekday-color" value="#000000" style="width:28px;height:28px;" onchange="updateCurrentMonthField('font_weekday_color', this.value)">
                 </div>
               </div>
@@ -193,15 +197,19 @@
             </div>
             <div class="ribbon-group">
               <div class="ribbon-group-content">
+                <button type="button" id="ribbon-font-saturday-bold" class="ribbon-btn" data-bs-toggle="button" title="Fett" onclick="updateCurrentMonthField('font_saturday_bold', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-bold"></span>
+                  <span class="ribbon-btn-label">Fett</span>
+                </button>
+                <button type="button" id="ribbon-font-saturday-italic" class="ribbon-btn" data-bs-toggle="button" title="Kursiv" onclick="updateCurrentMonthField('font_saturday_italic', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-italic"></span>
+                  <span class="ribbon-btn-label">Kursiv</span>
+                </button>
+                <button type="button" id="ribbon-font-saturday-underline" class="ribbon-btn" data-bs-toggle="button" title="Unterstrichen" onclick="updateCurrentMonthField('font_saturday_underline', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-underline"></span>
+                  <span class="ribbon-btn-label">Unterstrichen</span>
+                </button>
                 <div class="ribbon-inline">
-                  <div class="ribbon-font-buttons btn-group" role="group">
-                    <input type="checkbox" class="btn-check" id="ribbon-font-saturday-bold" onchange="updateCurrentMonthField('font_saturday_bold', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-saturday-bold"><span class="fa fa-bold"></span></label>
-                    <input type="checkbox" class="btn-check" id="ribbon-font-saturday-italic" onchange="updateCurrentMonthField('font_saturday_italic', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-saturday-italic"><span class="fa fa-italic"></span></label>
-                    <input type="checkbox" class="btn-check" id="ribbon-font-saturday-underline" onchange="updateCurrentMonthField('font_saturday_underline', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-saturday-underline"><span class="fa fa-underline"></span></label>
-                  </div>
                   <input class="form-control form-control-color" type="color" id="ribbon-font-saturday-color" value="#000000" style="width:28px;height:28px;" onchange="updateCurrentMonthField('font_saturday_color', this.value)">
                 </div>
               </div>
@@ -209,15 +217,19 @@
             </div>
             <div class="ribbon-group">
               <div class="ribbon-group-content">
+                <button type="button" id="ribbon-font-sunday-bold" class="ribbon-btn" data-bs-toggle="button" title="Fett" onclick="updateCurrentMonthField('font_sunday_bold', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-bold"></span>
+                  <span class="ribbon-btn-label">Fett</span>
+                </button>
+                <button type="button" id="ribbon-font-sunday-italic" class="ribbon-btn" data-bs-toggle="button" title="Kursiv" onclick="updateCurrentMonthField('font_sunday_italic', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-italic"></span>
+                  <span class="ribbon-btn-label">Kursiv</span>
+                </button>
+                <button type="button" id="ribbon-font-sunday-underline" class="ribbon-btn" data-bs-toggle="button" title="Unterstrichen" onclick="updateCurrentMonthField('font_sunday_underline', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-underline"></span>
+                  <span class="ribbon-btn-label">Unterstrichen</span>
+                </button>
                 <div class="ribbon-inline">
-                  <div class="ribbon-font-buttons btn-group" role="group">
-                    <input type="checkbox" class="btn-check" id="ribbon-font-sunday-bold" onchange="updateCurrentMonthField('font_sunday_bold', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-sunday-bold"><span class="fa fa-bold"></span></label>
-                    <input type="checkbox" class="btn-check" id="ribbon-font-sunday-italic" onchange="updateCurrentMonthField('font_sunday_italic', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-sunday-italic"><span class="fa fa-italic"></span></label>
-                    <input type="checkbox" class="btn-check" id="ribbon-font-sunday-underline" onchange="updateCurrentMonthField('font_sunday_underline', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-sunday-underline"><span class="fa fa-underline"></span></label>
-                  </div>
                   <input class="form-control form-control-color" type="color" id="ribbon-font-sunday-color" value="#000000" style="width:28px;height:28px;" onchange="updateCurrentMonthField('font_sunday_color', this.value)">
                 </div>
               </div>
@@ -225,15 +237,19 @@
             </div>
             <div class="ribbon-group">
               <div class="ribbon-group-content">
+                <button type="button" id="ribbon-font-event-bold" class="ribbon-btn" data-bs-toggle="button" title="Fett" onclick="updateCurrentMonthField('font_event_bold', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-bold"></span>
+                  <span class="ribbon-btn-label">Fett</span>
+                </button>
+                <button type="button" id="ribbon-font-event-italic" class="ribbon-btn" data-bs-toggle="button" title="Kursiv" onclick="updateCurrentMonthField('font_event_italic', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-italic"></span>
+                  <span class="ribbon-btn-label">Kursiv</span>
+                </button>
+                <button type="button" id="ribbon-font-event-underline" class="ribbon-btn" data-bs-toggle="button" title="Unterstrichen" onclick="updateCurrentMonthField('font_event_underline', this.classList.contains('active') ? '1' : '0')">
+                  <span class="fa fa-underline"></span>
+                  <span class="ribbon-btn-label">Unterstrichen</span>
+                </button>
                 <div class="ribbon-inline">
-                  <div class="ribbon-font-buttons btn-group" role="group">
-                    <input type="checkbox" class="btn-check" id="ribbon-font-event-bold" onchange="updateCurrentMonthField('font_event_bold', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-event-bold"><span class="fa fa-bold"></span></label>
-                    <input type="checkbox" class="btn-check" id="ribbon-font-event-italic" onchange="updateCurrentMonthField('font_event_italic', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-event-italic"><span class="fa fa-italic"></span></label>
-                    <input type="checkbox" class="btn-check" id="ribbon-font-event-underline" onchange="updateCurrentMonthField('font_event_underline', this.checked ? '1' : '')">
-                    <label class="btn btn-outline-primary btn-sm" for="ribbon-font-event-underline"><span class="fa fa-underline"></span></label>
-                  </div>
                   <input class="form-control form-control-color" type="color" id="ribbon-font-event-color" value="#000000" style="width:28px;height:28px;" onchange="updateCurrentMonthField('font_event_color', this.value)">
                 </div>
               </div>
@@ -247,7 +263,7 @@
           <div class="ribbon-row">
             <div class="ribbon-group">
               <div class="ribbon-group-content">
-                <button type="button" class="ribbon-btn ribbon-btn-lg" onclick="addEventForCurrentMonth()">
+                <button type="button" class="ribbon-btn" onclick="addEventForCurrentMonth()">
                   <span class="fa fa-calendar-plus"></span>
                   <span class="ribbon-btn-label">Hinzufügen</span>
                 </button>

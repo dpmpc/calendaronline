@@ -2,8 +2,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from creator.fotocalendar.bo.config import CalendarConfig
 from creator.fotocalendar.creator import get_default_config_for_format, get_default_config_for_request, get_config_for_request, create_from_config, create_preview_from_request
-from pdf2image import convert_from_bytes
-from pdf2image.exceptions import PDFInfoNotInstalledError, PDFPageCountError, PDFSyntaxError, PopplerNotInstalledError
 
 
 def index(request):
@@ -32,33 +30,33 @@ def load(request):
 
 
 def create(request):
-    if request.method == 'POST':
-        config = get_config_for_request(request)
-        if request.POST.get('save_project', '0') == '1':
-            content = config.dump()
-            return HttpResponse(content, content_type="application/octet-stream")
+    try:
+        if request.method == 'POST':
+            config = get_config_for_request(request)
+            if request.POST.get('save_project', '0') == '1':
+                content = config.dump()
+                return HttpResponse(content, content_type="application/octet-stream")
+            else:
+                calendar = create_from_config(config)
+                return HttpResponse(calendar.output(), content_type="application/pdf")
         else:
-            calendar = create_from_config(config)
-            return HttpResponse(calendar.output(), content_type="application/pdf")
-    else:
-        return HttpResponseRedirect('/creator')
+            return HttpResponseRedirect('/creator')
+    except Exception as e:
+        return HttpResponse("Error creating calendar: " + str(e), content_type="text/plain")
 
 
 def preview(request):
-    calendar = create_preview_from_request(request)
-    pdf_output = calendar.output()
-    if request.GET.get('pdf', '0') == '1':
-        return HttpResponse(pdf_output, content_type="application/pdf")
-    else:
-        try:
-            pages = convert_from_bytes(pdf_output, dpi=72, first_page=1, last_page=1)
-            img = pages[0]
+    try:
+        calendar = create_preview_from_request(request)
+        if request.GET.get('png', '0') == '1':
+            img = calendar.output_as_image()
             response = HttpResponse(content_type="image/png")
             img.save(response, "PNG")
             return response
-        except (PDFInfoNotInstalledError, PopplerNotInstalledError, PDFPageCountError, PDFSyntaxError, IndexError):
-            # PDF conversion failed - fall back to PDF output
-            return HttpResponse(pdf_output, content_type="application/pdf")
+        else:
+            return HttpResponse(calendar.output(), content_type="application/pdf")
+    except Exception as e:
+        return HttpResponse("Error creating preview: " + str(e), content_type="text/plain")
 
 
 def faq(request):
