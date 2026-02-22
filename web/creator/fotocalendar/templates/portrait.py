@@ -5,6 +5,8 @@ from creator.fotocalendar.bo.config import DefaultConfig
 class PortraitFotoCalendar(FotoCalendar):
 
     _font = "BalsamiqSans"
+    _y_offset_month_name = 222
+    _y_offset_day_names = _y_offset_month_name + 11
 
     def __init__(self, fullscreen=False, fullwidth=False, margin=10, image_with=190, image_height=185):
         self._fullscreen = fullscreen
@@ -42,10 +44,10 @@ class PortraitFotoCalendar(FotoCalendar):
         line_height = 8.5
         col_width = 25
 
-        pdf.set_y(222)
+        pdf.set_y(self._y_offset_month_name)
         self._add_month_name(config)
 
-        pdf.set_y(233)
+        pdf.set_y(self._y_offset_day_names)
         self._set_font(config.fonts.dayname)
         for day in self._dayNames:
             pdf.multi_cell(col_width, txt=day, border=0, align="C", new_y="TOP")

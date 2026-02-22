@@ -7,6 +7,8 @@ class VintageFotoCalendar(PortraitFotoCalendar):
 
     _font = "Tippa"
     _dayNames = ['Montag\n------', 'Dienstag\n--------', 'Mittwoch\n--------', 'Donnerstag\n----------', 'Freitag\n-------', 'Samstag\n-------', 'Sonntag\n-------']
+    _y_offset_month_name = 195
+    _y_offset_day_names = _y_offset_month_name + 20
 
     def __init__(self):
         super().__init__(False, False, 20, 150, 100)
@@ -35,7 +37,7 @@ class VintageFotoCalendar(PortraitFotoCalendar):
 
     def get_month_name_with_year(self, date):
         month_name = super().get_month_name_with_year(date)
-        return " " + month_name + " \n" + "=" * (len(month_name) + 2)
+        return " " + month_name + ' \n' + "=" * (len(month_name) + 2)
 
     def _add_image(self, config):
         pdf = self.fpdf

@@ -204,7 +204,7 @@ class FotoCalendar:
             if config.month_show_year
             else self.get_month_name(config.date)
         )
-        self.fpdf.cell(
+        self.fpdf.multi_cell(
             txt=text,
             w=self.fpdf.epw,
             align=config.month_align,
