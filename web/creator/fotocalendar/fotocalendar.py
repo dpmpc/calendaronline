@@ -4,58 +4,84 @@ from fpdf.drawing_primitives import color_from_hex_string
 from calendar import monthrange
 
 from pdf2image import convert_from_bytes
-from creator.fotocalendar.bo.config import DefaultConfig, MonthConfig, FontConfig, DayConfig
+from creator.fotocalendar.bo.config import (
+    DefaultConfig,
+    MonthConfig,
+    FontConfig,
+    DayConfig,
+)
 
 
 class FotoCalendar:
-    _dayNamesAbbrev = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
-    _dayNames = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
-    _monthNames = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember']
+    _dayNamesAbbrev = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
+    _dayNames = [
+        "Montag",
+        "Dienstag",
+        "Mittwoch",
+        "Donnerstag",
+        "Freitag",
+        "Samstag",
+        "Sonntag",
+    ]
+    _monthNames = [
+        "Januar",
+        "Februar",
+        "März",
+        "April",
+        "Mai",
+        "Juni",
+        "Juli",
+        "August",
+        "September",
+        "Oktober",
+        "November",
+        "Dezember",
+    ]
 
-    _font = 'Helvetica'
+    _font = "Helvetica"
     _fonts = {
-        'Sawasdee': {
-            'R': 'files/font/TLWG/Sawasdee.ttf',
-            'B': 'files/font/TLWG/Sawasdee-Bold.ttf',
-            'I': 'files/font/TLWG/Sawasdee-Oblique.ttf',
-            'BI': 'files/font/TLWG/Sawasdee-BoldOblique.ttf'
+        "Sawasdee": {
+            "R": "files/font/TLWG/Sawasdee.ttf",
+            "B": "files/font/TLWG/Sawasdee-Bold.ttf",
+            "I": "files/font/TLWG/Sawasdee-Oblique.ttf",
+            "BI": "files/font/TLWG/Sawasdee-BoldOblique.ttf",
         },
-        'BalsamiqSans': {
-            'R': 'files/font/Balsamiq_Sans/BalsamiqSans-Regular.ttf',
-            'B': 'files/font/Balsamiq_Sans/BalsamiqSans-Bold.ttf',
-            'I': 'files/font/Balsamiq_Sans/BalsamiqSans-Italic.ttf',
-            'BI': 'files/font/Balsamiq_Sans/BalsamiqSans-BoldItalic.ttf'
+        "BalsamiqSans": {
+            "R": "files/font/Balsamiq_Sans/BalsamiqSans-Regular.ttf",
+            "B": "files/font/Balsamiq_Sans/BalsamiqSans-Bold.ttf",
+            "I": "files/font/Balsamiq_Sans/BalsamiqSans-Italic.ttf",
+            "BI": "files/font/Balsamiq_Sans/BalsamiqSans-BoldItalic.ttf",
         },
-        'Purisa': {
-            'R': 'files/font/TLWG/Purisa.ttf',
-            'B': 'files/font/TLWG/Purisa-Bold.ttf',
-            'I': 'files/font/TLWG/Purisa-Oblique.ttf',
-            'BI': 'files/font/TLWG/Purisa-BoldOblique.ttf'
+        "Purisa": {
+            "R": "files/font/TLWG/Purisa.ttf",
+            "B": "files/font/TLWG/Purisa-Bold.ttf",
+            "I": "files/font/TLWG/Purisa-Oblique.ttf",
+            "BI": "files/font/TLWG/Purisa-BoldOblique.ttf",
         },
-        'Tippa': {
-            'R': 'files/font/Tippa/Tippa.ttf',
-            'B': 'files/font/Tippa/Tippa.ttf',
-            'I': 'files/font/Tippa/Tippa.ttf',
-            'BI': 'files/font/Tippa/Tippa.ttf'
+        "Tippa": {
+            "R": "files/font/Tippa/Tippa.ttf",
+            "B": "files/font/Tippa/Tippa.ttf",
+            "I": "files/font/Tippa/Tippa.ttf",
+            "BI": "files/font/Tippa/Tippa.ttf",
         },
-        'MonsieurLaDoulaise': {
-            'R': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf',
-            'B': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf',
-            'I': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf',
-            'BI': 'files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf'
+        "MonsieurLaDoulaise": {
+            "R": "files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf",
+            "B": "files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf",
+            "I": "files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf",
+            "BI": "files/font/Monsieur_La_Doulaise/MonsieurLaDoulaise-Regular.ttf",
         },
-        'Pacifico': {
-            'R': 'files/font/Pacifico/Pacifico-Regular.ttf',
-            'B': 'files/font/Pacifico/Pacifico-Regular.ttf',
-            'I': 'files/font/Pacifico/Pacifico-Regular.ttf',
-            'BI': 'files/font/Pacifico/Pacifico-Regular.ttf'
+        "Pacifico": {
+            "R": "files/font/Pacifico/Pacifico-Regular.ttf",
+            "B": "files/font/Pacifico/Pacifico-Regular.ttf",
+            "I": "files/font/Pacifico/Pacifico-Regular.ttf",
+            "BI": "files/font/Pacifico/Pacifico-Regular.ttf",
         },
-        'NotoSansDisplay': {
-            'R': 'files/font/NotoSansDisplay/NotoSansDisplay_Condensed-Regular.ttf',
-            'B': 'files/font/NotoSansDisplay/NotoSansDisplay_Condensed-Bold.ttf',
-            'I': 'files/font/NotoSansDisplay/NotoSansDisplay_Condensed-Italic.ttf',
-            'BI': 'files/font/NotoSansDisplay/NotoSansDisplay_Condensed-BoldItalic.ttf'
-        }
+        "NotoSansDisplay": {
+            "R": "files/font/NotoSansDisplay/NotoSansDisplay_Condensed-Regular.ttf",
+            "B": "files/font/NotoSansDisplay/NotoSansDisplay_Condensed-Bold.ttf",
+            "I": "files/font/NotoSansDisplay/NotoSansDisplay_Condensed-Italic.ttf",
+            "BI": "files/font/NotoSansDisplay/NotoSansDisplay_Condensed-BoldItalic.ttf",
+        },
     }
 
     @property
@@ -81,12 +107,12 @@ class FotoCalendar:
         self.image_with = image_with
         self.image_height = image_height
 
-    def addTitle(self, title='', image=None):
+    def addTitle(self, title="", image=None):
         pdf = self.fpdf
-        if title != '':
+        if title != "":
             pdf.set_subject(title)
             pdf.add_page()
-            pdf.set_font(style='B', size=100)
+            pdf.set_font(style="B", size=100)
             pdf.cell(txt=title)
             if image:
                 pdf.image(image, h=pdf.eph, w=pdf.epw, x=0, y=0)
@@ -97,16 +123,32 @@ class FotoCalendar:
         self._add_text(config, self._generate_month_matrix(config))
 
     def get_default_config(self, date=None) -> DefaultConfig:
-        return DefaultConfig(image_aspect_ratio=self.get_image_aspect_ratio(), date=date, font_family=self._font)
+        return DefaultConfig(
+            image_aspect_ratio=self.get_image_aspect_ratio(),
+            date=date,
+            font_family=self._font,
+        )
 
     def _add_table_background(self, config, x, y, w, h):
         pdf = self.fpdf
-        with pdf.local_context(fill_opacity=float(config.table_background_opacity) / 100.0, stroke_opacity=0, fill_color=config.table_background_color):
-            pdf.rect(x, y, w, h, round_corners=config.table_background_round_corners, corner_radius=config.table_background_corner_radius, style="F")
+        with pdf.local_context(
+            fill_opacity=float(config.table_background_opacity) / 100.0,
+            stroke_opacity=0,
+            fill_color=config.table_background_color,
+        ):
+            pdf.rect(
+                x,
+                y,
+                w,
+                h,
+                round_corners=config.table_background_round_corners,
+                corner_radius=config.table_background_corner_radius,
+                style="F",
+            )
 
-    def _add_page(self, config): 
+    def _add_page(self, config):
         pdf = self.fpdf
-        if config.background_type == 'S' and config.background_color is not None:
+        if config.background_type == "S" and config.background_color is not None:
             color = color_from_hex_string(config.background_color)
             pdf.set_page_background(color)
         else:
@@ -121,20 +163,29 @@ class FotoCalendar:
         pdf = self.fpdf
         colors = [config.background_color, config.background_color_b]
 
-        if config.background_type == 'V':
+        if config.background_type == "V":
             grad = LinearGradient(0, 0, pdf.w, 0, colors)
-        elif config.background_type == 'H':
+        elif config.background_type == "H":
             grad = LinearGradient(0, 0, 0, pdf.h, colors)
-        elif config.background_type == 'D':
+        elif config.background_type == "D":
             grad = LinearGradient(0, 0, pdf.w, pdf.h, colors)
-        elif config.background_type == 'R':
+        elif config.background_type == "R":
             center_x = pdf.w / 2
             center_y = pdf.h / 2
             if pdf.w > pdf.h:
                 r = pdf.w / 2
             else:
                 r = pdf.h / 2
-            grad = RadialGradient(center_x, center_y, 0, center_x, center_y, r, colors, config.background_color_b)
+            grad = RadialGradient(
+                center_x,
+                center_y,
+                0,
+                center_x,
+                center_y,
+                r,
+                colors,
+                config.background_color_b,
+            )
         else:
             grad = None
 
@@ -148,8 +199,18 @@ class FotoCalendar:
 
     def _add_month_name(self, config):
         self._set_font(config.fonts.month)
-        text = self.get_month_name_with_year(config.date) if config.month_show_year else self.get_month_name(config.date)
-        self.fpdf.cell(txt=text, w=self.fpdf.epw, align=config.month_align, new_x="LMARGIN", new_y="NEXT")
+        text = (
+            self.get_month_name_with_year(config.date)
+            if config.month_show_year
+            else self.get_month_name(config.date)
+        )
+        self.fpdf.cell(
+            txt=text,
+            w=self.fpdf.epw,
+            align=config.month_align,
+            new_x="LMARGIN",
+            new_y="NEXT",
+        )
 
     def _add_image(self, config):
         if config.image is not None:
@@ -163,18 +224,26 @@ class FotoCalendar:
                 y = self.tmargin + config.image_border_width
                 h = self.image_height - config.image_border_width * 2
                 w = self.image_with - config.image_border_width * 2
-                with pdf.local_context(line_width=config.image_border_width, draw_color=config.image_border_color):
-                    pdf.rect(x + config.image_border_width / 2, y + config.image_border_width / 2, w - config.image_border_width, h - config.image_border_width)
+                with pdf.local_context(
+                    line_width=config.image_border_width,
+                    draw_color=config.image_border_color,
+                ):
+                    pdf.rect(
+                        x + config.image_border_width / 2,
+                        y + config.image_border_width / 2,
+                        w - config.image_border_width,
+                        h - config.image_border_width,
+                    )
             pdf.image(config.image, h=h, w=w, x=x, y=y)
 
     def _add_font(self, family):
         if family in self._fonts:
             pdf = self.fpdf
             font = self._fonts[family]
-            pdf.add_font(fname=font['R'], family=family)
-            pdf.add_font(fname=font['B'], style="B", family=family)
-            pdf.add_font(fname=font['I'], style="I", family=family)
-            pdf.add_font(fname=font['BI'], style="BI", family=family)
+            pdf.add_font(fname=font["R"], family=family)
+            pdf.add_font(fname=font["B"], style="B", family=family)
+            pdf.add_font(fname=font["I"], style="I", family=family)
+            pdf.add_font(fname=font["BI"], style="BI", family=family)
             pdf.set_text_shaping(True)
 
     def _generate_month_matrix(self, config):
@@ -230,7 +299,9 @@ class FotoCalendar:
         else:
             self.fpdf.text_mode = 2
             self.fpdf.draw_color = config.stroke_color
-        self.fpdf.set_font(style=config.font_style, size=config.size, family=config.family)
+        self.fpdf.set_font(
+            style=config.font_style, size=config.size, family=config.family
+        )
         self.fpdf.set_text_color(config.color)
 
     def _set_font_for_day(self, day: DayConfig, config: MonthConfig):
