@@ -41,10 +41,10 @@ class VintageFotoCalendar(PortraitFotoCalendar):
 
     def _add_image(self, config):
         pdf = self.fpdf
-        x = (pdf.w - self.image_with) / 2
+        x = (pdf.w - self.image_width) / 2
         y = self.tmargin + 40
         h = self.image_height
-        w = self.image_with
+        w = self.image_width
         if config.image_border:
             self._shadow(x, y, w, h)
 

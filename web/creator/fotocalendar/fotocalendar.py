@@ -98,13 +98,13 @@ class FotoCalendar:
 
         return self._fpdf
 
-    def __init__(self, orientation, margin, image_with, image_height):
+    def __init__(self, orientation, margin, image_width, image_height):
         self._fpdf = None
 
         self.orientation = orientation
         self.margin = margin
         self.tmargin = 20
-        self.image_with = image_with
+        self.image_width = image_width
         self.image_height = image_height
 
     def addTitle(self, title="", image=None):
@@ -197,7 +197,7 @@ class FotoCalendar:
     def _add_text(self, config, matrix):
         pass
 
-    def _add_month_name(self, config):
+    def _add_month_name(self, config, cell_width=None):
         self._set_font(config.fonts.month)
         text = (
             self.get_month_name_with_year(config.date)
@@ -206,7 +206,7 @@ class FotoCalendar:
         )
         self.fpdf.multi_cell(
             txt=text,
-            w=self.fpdf.epw,
+            w=self.fpdf.epw if cell_width is None else cell_width,
             align=config.month_align,
             new_x="LMARGIN",
             new_y="NEXT",
@@ -218,12 +218,12 @@ class FotoCalendar:
             x = self.margin
             y = self.tmargin
             h = self.image_height
-            w = self.image_with
+            w = self.image_width
             if config.image_border:
                 x = self.margin + config.image_border_width
                 y = self.tmargin + config.image_border_width
                 h = self.image_height - config.image_border_width * 2
-                w = self.image_with - config.image_border_width * 2
+                w = self.image_width - config.image_border_width * 2
                 with pdf.local_context(
                     line_width=config.image_border_width,
                     draw_color=config.image_border_color,
@@ -315,7 +315,7 @@ class FotoCalendar:
             self._set_font(config.fonts.weekday)
 
     def get_image_aspect_ratio(self) -> str:
-        return "{:.2f}".format(self.image_with / self.image_height)
+        return "{:.2f}".format(self.image_width / self.image_height)
 
     def output(self):
         return bytes(self.fpdf.output())

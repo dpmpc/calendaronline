@@ -6,8 +6,15 @@ class Design2026FotoCalendar(FotoCalendar):
 
     _font = "NotoSansDisplay"
 
-    def __init__(self):
-        super().__init__("P", 0, 210, 180)
+    def __init__(self, landscape=False):
+        if landscape:
+            super().__init__("L", 0, 186, 210)
+            self.is_landscape = True
+        else:
+            super().__init__("P", 0, 210, 180)
+            self.is_landscape = False
+            
+            
         self.tmargin = 0
         self._add_font("Pacifico")
 
@@ -19,7 +26,7 @@ class Design2026FotoCalendar(FotoCalendar):
         config.month_align = 'C'
 
         config.table_background_color = "#85ace6"
-        config.fonts.month.size = 75
+        config.fonts.month.size = 60 if self.is_landscape else 75
         config.fonts.month.family = "Pacifico"
         config.fonts.month.color = '#C8C8C8'
         config.fonts.weekday.size = 14
@@ -31,13 +38,16 @@ class Design2026FotoCalendar(FotoCalendar):
         pdf = self.fpdf
         config.fonts.month.color = config.table_background_color
 
-        y = self.image_height - 8.7
+        y = 85 if self.is_landscape else self.image_height - 8.7
         pdf.set_y(y)
         self._add_month_name(config)
 
         line_height = 11.5
-        col_width = 21
-        pdf.set_margins((pdf.w - 7 * col_width) / 2, 20)
+        col_width = 13 if self.is_landscape else 25
+        if self.is_landscape:
+            pdf.set_margins(196, 20, 20)
+        else:
+            pdf.set_margins((self.fpdf.w - 7 * col_width) / 2, 20)
 
         x = pdf.get_x() + col_width / 2
         for day in self._dayNamesAbbrev:
@@ -65,9 +75,13 @@ class Design2026FotoCalendar(FotoCalendar):
             pdf.ln()
 
     def _add_month_name(self, config):
-        y = self.fpdf.get_y() - 1.2
+        y = self.fpdf.get_y() - (45 if self.is_landscape else 1.2)
         x = self.fpdf.w - 10
-        super()._add_month_name(config)
+        if self.is_landscape:
+            self.fpdf.set_x(self.image_width)
+            super()._add_month_name(config, self.fpdf.w - self.image_width)
+        else:
+            super()._add_month_name(config)
 
         # Draw circle with month number
         self._set_font(config.fonts.dayname)

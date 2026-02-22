@@ -2,7 +2,7 @@
 
 URL="http://localhost:8000/preview?format="
 DST_FOLDER="web/creator/static/images/"
-FORMATS="P PW PF L LF LM 1 V 26"
+FORMATS="P PW PF L LF LM 1 V 26 26L"
 
 for FORMAT in $FORMATS
 do
