@@ -2,9 +2,431 @@
 {% load static %}
 
 {% block title %}
-  FAQs
+  FAQ – Häufig gestellte Fragen
 {% endblock %}
 
 {% block content %}
-<h1>FAQs</h1>
+<h1 class="mb-4">Häufig gestellte Fragen (FAQ)</h1>
+
+<!-- Table of contents -->
+<div class="card mb-5">
+  <div class="card-header bg-success text-white">
+    <span class="fa fa-list me-2"></span>Inhaltsverzeichnis
+  </div>
+  <div class="card-body">
+    <ul class="mb-0">
+      <li><a href="#anleitung">Anleitung: Kalender erstellen</a>
+        <ul>
+          <li><a href="#schritt1">Schritt 1: Kalenderformat auswählen</a></li>
+          <li><a href="#schritt2">Schritt 2: Startmonat festlegen</a></li>
+          <li><a href="#schritt3">Schritt 3: Optionen anpassen</a></li>
+          <li><a href="#schritt4">Schritt 4: Fotos auswählen und zuschneiden</a></li>
+          <li><a href="#schritt5">Schritt 5: PDF erzeugen und herunterladen</a></li>
+        </ul>
+      </li>
+      <!--<li><a href="#formate">Kalenderformate im Überblick</a></li>-->
+      <li><a href="#fragen">Häufig gestellte Fragen</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Step-by-step guide -->
+<h2 id="anleitung" class="mb-4">
+  <span class="fa fa-circle-question me-2 text-success"></span>Anleitung: Kalender erstellen
+</h2>
+<p class="lead mb-4">
+  Mit dem Fotokalender PDF Generator können Sie in wenigen Schritten einen individuellen Fotokalender als PDF erstellen und selbst ausdrucken.
+  Die folgende Anleitung führt Sie durch alle Schritte.
+</p>
+
+<!-- Step 1 -->
+<div class="card mb-4" id="schritt1">
+  <div class="card-header bg-success text-white">
+    <span class="fa fa-1 me-2"></span><strong>Schritt 1: Kalenderformat auswählen</strong>
+  </div>
+  <div class="card-body">
+    <p>
+      Auf der <a href="start">Startseite</a> sehen Sie alle verfügbaren Kalenderformate als Kacheln mit einer Vorschau.
+      Wählen Sie das gewünschte Format aus, indem Sie auf den Button <strong>„Erstellen"</strong> unter dem entsprechenden Format klicken.
+    </p>
+    <p>Mit dem Button <strong>„Vorschau"</strong> können Sie sich vorab ein Beispiel des jeweiligen Formats als PDF ansehen.</p>
+    <div class="text-center my-3">
+      <img src="{% static 'images/faq-step1-start.png' %}" alt="Startseite mit Kalenderformaten" class="img-fluid rounded border shadow-sm" style="max-width: 800px;">
+      <p class="text-muted mt-2"><small>Die Startseite zeigt alle verfügbaren Kalenderformate.</small></p>
+    </div>
+    <div class="alert alert-info mt-3">
+      <span class="fa fa-info-circle me-2"></span>
+      <strong>Tipp:</strong> Eine Übersicht aller Kalenderformate mit Beschreibung finden Sie weiter unten unter <a href="#formate">Kalenderformate im Überblick</a>.
+    </div>
+  </div>
+</div>
+
+<!-- Step 2 -->
+<div class="card mb-4" id="schritt2">
+  <div class="card-header bg-success text-white">
+    <span class="fa fa-2 me-2"></span><strong>Schritt 2: Startmonat festlegen</strong>
+  </div>
+  <div class="card-body">
+    <p>
+      Nach dem Klick auf „Erstellen" öffnet sich ein Dialog, in dem Sie den <strong>ersten Monat</strong> des Kalenders auswählen können.
+      Standardmäßig ist der nächste Monat vorausgewählt.
+    </p>
+    <p>
+      Wählen Sie das gewünschte Startdatum aus und klicken Sie anschließend auf
+      <strong>„Weiter zur Fotoauswahl"</strong>, um fortzufahren.
+    </p>
+    <div class="text-center my-3">
+      <img src="{% static 'images/faq-step2-modal.png' %}" alt="Dialog zum Festlegen des Startmonats" class="img-fluid rounded border shadow-sm" style="max-width: 600px;">
+      <p class="text-muted mt-2"><small>Im Dialog legen Sie den ersten Monat des Kalenders fest.</small></p>
+    </div>
+    <div class="alert alert-info mt-3">
+      <span class="fa fa-info-circle me-2"></span>
+      <strong>Hinweis:</strong> Der Kalender umfasst immer 12 Monate, beginnend mit dem von Ihnen gewählten Monat.
+    </div>
+  </div>
+</div>
+
+<!-- Step 3 -->
+<div class="card mb-4" id="schritt3">
+  <div class="card-header bg-success text-white">
+    <span class="fa fa-3 me-2"></span><strong>Schritt 3: Optionen anpassen</strong>
+  </div>
+  <div class="card-body">
+    <p>
+      Auf der Fotoauswahl-Seite haben Sie über die <strong>Werkzeugleiste (Ribbon)</strong> am oberen Rand umfangreiche
+      Möglichkeiten, den Kalender individuell anzupassen. Die Ribbon-Werkzeugleiste enthält folgende Reiter:
+    </p>
+    <div class="row mt-3">
+      <div class="col-md-6 mb-3">
+        <div class="d-flex align-items-start">
+          <span class="fa fa-image text-success me-3 mt-1 fa-lg"></span>
+          <div>
+            <strong>Bild</strong>
+            <p class="mb-0 text-muted">Bild öffnen, drehen, spiegeln und einen Bildrahmen hinzufügen.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="d-flex align-items-start">
+          <span class="fa fa-palette text-success me-3 mt-1 fa-lg"></span>
+          <div>
+            <strong>Hintergrund</strong>
+            <p class="mb-0 text-muted">Hintergrundfarbe oder Farbverlauf (einfarbig, horizontal, vertikal, diagonal, kreisförmig) festlegen.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="d-flex align-items-start">
+          <span class="fa fa-calendar-days text-success me-3 mt-1 fa-lg"></span>
+          <div>
+            <strong>Tagesliste</strong>
+            <p class="mb-0 text-muted">Rahmen um die Tagesliste ein- oder ausblenden, Kalenderwochen anzeigen und Hintergrundfarbe der Tagesliste anpassen.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="d-flex align-items-start">
+          <span class="fa fa-font text-success me-3 mt-1 fa-lg"></span>
+          <div>
+            <strong>Schriften</strong>
+            <p class="mb-0 text-muted">Schriftart, Stil (fett, kursiv, unterstrichen) und Farbe für Wochentage, Samstage, Sonntage und Termine anpassen.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 mb-3">
+        <div class="d-flex align-items-start">
+          <span class="fa fa-calendar-plus text-success me-3 mt-1 fa-lg"></span>
+          <div>
+            <strong>Termine</strong>
+            <p class="mb-0 text-muted">Eigene Termine zum Kalenderblatt hinzufügen.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="alert alert-info mt-2">
+      <span class="fa fa-info-circle me-2"></span>
+      <strong>Tipp:</strong> Alle Einstellungen können für jeden Monat individuell vorgenommen werden.
+      Navigieren Sie mit den Pfeiltasten oder dem Dropdown-Menü in der Monatsleiste zwischen den einzelnen Monaten.
+    </div>
+  </div>
+</div>
+
+<!-- Step 4 -->
+<div class="card mb-4" id="schritt4">
+  <div class="card-header bg-success text-white">
+    <span class="fa fa-4 me-2"></span><strong>Schritt 4: Fotos auswählen und zuschneiden</strong>
+  </div>
+  <div class="card-body">
+    <p>
+      Für jeden Monat können Sie ein eigenes Foto hochladen. Klicken Sie dazu im Reiter <strong>„Bild"</strong>
+      der Werkzeugleiste auf <strong>„Bild öffnen"</strong> und wählen Sie ein Foto von Ihrem Gerät aus.
+    </p>
+    <p>Das hochgeladene Foto wird in einem <strong>Bildeditor</strong> angezeigt, mit dem Sie:</p>
+    <ul>
+      <li>Den gewünschten Ausschnitt durch Verschieben und Zoomen auswählen</li>
+      <li>Das Bild um 90° nach links oder rechts <strong>drehen</strong></li>
+      <li>Das Bild horizontal oder vertikal <strong>spiegeln</strong></li>
+    </ul>
+    <p>
+      Der Bildausschnitt wird automatisch auf das richtige Seitenverhältnis für das gewählte Kalenderformat zugeschnitten.
+    </p>
+    <p>
+      Navigieren Sie nach dem Hochladen des Fotos zum nächsten Monat, indem Sie auf den
+      <strong>Pfeil rechts</strong> in der Monatsleiste klicken oder im Dropdown-Menü einen Monat auswählen.
+    </p>
+    <div class="alert alert-warning mt-3">
+      <span class="fa fa-triangle-exclamation me-2"></span>
+      <strong>Hinweis:</strong> Fotos mit einer Auflösung von mindestens <strong>2 Megapixeln</strong> liefern beim Ausdrucken das beste Ergebnis.
+      Für einen A4-Druck empfehlen wir mindestens 2480 × 3508 Pixel (300 dpi).
+    </div>
+  </div>
+</div>
+
+<!-- Step 5 -->
+<div class="card mb-5" id="schritt5">
+  <div class="card-header bg-success text-white">
+    <span class="fa fa-5 me-2"></span><strong>Schritt 5: PDF erzeugen und herunterladen</strong>
+  </div>
+  <div class="card-body">
+    <p>
+      Sobald Sie alle Fotos ausgewählt und die gewünschten Einstellungen vorgenommen haben,
+      können Sie das PDF erzeugen:
+    </p>
+    <ol>
+      <li>Klicken Sie im Reiter <strong>„Bild"</strong> der Werkzeugleiste auf den Button <strong>„PDF Erzeugen"</strong>.</li>
+      <li>Die Bilder werden hochgeladen und der Kalender als PDF generiert – dies kann einige Sekunden dauern.</li>
+      <li>Das fertige PDF wird automatisch heruntergeladen.</li>
+    </ol>
+    <p>
+      Mit dem Button <strong>„Vorschau"</strong> können Sie jederzeit eine Vorschau des aktuellen Monatsblatts als PDF abrufen,
+      bevor Sie den gesamten Kalender erzeugen.
+    </p>
+    <div class="alert alert-success mt-3">
+      <span class="fa fa-check-circle me-2"></span>
+      <strong>Fertig!</strong> Das heruntergeladene PDF können Sie direkt auf einem handelsüblichen Drucker auf A4-Papier ausdrucken.
+    </div>
+  </div>
+</div>
+
+<!-- Calendar formats overview -->
+ <!--
+<h2 id="formate" class="mb-4">
+  <span class="fa fa-th-large me-2 text-success"></span>Kalenderformate im Überblick
+</h2>
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-header">Hochkant</div>
+      <img src="{% static 'images/preview-P.png' %}" class="p-3" alt="Hochkant Vorschau">
+      <div class="card-body">
+        <p class="card-text text-muted">Klassisches Hochformat. Foto oben, Kalenderblatt unten.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-header">Hochkant (volle Breite)</div>
+      <img src="{% static 'images/preview-PW.png' %}" class="p-3" alt="Hochkant volle Breite Vorschau">
+      <div class="card-body">
+        <p class="card-text text-muted">Hochformat mit breiterem Foto über die gesamte Seitenbreite.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-header">Hochkant (vollbild)</div>
+      <img src="{% static 'images/preview-PF.png' %}" class="p-3" alt="Hochkant Vollbild Vorschau">
+      <div class="card-body">
+        <p class="card-text text-muted">Das Foto füllt die gesamte Seite; der Kalender wird über das Bild gelegt.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-header">Querformat</div>
+      <img src="{% static 'images/preview-L.png' %}" class="p-3" alt="Querformat Vorschau">
+      <div class="card-body">
+        <p class="card-text text-muted">Klassisches Querformat. Foto oben, Kalenderblatt unten.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-header">Querformat (vollbild)</div>
+      <img src="{% static 'images/preview-LF.png' %}" class="p-3" alt="Querformat Vollbild Vorschau">
+      <div class="card-body">
+        <p class="card-text text-muted">Das Foto füllt die gesamte Querformat-Seite; der Kalender wird über das Bild gelegt.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-header">Querformat (Modern)</div>
+      <img src="{% static 'images/preview-LM.png' %}" class="p-3" alt="Querformat Modern Vorschau">
+      <div class="card-body">
+        <p class="card-text text-muted">Modernes Querformat-Design mit stilvollem Layout.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-header">Design 1</div>
+      <img src="{% static 'images/preview-1.png' %}" class="p-3" alt="Design 1 Vorschau">
+      <div class="card-body">
+        <p class="card-text text-muted">Querformat mit großem Foto links und Kalender rechts.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-header">Vintage</div>
+      <img src="{% static 'images/preview-V.png' %}" class="p-3" alt="Vintage Vorschau">
+      <div class="card-body">
+        <p class="card-text text-muted">Klassisches Vintage-Design im Hochformat.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-header">Design 2026</div>
+      <img src="{% static 'images/preview-26.png' %}" class="p-3" alt="Design 2026 Vorschau">
+      <div class="card-body">
+        <p class="card-text text-muted">Modernes Design mit großem Foto und stilisierter Datumsanzeige.</p>
+      </div>
+    </div>
+  </div>
+</div>
+-->
+
+<!-- FAQ section -->
+<h2 id="fragen" class="mb-4">
+  <span class="fa fa-circle-question me-2 text-success"></span>Häufig gestellte Fragen
+</h2>
+
+<div class="accordion mb-5" id="faqAccordion">
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+        Wie viele Monate hat ein Kalender?
+      </button>
+    </h2>
+    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">
+        Ein Kalender umfasst immer genau <strong>12 Monate</strong>, beginnend mit dem von Ihnen festgelegten Startmonat.
+        Sie können z.&nbsp;B. einen Kalender von Januar bis Dezember oder von Juli bis Juni erstellen.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+        Welche Bildformate werden unterstützt?
+      </button>
+    </h2>
+    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">
+        Sie können Fotos in den gängigen Formaten hochladen: <strong>JPEG, PNG</strong> und weitere von Pillow unterstützte Formate.
+        JPEG-Bilder empfehlen sich für Fotos, da sie ein gutes Verhältnis von Dateigröße zu Qualität bieten.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+        Wird mein Kalender auf dem Server gespeichert?
+      </button>
+    </h2>
+    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">
+        Nein. Der Kalender wird ausschließlich für die Dauer Ihrer Sitzung im Arbeitsspeicher des Servers verarbeitet
+        und <strong>nicht dauerhaft gespeichert</strong>. Das fertige PDF wird direkt an Ihren Browser übermittelt.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+        Auf welchem Papierformat wird der Kalender gedruckt?
+      </button>
+    </h2>
+    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">
+        Alle Kalenderformate sind für den Druck auf <strong>DIN A4-Papier</strong> ausgelegt.
+        Hochkant-Formate werden im Hochformat gedruckt, Querformate entsprechend im Querformat.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+        Kann ich unterschiedliche Einstellungen für jeden Monat vornehmen?
+      </button>
+    </h2>
+    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">
+        Ja. In der Fotoauswahl können Sie für jeden Monat <strong>individuelle Einstellungen</strong> wie Hintergrundfarbe,
+        Bildrahmen, Schriftfarben und Termine festlegen. Navigieren Sie mit den Pfeilen oder dem Dropdown-Menü
+        zwischen den einzelnen Monaten.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+        Kann ich eigene Termine in den Kalender eintragen?
+      </button>
+    </h2>
+    <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">
+        Ja (bei unterstützten Formaten). Über den Reiter <strong>„Termine"</strong> in der Werkzeugleiste können Sie
+        für jeden Monat eigene Termine hinzufügen, die dann auf dem Kalenderblatt erscheinen.
+        Außerdem können Sie bei unterstützten Formaten eine <strong>ICS-Kalender-URL</strong> angeben,
+        um Termine aus einem bestehenden Kalender zu importieren.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+        Wie kann ich mir eine Vorschau ansehen, bevor ich das PDF erzeuge?
+      </button>
+    </h2>
+    <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">
+        Klicken Sie auf den Button <strong>„Vorschau"</strong> im Reiter „Bild" der Werkzeugleiste, um eine Vorschau
+        des aktuellen Monatsblatts zu erhalten. Auf der Startseite können Sie außerdem mit dem Button
+        <strong>„Vorschau"</strong> bei jedem Format ein Beispiel-PDF ansehen.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq8">
+        Muss ich alle 12 Fotos hochladen?
+      </button>
+    </h2>
+    <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+      <div class="accordion-body">
+        Nein. Sie können das PDF auch erzeugen, ohne für jeden Monat ein Foto hochzuladen.
+        Monate ohne Foto werden dann mit einem <strong>Platzhalter</strong> dargestellt.
+        Sie können das PDF jederzeit erneut erzeugen, wenn Sie weitere Fotos hinzufügen möchten.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="text-muted">
+  <span class="fa fa-envelope me-1"></span>
+  Haben Sie eine Frage, die hier nicht beantwortet wird? Schreiben Sie uns gerne über das <a href="impressum">Impressum</a>.
+</p>
+
 {% endblock %}

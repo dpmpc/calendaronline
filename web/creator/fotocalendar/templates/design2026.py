@@ -18,7 +18,7 @@ class Design2026FotoCalendar(FotoCalendar):
         config.supports_italic = False
         config.month_align = 'C'
 
-        config.table_background_color = '#C8C8C8'
+        config.table_background_color = "#85ace6"
         config.fonts.month.size = 75
         config.fonts.month.family = "Pacifico"
         config.fonts.month.color = '#C8C8C8'
