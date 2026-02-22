@@ -43,7 +43,7 @@ class Design2026FotoCalendar(FotoCalendar):
         line_height = 11.5
         col_width = 13 if self.is_landscape else 25
         if self.is_landscape:
-            pdf.set_margins(196, 20, 20)
+            pdf.set_margins(self.image_width + 10, 20, 10)
         else:
             pdf.set_margins((self.fpdf.w - 7 * col_width) / 2, 20)
 
