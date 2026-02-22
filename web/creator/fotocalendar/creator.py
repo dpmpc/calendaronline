@@ -38,14 +38,19 @@ def create_for_format(format: str) -> FotoCalendar:
     elif format == "26":
         print("Creating Design2026FotoCalendar for format", format)
         return Design2026FotoCalendar()
+    elif format == "26L":
+        print("Creating Design2026FotoCalendar (landscape) for format", format)
+        return Design2026FotoCalendar(True)
     else:
         print("Creating PortraitFotoCalendar for format", format)
         return PortraitFotoCalendar()
 
 
-def get_default_config_for_format(format: str) -> CalendarConfig:
+def get_default_config_for_format(format: str, month: str = None) -> CalendarConfig:
     first_month = datetime.now()
-    if first_month.month > 10:
+    if month and month.isdigit() and 1 <= int(month) <= 12:
+        first_month = first_month + relativedelta(month=int(month), day=1)
+    elif first_month.month > 10:
         first_month = first_month + relativedelta(years=1, month=1, day=1)
     else:
         first_month = first_month + relativedelta(months=1, day=1)
@@ -124,7 +129,7 @@ def create_preview_from_request(request) -> FotoCalendar:
         format = config.format
     else:
         format = request.GET.get("format", "P")
-        config = get_default_config_for_format(format)
+        config = get_default_config_for_format(format, request.GET.get("month"))
 
     if not config.months[0].image:
         image = Image.open("files/images/example.jpg")
@@ -159,6 +164,10 @@ def create_preview_from_request(request) -> FotoCalendar:
         elif format == "26":
             x = 352
             y = 180
+            w = 1000
+        elif format == "26L":
+            x = 300
+            y = 0
             w = 1000
 
         h = w / float(config.months[0].image_aspect_ratio)

@@ -8,7 +8,7 @@ class PortraitFotoCalendar(FotoCalendar):
     _y_offset_month_name = 222
     _y_offset_day_names = _y_offset_month_name + 11
 
-    def __init__(self, fullscreen=False, fullwidth=False, margin=10, image_with=190, image_height=185):
+    def __init__(self, fullscreen=False, fullwidth=False, margin=10, image_width=190, image_height=185):
         self._fullscreen = fullscreen
         self._fullwidth = fullwidth
 
@@ -20,7 +20,7 @@ class PortraitFotoCalendar(FotoCalendar):
             super().__init__("P", 0, 210, 205)
             self.tmargin = 0
         else:
-            super().__init__("P", margin, image_with, image_height)
+            super().__init__("P", margin, image_width, image_height)
 
     def get_default_config(self, date=None) -> DefaultConfig:
         config = super().get_default_config(date)
