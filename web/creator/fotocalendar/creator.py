@@ -14,28 +14,28 @@ from copy import deepcopy
 
 
 def create_for_format(format: str) -> FotoCalendar:
-    if format == 'L':
+    if format == "L":
         print("Creating LandscapeFotoCalendar for format", format)
         return LandscapeFotoCalendar(False)
-    elif format == '1':
+    elif format == "1":
         print("Creating Design1FotoCalendar for format", format)
         return Design1FotoCalendar()
-    elif format == 'LF':
+    elif format == "LF":
         print("Creating LandscapeFotoCalendar (fullscreen) for format", format)
         return LandscapeFotoCalendar(True)
-    elif format == 'PF':
+    elif format == "PF":
         print("Creating PortraitFotoCalendar (fullscreen) for format", format)
         return PortraitFotoCalendar(True)
-    elif format == 'PW':
+    elif format == "PW":
         print("Creating PortraitFotoCalendar (fullwidth) for format", format)
         return PortraitFotoCalendar(False, True)
-    elif format == 'V':
+    elif format == "V":
         print("Creating HandmadeFotoCalendar for format", format)
         return VintageFotoCalendar()
-    elif format == 'LM':
+    elif format == "LM":
         print("Creating LandscapeModernFotoCalendar for format", format)
         return LandscapeModernFotoCalendar()
-    elif format == '26':
+    elif format == "26":
         print("Creating Design2026FotoCalendar for format", format)
         return Design2026FotoCalendar()
     else:
@@ -56,17 +56,19 @@ def get_default_config_for_format(format: str) -> CalendarConfig:
     return config
 
 
-def get_default_config_for_request(request, number_of_months: int = 12) -> CalendarConfig:
-    config = get_default_config_for_format(request.POST.get('format', 'P'))
+def get_default_config_for_request(
+    request, number_of_months: int = 12
+) -> CalendarConfig:
+    config = get_default_config_for_format(request.POST.get("format", "P"))
     defaut_config = config.months[0]
     defaut_config.update_from_request(request)
     config.months = []
 
-    start = request.POST.get('start')
-    firstMonth = datetime.strptime(start, '%Y-%m-%d')
+    start = request.POST.get("start")
+    firstMonth = datetime.strptime(start, "%Y-%m-%d")
     lastMonth = firstMonth + relativedelta(months=number_of_months + 1, day=31)
 
-    events = get_events_from_ics(request.POST.get('ics_url', ''), firstMonth, lastMonth)
+    events = get_events_from_ics(request.POST.get("ics_url", ""), firstMonth, lastMonth)
 
     for month in range(number_of_months):
         month_config = deepcopy(defaut_config)
@@ -83,24 +85,24 @@ def get_default_config_for_request(request, number_of_months: int = 12) -> Calen
 
 
 def get_config_for_request(request) -> CalendarConfig:
-    config = get_default_config_for_format(request.POST.get('format', 'P'))
+    config = get_default_config_for_format(request.POST.get("format", "P"))
     defaut_config = config.months[0]
     config.months = []
-    number_of_months = int(request.POST.get('lenght', 1))
-    ids = request.POST.get('ids')
-    ids_list = ids.split(',') if ids else range(number_of_months)
+    number_of_months = int(request.POST.get("lenght", 1))
+    ids = request.POST.get("ids")
+    ids_list = ids.split(",") if ids else range(number_of_months)
 
     for month in ids_list:
-        if month != '':
+        if month != "":
             month_config = deepcopy(defaut_config)
-            month_config.update_from_request(request, '_' + str(month))
+            month_config.update_from_request(request, "_" + str(month))
             config.months.append(month_config)
 
     return config
 
 
 def create_calendar_for_request(request) -> FotoCalendar:
-    format = request.POST.get('format', 'P')
+    format = request.POST.get("format", "P")
     calendar = create_for_format(format)
     config = CalendarConfig.create_for_request(request, calendar)
     return create_from_config(config)
@@ -108,8 +110,6 @@ def create_calendar_for_request(request) -> FotoCalendar:
 
 def create_from_config(config: CalendarConfig) -> FotoCalendar:
     calendar = create_for_format(config.format)
-    # if 'title' in config:
-    #    calendar.addTitle(config['title'])
 
     for month in config.months:
         calendar.add_month(month)
@@ -119,44 +119,44 @@ def create_from_config(config: CalendarConfig) -> FotoCalendar:
 
 def create_preview_from_request(request) -> FotoCalendar:
 
-    if request.method == 'POST':
+    if request.method == "POST":
         config = get_default_config_for_request(request, 1)
         format = config.format
     else:
-        format = request.GET.get('format', 'P')
+        format = request.GET.get("format", "P")
         config = get_default_config_for_format(format)
 
     if not config.months[0].image:
-        image = Image.open('files/images/example.jpg')
-        if format == 'P':
+        image = Image.open("files/images/example.jpg")
+        if format == "P":
             x = 352
             y = 34
             w = 1000
-        if format == 'V':
+        if format == "V":
             x = 320
             y = 350
             w = 1000
-        elif format == '1':
+        elif format == "1":
             x = 389
             y = 24
             w = 1200
-        elif format == 'LF':
+        elif format == "LF":
             x = 307
             y = 335
             w = 1400
-        elif format == 'PF':
+        elif format == "PF":
             x = 350
             y = 115
             w = 850
-        elif format == 'PW':
+        elif format == "PW":
             x = 312
             y = 0
             w = 1000
-        elif format == 'L' or format == 'LM':
+        elif format == "L" or format == "LM":
             x = 304
             y = 290
             w = 1400
-        elif format == '26':
+        elif format == "26":
             x = 352
             y = 180
             w = 1000

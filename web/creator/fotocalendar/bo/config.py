@@ -164,7 +164,7 @@ class MonthConfig:
         self.name = request.POST.get('name' + postfix, '')
         self.background_type = request.POST.get('background_type' + postfix, self.background_type)
         if request.POST.get('background_color' + postfix, '') != '':
-            self.background_color = request.POST.get('background_color' + postfix) 
+            self.background_color = request.POST.get('background_color' + postfix)
         if request.POST.get('background_color_b' + postfix, '') != '':
             self.background_color_b = request.POST.get('background_color_b' + postfix)
         if request.POST.get('center_month' + postfix, False):
