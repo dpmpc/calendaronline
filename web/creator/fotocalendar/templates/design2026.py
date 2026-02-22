@@ -13,8 +13,6 @@ class Design2026FotoCalendar(FotoCalendar):
         else:
             super().__init__("P", 0, 210, 180)
             self.is_landscape = False
-            
-            
         self.tmargin = 0
         self._add_font("Pacifico")
 
