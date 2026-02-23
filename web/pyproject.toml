@@ -16,7 +16,7 @@ dependencies = [
     "icalevents==0.3.1",
     "uharfbuzz==0.53.3",
     "orjson==3.11.7",
-    "gunicorn==25.0.3",
+    "gunicorn==25.1.0",
     "pdf2image==1.17.0"
 ]
 
