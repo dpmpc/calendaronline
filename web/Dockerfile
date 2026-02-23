@@ -13,7 +13,7 @@ ARG APP_GID=1000
 
 RUN apk add --no-cache uv && \
     addgroup --system --gid "${APP_GID}" calendaronline && \
-    adduser --system -u "${APP_UID}" -G calendaronline calendaronline calendaronline && \
+    adduser --system -u "${APP_UID}" -G calendaronline calendaronline && \
     chown calendaronline:calendaronline -R /app
 
 USER calendaronline
@@ -31,7 +31,7 @@ ENV PYTHONUNBUFFERED="true" \
 RUN uv lock && \
     uv sync --frozen --no-install-project
 
-CMD ["bash"]
+CMD ["sh"]
 
 #########
 # FINAL #
@@ -51,7 +51,7 @@ ENV GUNICORN_PORT=8001
 
 RUN apk add --no-cache poppler-utils uv && \
     addgroup --system --gid "${APP_GID}" calendaronline && \
-    adduser --system -u "${APP_UID}" -G calendaronline calendaronline calendaronline && \
+    adduser --system -u "${APP_UID}" -G calendaronline calendaronline && \
     chown calendaronline:calendaronline -R /app
 
 USER calendaronline
