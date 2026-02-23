@@ -21,7 +21,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -r web/requirements.txt
+        pip install uv
+        uv pip install -r web/requirements.txt
 
     - name: Setup flake8 annotations
       uses: rbialon/flake8-annotations@v1

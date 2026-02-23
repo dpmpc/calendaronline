@@ -28,7 +28,8 @@ ENV PYTHONUNBUFFERED="true" \
   PATH="${PATH}:/home/calendaronline/.local/bin" \
   USER="calendaronline"
 
-RUN uv lock && \
+RUN chmod +x ./bin/* && \
+    uv lock && \
     uv sync --frozen --no-install-project
 
 CMD ["sh"]
