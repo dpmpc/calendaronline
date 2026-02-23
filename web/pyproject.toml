@@ -24,7 +24,7 @@ dependencies = [
 where = ["."]
 include = [
     "calendaronline*",
-    "creator*",
+    "creator*"
 ]
 
 [build-system]
