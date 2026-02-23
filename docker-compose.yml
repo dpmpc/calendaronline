@@ -1,0 +1,15 @@
+services:
+  calendaronline-nginx:
+    image: calendaronline-nginx
+    restart: no
+    ports:
+      - "8000:80"
+    depends_on: 
+      - calendaronline
+
+  calendaronline:
+    image: calendaronline
+    restart: no
+    environment:
+      - GUNICORN_ARGS=--log-level=debug
+      - CSRF_TRUSTED_ORIGINS=http://localhost:8000

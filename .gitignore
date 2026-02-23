@@ -3,3 +3,4 @@ venv/
 .venv/
 web/.cache/
 web/files/font/Other/
+nginx/static/**
