@@ -5,7 +5,7 @@ dynamic = ["version"]
 authors = [{name = "Daniel Schlich", email = "info@k51.de"}]
 license = "GPL-3.0"
 # license-files = ["LICENSE.md"]
-description = "A simple tool to create beautiful photo calendars as PDF for self printing."
+description = "A simple tool to create beautiful photo calendars as PDF files for self-printing."
 # readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

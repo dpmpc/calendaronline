@@ -1,7 +1,7 @@
 # pdfcalendar
-A simple tool to create beautiful photo calendars as PDF for self printing.
+A simple tool to create beautiful photo calendars as PDF files for self-printing.
 
-You could see it in action on [k51.de](https://k51.de)
+You can see it in action at [k51.de](https://k51.de).
 
 ## Deploy with docker compose
 Create a docker-compose.yml 
@@ -25,16 +25,15 @@ services:
 
 ## Used libraries
 - [Python 3](https://www.python.org/)
-
-- [Boostrap 5.3](https://getbootstrap.com/docs/5.3)
+- [Bootstrap 5.3](https://getbootstrap.com/docs/5.3)
 - [Cropper.js 1.6.2](https://fengyuanchen.github.io/cropperjs/)
 - [django 6.0](https://docs.djangoproject.com/en/6.0/)
 - [gunicorn 2.25](https://gunicorn.org/)
 - [icalevents 0.3](https://github.com/jazzband/icalevents)
-- [jQuery 4.0](https://api.jquery.com/category/version/4.0/)
+- [jQuery 4.0](https://api.jquery.com/category/version/4.0)
 - [nginx 1.29](https://nginx.org/)
 - [orjson 3.11](https://github.com/ijl/orjson)
-- [Pillow (PIL Fork) 12](https://pillow.readthedocs.io/en/stable/installation.html)#
+- [Pillow (PIL fork) 12](https://pillow.readthedocs.io/en/stable/installation.html)
 - [PyFPDF/fpdf2 2.8](https://pyfpdf.github.io/fpdf2/index.html)
 
 
@@ -48,8 +47,8 @@ services:
 - [Tippa](http://www.catfonts.de ) - Copyright (c) 2015, CAT-Fonts, Peter Wiegel
 
 
-# Developemnt
-Start a developemnt envrionment by the following commands:
+# Development
+Start a development environment with the following commands:
 ```
 cd web
 python -m venv venv
