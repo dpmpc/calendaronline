@@ -15,7 +15,7 @@ dependencies = [
     "python-dateutil",
     "icalevents==0.3.1",
     "uharfbuzz==0.53.6",
-    "orjson==3.11.7",
+    "orjson==3.11.8",
     "gunicorn==25.3.0",
     "pdf2image==1.17.0"
 ]
