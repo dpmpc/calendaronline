@@ -212,7 +212,6 @@ class CalendarConfig:
     first_month: datetime = field(default_factory=datetime.now)
 
     def __post_init__(self):
-        #self.months = list(self.months)
         self.months = [DefaultConfig(**o) for o in self.months]
 
     def asdict(self):
