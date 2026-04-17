@@ -53,7 +53,7 @@ class FontsConfig:
 
     def __post_init__(self, font_family: str):
         self.weekday = FontConfig(size=15, family=font_family)
-        self.saturday = FontConfig(size=15, family=font_family, bold=True)
+        self.saturday = FontConfig(size=15, family=font_family)
         self.sunday = FontConfig(size=15, family=font_family, bold=True)
         self.event = FontConfig(size=8, family=font_family)
         self.month = FontConfig(size=20, family=font_family)

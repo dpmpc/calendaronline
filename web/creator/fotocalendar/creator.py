@@ -41,6 +41,9 @@ def create_for_format(format: str) -> FotoCalendar:
     elif format == "26L":
         print("Creating Design2026FotoCalendar (landscape) for format", format)
         return Design2026FotoCalendar(True)
+    elif format == "26S":
+        print("Creating Design2026FotoCalendar (schedule) for format", format)
+        return Design2026FotoCalendar(False, True)
     else:
         print("Creating PortraitFotoCalendar for format", format)
         return PortraitFotoCalendar()
@@ -169,6 +172,10 @@ def create_preview_from_request(request) -> FotoCalendar:
             x = 300
             y = 0
             w = 1000
+        elif format == "26S":
+            x = 304
+            y = 190
+            w = 1400
 
         h = w / float(config.months[0].image_aspect_ratio)
         config.months[0].set_image(image.crop((x, y, x + w, y + h)))
