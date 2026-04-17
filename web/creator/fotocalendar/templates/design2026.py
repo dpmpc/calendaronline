@@ -1,6 +1,5 @@
 from creator.fotocalendar.fotocalendar import FotoCalendar
 from creator.fotocalendar.bo.config import DefaultConfig
-from fpdf.drawing_primitives import convert_to_device_color, DeviceRGB
 
 
 class Design2026FotoCalendar(FotoCalendar):
@@ -9,7 +8,7 @@ class Design2026FotoCalendar(FotoCalendar):
     _is_landscape = False
     _is_schedule = False
 
-    _fill_colors = [ "#F0F0F0", "#E0E0E0", "#D0D0D0" ]
+    _fill_colors = ["#F0F0F0", "#E0E0E0", "#D0D0D0"]
 
     def __init__(self, landscape=False, schedule=False):
         if schedule:
@@ -47,7 +46,6 @@ class Design2026FotoCalendar(FotoCalendar):
         pdf.set_y(y)
         self._add_month_name(config)
 
-
         line_height = 11.5
         border = 0
         align = "C"
@@ -75,7 +73,7 @@ class Design2026FotoCalendar(FotoCalendar):
         pdf.set_y(y + 50)
         weeks = self.__toWeekMatrix(matrix)
         events = []
-       
+
         for weekId in weeks:
             for dayId in weeks[weekId]:
                 day = weeks[weekId][dayId]
