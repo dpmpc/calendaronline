@@ -2,6 +2,7 @@ from fpdf import FPDF
 from fpdf.pattern import LinearGradient, RadialGradient
 from fpdf.drawing_primitives import color_from_hex_string
 from calendar import monthrange
+from typing import Optional
 
 from pdf2image import convert_from_bytes
 from creator.fotocalendar.bo.config import (
@@ -304,10 +305,10 @@ class FotoCalendar:
         )
         self.fpdf.set_text_color(config.color)
 
-    def _set_font_for_day(self, day: DayConfig, config: MonthConfig):
+    def _set_font_for_day(self, day: Optional[DayConfig], config: MonthConfig):
         if not day:
-            pass
-        elif day.is_holiday:
+            return
+        if day.is_holiday:
             self._set_font(config.fonts.events)
         elif day.is_sunday:
             self._set_font(config.fonts.sunday)
