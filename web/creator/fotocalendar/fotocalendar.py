@@ -305,7 +305,9 @@ class FotoCalendar:
         self.fpdf.set_text_color(config.color)
 
     def _set_font_for_day(self, day: DayConfig, config: MonthConfig):
-        if day.is_holiday:
+        if not day:
+            pass
+        elif day.is_holiday:
             self._set_font(config.fonts.events)
         elif day.is_sunday:
             self._set_font(config.fonts.sunday)

@@ -1,30 +1,37 @@
 from creator.fotocalendar.fotocalendar import FotoCalendar
 from creator.fotocalendar.bo.config import DefaultConfig
+from fpdf.drawing_primitives import convert_to_device_color, DeviceRGB
 
 
 class Design2026FotoCalendar(FotoCalendar):
 
     _font = "NotoSansDisplay"
+    _is_landscape = False
+    _is_schedule = False
 
-    def __init__(self, landscape=False):
-        if landscape:
+    _fill_colors = [ "#F0F0F0", "#E0E0E0", "#D0D0D0" ]
+
+    def __init__(self, landscape=False, schedule=False):
+        if schedule:
+            super().__init__("L", 0, 297, 185)
+            self._is_schedule = True
+        elif landscape:
             super().__init__("L", 0, 186, 210)
-            self.is_landscape = True
+            self._is_landscape = True
         else:
             super().__init__("P", 0, 210, 180)
-            self.is_landscape = False
         self.tmargin = 0
         self._add_font("Pacifico")
 
     def get_default_config(self, date=None) -> DefaultConfig:
         config = super().get_default_config(date)
-        config.show_weeks = False
+        config.show_weeks = self._is_schedule
         config.month_show_year = False
         config.supports_italic = False
         config.month_align = 'C'
 
         config.table_background_color = "#85ace6"
-        config.fonts.month.size = 60 if self.is_landscape else 75
+        config.fonts.month.size = 60 if self._is_landscape else 75
         config.fonts.month.family = "Pacifico"
         config.fonts.month.color = '#C8C8C8'
         config.fonts.weekday.size = 14
@@ -36,15 +43,28 @@ class Design2026FotoCalendar(FotoCalendar):
         pdf = self.fpdf
         config.fonts.month.color = config.table_background_color
 
-        y = 85 if self.is_landscape else self.image_height - 8.7
+        y = 85 if self._is_landscape else self.image_height - 8.7
         pdf.set_y(y)
         self._add_month_name(config)
 
+
         line_height = 11.5
-        col_width = 13 if self.is_landscape else 25
-        if self.is_landscape:
+        border = 0
+        align = "C"
+        if self._is_landscape:
+            col_width = 13
             pdf.set_margins(self.image_width + 10, 20, 10)
         else:
+            if self._is_schedule:
+                pdf.add_page()
+                y = 0
+                col_width = 38
+                line_height = 25
+                pdf.c_margin = 5
+                border = 1
+                align = "R"
+            else:
+                col_width = 25
             pdf.set_margins((pdf.w - 7 * col_width) / 2, 20)
 
         x = pdf.get_x() + col_width / 2
@@ -55,16 +75,29 @@ class Design2026FotoCalendar(FotoCalendar):
         pdf.set_y(y + 50)
         weeks = self.__toWeekMatrix(matrix)
         events = []
+       
         for weekId in weeks:
             for dayId in weeks[weekId]:
                 day = weeks[weekId][dayId]
                 txt = ''
+                self._set_font_for_day(day, config)
                 if day:
-                    self._set_font_for_day(day, config)
                     txt = day.day
                     if len(day.events) > 0:
                         events.append(day.day + ". " + config.event_serparator.join(day.events))
-                pdf.cell(col_width, line_height, txt=txt, border='BT' if config.table_border else 0, align="C", new_y="TOP")
+
+                fill_color = None
+
+                if day and self._is_schedule:
+                    if day.is_saturday:
+                        fill_color = self._fill_colors[1]
+                    elif day.is_sunday:
+                        fill_color = self._fill_colors[2]
+                    else:
+                        fill_color = self._fill_colors[0]
+
+                with pdf.local_context(line_width=2, draw_color="#ffffff", fill_color=fill_color):
+                    pdf.cell(col_width, line_height, txt=txt, border=border, fill=fill_color is not None, align=align, new_y="TOP")
 
             if config.show_weeks:
                 self._set_font(config.fonts.week)
@@ -72,10 +105,27 @@ class Design2026FotoCalendar(FotoCalendar):
 
             pdf.ln()
 
+    def _add_schedule(self, config, matrix, col_width, line_height):
+        pdf = self.fpdf
+        pdf.add_page()
+        pdf.set_y(pdf.get_y() + 50)
+        for day in range(1, 32):
+            events = []
+            for weekId in range(1, 7):
+                if weekId in matrix and day in matrix[weekId]:
+                    dayObj = matrix[weekId][day]
+                    if dayObj:
+                        events.extend(dayObj.events)
+
+            txt = str(day) + ". " if day <= 31 else ""
+            if len(events) > 0:
+                txt += config.event_serparator.join(events)
+            pdf.cell(col_width, line_height, txt=txt, border='BT' if config.table_border else 0, align="L", new_y="TOP")
+
     def _add_month_name(self, config):
-        y = self.fpdf.get_y() - (45 if self.is_landscape else 1.2)
+        y = self.fpdf.get_y() - (45 if self._is_landscape else 1.2)
         x = self.fpdf.w - 10
-        if self.is_landscape:
+        if self._is_landscape:
             self.fpdf.set_x(self.image_width)
             super()._add_month_name(config, self.fpdf.w - self.image_width)
         else:
