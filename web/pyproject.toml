@@ -14,7 +14,7 @@ dependencies = [
     "Pillow==12.2.0",
     "python-dateutil",
     "icalevents==0.3.1",
-    "uharfbuzz==0.54.1",
+    "uharfbuzz==0.55.0",
     "orjson==3.11.9",
     "gunicorn==26.0.0",
     "pdf2image==1.17.0"
