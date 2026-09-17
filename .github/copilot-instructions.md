@@ -8,7 +8,7 @@
 - **Primary Language**: Python 3.12+ (using Django 6.0)
 - **Runtime**: Django with gunicorn (production) or Django development server (local)
 - **Key Libraries**: Django 6.0, fpdf2 2.8, Pillow 12, icalevents 0.3, python-dateutil, orjson, uharfbuzz
-- **Frontend**: Bootstrap 5.3, jQuery 4.0, Cropper.js 1.6
+- **Frontend**: Bootstrap 5.3, jQuery 4.0, Cropper.js 2.2
 - **Deployment**: Docker containers (nginx + Django app)
 
 ## Development Environment Setup
