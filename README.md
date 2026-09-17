@@ -26,7 +26,7 @@ services:
 ## Used libraries
 - [Python 3](https://www.python.org/)
 - [Bootstrap 5.3](https://getbootstrap.com/docs/5.3)
-- [Cropper.js 1.6.2](https://fengyuanchen.github.io/cropperjs/)
+- [Cropper.js 2.2.0](https://fengyuanchen.github.io/cropperjs/)
 - [django 6.0](https://docs.djangoproject.com/en/6.0/)
 - [gunicorn 2.25](https://gunicorn.org/)
 - [icalevents 0.3](https://github.com/jazzband/icalevents)

@@ -236,6 +236,7 @@ function updatePreview(input, id, aspectRatio) {
 
 function setCropperImage(id, aspectRatio, key, imageData) {
   let img = document.getElementById("image-preview-" + id);
+  img.src = imageData;
 
   if (cropper[id]) {
     cropper[id].destroy();
@@ -243,7 +244,64 @@ function setCropperImage(id, aspectRatio, key, imageData) {
 
   cropper[id] = enableCropper(img, id, key, aspectRatio);
   cropper[id].imageReplaced = true;
-  cropper[id].replace(imageData);
+}
+
+function parseAspectRatio(aspectRatio) {
+  const parsed = parseFloat(aspectRatio);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : NaN;
+}
+
+function getCropperSelection(cropperInstance) {
+  if (!cropperInstance || !cropperInstance.getCropperSelection) {
+    return null;
+  }
+  return cropperInstance.getCropperSelection();
+}
+
+function getCropperImage(cropperInstance) {
+  if (!cropperInstance || !cropperInstance.getCropperImage) {
+    return null;
+  }
+  return cropperInstance.getCropperImage();
+}
+
+function withCropperSelection(cropperInstance, callback, retries = 20) {
+  const selection = getCropperSelection(cropperInstance);
+  if (selection) {
+    callback(selection);
+    return;
+  }
+  if (retries > 0) {
+    setTimeout(function() {
+      withCropperSelection(cropperInstance, callback, retries - 1);
+    }, 25);
+  }
+}
+
+function buildCropperTemplate(aspectRatio) {
+  const ratio = parseAspectRatio(aspectRatio);
+  const initialAspectRatio = Number.isNaN(ratio) ? '' : ' initial-aspect-ratio="' + ratio + '"';
+
+  return (
+    '<cropper-canvas background>'
+    + '<cropper-image rotatable scalable translatable></cropper-image>'
+    + '<cropper-shade hidden></cropper-shade>'
+    + '<cropper-handle action="select" plain></cropper-handle>'
+    + '<cropper-selection initial-coverage="1"' + initialAspectRatio + ' movable resizable>'
+    + '<cropper-grid role="grid" bordered covered></cropper-grid>'
+    + '<cropper-crosshair centered></cropper-crosshair>'
+    + '<cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle>'
+    + '<cropper-handle action="n-resize"></cropper-handle>'
+    + '<cropper-handle action="e-resize"></cropper-handle>'
+    + '<cropper-handle action="s-resize"></cropper-handle>'
+    + '<cropper-handle action="w-resize"></cropper-handle>'
+    + '<cropper-handle action="ne-resize"></cropper-handle>'
+    + '<cropper-handle action="nw-resize"></cropper-handle>'
+    + '<cropper-handle action="se-resize"></cropper-handle>'
+    + '<cropper-handle action="sw-resize"></cropper-handle>'
+    + '</cropper-selection>'
+    + '</cropper-canvas>'
+  );
 }
 
 function enableCropper(img, id, storedCropperKey, aspectRatio) {
@@ -252,23 +310,103 @@ function enableCropper(img, id, storedCropperKey, aspectRatio) {
     storedCropperData = JSON.parse(localStorage.getItem(storedCropperKey))
   }
 
-  return new Cropper(img, {
-    dragMode: 'move',
-    aspectRatio: aspectRatio,
-    autoCropArea: 1.0,
-    viewMode: 2,
-    restore: false,
-    rotatable: true,
-    crop(event) {
-      localStorage.setItem(storedCropperKey, JSON.stringify(this.cropper.getData(true)));
-    },
-    ready() {
-      if (this.cropper.imageReplaced && storedCropperData) {
-        console.log("Restoring cropper data", storedCropperData)
-        this.cropper.setData(storedCropperData)
+  const cropperInstance = new Cropper(img, {
+    template: buildCropperTemplate(aspectRatio),
+  });
+  const ratio = parseAspectRatio(aspectRatio);
+  const adapter = {
+    cropper: cropperInstance,
+    imageReplaced: false,
+    scaleXValue: 1,
+    scaleYValue: 1,
+    rotate(degrees) {
+      const image = getCropperImage(this.cropper);
+      if (image) {
+        image.$rotate((degrees * Math.PI) / 180);
       }
+    },
+    scaleX(value) {
+      const image = getCropperImage(this.cropper);
+      if (image && this.scaleXValue !== 0) {
+        image.$scale(value / this.scaleXValue, 1);
+        this.scaleXValue = value;
+      }
+    },
+    scaleY(value) {
+      const image = getCropperImage(this.cropper);
+      if (image && this.scaleYValue !== 0) {
+        image.$scale(1, value / this.scaleYValue);
+        this.scaleYValue = value;
+      }
+    },
+    getData() {
+      const selection = getCropperSelection(this.cropper);
+      if (!selection) {
+        return { x: 0, y: 0, width: 0, height: 0 };
+      }
+      return {
+        x: selection.x,
+        y: selection.y,
+        width: selection.width,
+        height: selection.height,
+      };
+    },
+    setData(data) {
+      withCropperSelection(this.cropper, function(selection) {
+        const x = Number(data.x) || 0;
+        const y = Number(data.y) || 0;
+        const width = Number(data.width) || selection.width || 0;
+        const height = Number(data.height) || selection.height || 0;
+        selection.$change(x, y, width, height, ratio, true);
+      });
+    },
+    getCroppedCanvas(options) {
+      const buildCanvasPromise = new Promise((resolve) => {
+        withCropperSelection(this.cropper, function(selection) {
+          const width = Math.max(options.minWidth || 1, Math.min(options.maxWidth || selection.width, selection.width || 1));
+          const height = Math.max(options.minHeight || 1, Math.min(options.maxHeight || selection.height, selection.height || 1));
+
+          selection.$toCanvas({
+            width: Math.round(width),
+            height: Math.round(height),
+          }).then(resolve);
+        });
+      });
+
+      return {
+        toBlob(callback, type, quality) {
+          buildCanvasPromise.then((canvas) => {
+            canvas.toBlob(callback, type, quality);
+          });
+        },
+      };
+    },
+    replace(imageData) {
+      img.src = imageData;
+      const image = getCropperImage(this.cropper);
+      if (image) {
+        image.src = imageData;
+      }
+    },
+    destroy() {
+      this.cropper.destroy();
     }
-  })
+  };
+
+  withCropperSelection(cropperInstance, function(selection) {
+    selection.addEventListener('change', function() {
+      if (storedCropperKey) {
+        localStorage.setItem(storedCropperKey, JSON.stringify(adapter.getData()));
+      }
+    });
+
+    if (storedCropperData) {
+      console.log("Restoring cropper data", storedCropperData)
+      adapter.setData(storedCropperData)
+    }
+  });
+
+  return adapter;
 }
 
 // Live Preview functionality
