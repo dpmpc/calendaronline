@@ -10,7 +10,7 @@ description = "A simple tool to create beautiful photo calendars as PDF files fo
 requires-python = ">=3.12"
 dependencies = [
     "django==6.1",
-    "fpdf2==2.8.7",
+    "fpdf2==2.8.8",
     "Pillow==12.3.0",
     "python-dateutil",
     "icalevents==0.3.1",
